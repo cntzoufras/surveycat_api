@@ -1,2 +1,2 @@
 # surveycat
-Surveymonkey alternative for my undergraduate thesis
+Surveymonkey alternative as a project for my undergraduate thesis
