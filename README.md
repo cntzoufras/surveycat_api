@@ -1,2 +1,3 @@
-# surveycat
-Surveymonkey alternative as a project for my undergraduate thesis
+# Surveycat
+Surveymonkey alternative as a project for my undergraduate thesis .
+Developed for web and app usage .
