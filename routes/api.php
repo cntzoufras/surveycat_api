@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,7 +43,9 @@ Route::post('products', function() {
             'message' => 'Create success'
         ], 201);
 });
- 
+
+Route::get('posts',[PostController::class,'getPost']);
+
 Route::put('products/{product}', function() {
     return  response()->json([
             'message' => 'Update success'
