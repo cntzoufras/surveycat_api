@@ -14,41 +14,12 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-header">
-							All Posts <a href="/add-post" class="btn btn-success">Add New Post</a>
+							All Posts
 						</div>
 						<div class="card-body">
-							@if(Session::has('post_deleted'))
-								<div class="alert alert-success" role="alert">
-									{{Session::get('post_deleted')}}
-								</div>
-							@endif
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Post Title</th>
-										<th>Post Description</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($posts as $post)
-										<tr>
-											<td>{{$post->id}}</td>
-											<td>{{$post->title}}</td>
-											<td>{{$post->body}}</td>
-											<td>
-												<a href="/posts/{{$post->id}}" class="btn btn-info">Details</a>
-												<a href="edit-post/{{$post->id}}" class="btn btn-success">Edit</a>
-												<a href="/delete-post/{{$post->id}}" class="btn btn-danger">Delete</a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
+							{{ $posts ?? '' }}
 						</div>
 					</div>
-					
 				</div>
 			</div>
 		</div>
