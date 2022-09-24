@@ -16,7 +16,7 @@ class PostController extends Controller
     	$post->title 	= $request->title;
     	$post->body 	= $request->body;
     	$post->save();
-    	return back()->with('post_created','Post has been created successfully');
+    	return response()->json(['title' => $post->title,'body'=>$post->body]);
     }
 
     public function getPost() {
@@ -26,7 +26,13 @@ class PostController extends Controller
 
     public function getPostById($id) {
     	$post = Post::where('id', $id)->first();
-    	return view('single-post',compact('post'));
+        return response()->json(['post' => $post]);
+    }
+
+    public function getPosts() {
+//        $posts = Post::all();
+        $posts = Post::orderBy('created_at', 'desc')->paginate(20);
+        return view('posts',compact('posts'));
     }
 
     public function deletePost($id) {
