@@ -37,19 +37,19 @@ Route::get('/posts-collection', function () {
 
 // --
 // Products
-Route::get('products/{product}', function ($productId) {
-    return response()->json(['productId' => "{$productId}"], 201);
+Route::get('/products/{product}', function ($id) {
+    return response()->json(['productId' => "{$id}"], 201);
 });
 Route::get('/products', function () {
     return response()->json([
         'message' => 'msg: Products',
     ], 201);
 });
-Route::put('products/{product}', function () {
+Route::put('/products/{product}', function () {
     return response()->json([
         'message' => 'Update success',
     ], 200);
 });
-Route::delete('products/{product}', function () {
+Route::delete('/products/{product}', function () {
     return response()->json(null, 204);
 });
