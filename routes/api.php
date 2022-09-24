@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Resources\PostCollection;
+use App\Http\Resources\PostResource;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,31 +22,34 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Products
-Route::get('products', function () {
-    return response(['Product 1', 'Product 2', 'Product 3'],200);
-});
-Route::get('products/{product}', function ($productId) {
-    return response()->json(['productId' => "{$productId}"], 200);
-});
-Route::post('products', function() {
-    return  response()->json([
-            'message' => 'Create success'
-        ], 201);
-});
-Route::put('products/{product}', function() {
-    return  response()->json([
-            'message' => 'Update success'
-        ], 200);
-});
-Route::delete('products/{product}',function() {
-    return  response()->json(null, 204);
+// Resources
+Route::get('/posts/{id}', function ($id) {
+    return new PostResource(Post::findOrFail($id));
 });
 
-// Posts
-Route::get('/add-post', [PostController::class,'addPost']);
-Route::post('/create-post',[PostController::class,'createPost'])->name('post.create');
-Route::get('/posts/{id}', [PostController::class,'getPostById'])->name('post.get');
-Route::get('/delete-post/{id}',[PostController::class,'deletePost'])->name('post.delete');
-Route::get('/edit-post/{id}', [PostController::class,'editPost'])->name('post.edit');
-Route::post('/update-post',[PostController::class,'updatePost'])->name('post.update');
+Route::get('/posts', function () {
+    return PostResource::collection(Post::all());
+});
+
+Route::get('/posts-collection', function () {
+    return new PostCollection(Post::paginate());
+});
+
+// --
+// Products
+Route::get('products/{product}', function ($productId) {
+    return response()->json(['productId' => "{$productId}"], 201);
+});
+Route::get('/products', function () {
+    return response()->json([
+        'message' => 'msg: Products',
+    ], 201);
+});
+Route::put('products/{product}', function () {
+    return response()->json([
+        'message' => 'Update success',
+    ], 200);
+});
+Route::delete('products/{product}', function () {
+    return response()->json(null, 204);
+});
