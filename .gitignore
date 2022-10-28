@@ -7,43 +7,16 @@
 .env.backup
 .phpunit.result.cache
 docker-compose.override.yml
-Homestead.json
-Homestead.yaml
 npm-debug.log
 yarn-error.log
-
-
 vendor/
 node_modules/
-npm-debug.log
-
-# Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
-
-# Laravel 5 & Lumen specific
-public/storage
-public/hot
-storage/*.key
-.env.*.php
-.env.php
-.env
-Homestead.yaml
-Homestead.json
-
+phpunit.local.xml
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
-
 sftp-config.json
-
 .htaccess
-
-
-#/public/images/icons/.DS_Store
-#/public/js/app.js
-/vendor
-/.idea
-/.vscode
-
-
+.idea
+.vscode
+auth.json
 .DS_Store
