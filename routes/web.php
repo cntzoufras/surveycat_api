@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
- Route::get('/', function () {
-     return view('welcome');
- });
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/posts', function () {
+    $data = new Post();
+    $posts = Post::where('id', '>=', 1)->where('id', '<', 20)->get();
+    return view('posts', ['posts' => $posts]);
+});
