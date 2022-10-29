@@ -31,9 +31,9 @@ Route::get('/posts', function () {
     return PostResource::collection(Post::all());
 });
 
-Route::get('/posts', function () {
-    return new PostResource(Post::query()->where('id', '<', 10));
-});
+//Route::get('/posts', function () {
+//    return new PostResource(Post::query()->where('id', '<', 10));
+//});
 Route::get('/posts-collection', function () {
     return new PostCollection(Post::paginate());
 });
