@@ -3,78 +3,79 @@
 namespace App\Services;
 
 use App\Domain\Models\Surveycat\UserRefreshToken;
-use App\Domain\Models\Parties\Party;
-use App\Domain\Models\Parties\PartyUser;
-use App\Domain\Models\Parties\RefreshToken;
+use App\Domain\Models\Members\Member;
+use App\Domain\Models\Members\MemberUser;
+use App\Domain\Models\Members\RefreshToken;
 use App\Domain\Repositories\Surveycat\UserRepository;
-use App\Domain\Repositories\Parties\PartyRepository;
+use App\Domain\Repositories\Members\MemberRepository;
 use App\Domain\Repositories\SavedTableRepository;
 use App\Http\Auth\TenantContext;
-use App\Notifications\PartyPasswordReset;
+use App\Notifications\MemberPasswordReset;
 use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use OrcaTools\Parties\Enums\PartyType;
-use OrcaTools\Utils\RegexUtils;
-use WebThatMatters\LaravelUtils\Exceptions\InvalidOperationException;
+use Members\Enums\MemberType;
+use Utils\RegexUtils;
 
 class AuthService {
 
-    private $context, $users;
+    private $users;
 
-    const BLACKLIST_PREFIX = 'session-';
 
+    /**
+     * @param \App\Domain\Repositories\Surveycat\UserRepository $users
+     */
     public function __construct(UserRepository $users) {
 
         $this->users = $users;
     }
 
+
     /**
-     * Try to authenticate a party using a username/password combination.
-     * Surveycat admins can only login by Apparatus in Orca.
-     *
      * @param string $username
      * @param string $password
      *
-     * @return \App\Domain\Models\Parties\Party The authenticated party
-     * @throws \Illuminate\Auth\AuthenticationException If the credentials can't match a record
+     * @return \App\Domain\Models\Members\Member|null
      */
-    public function authenticateByCredentials(string $username, string $password): Party {
-        $this->context->switchToTenantSchema();
-        $party = $this->parties->findByUsername($username);
-        if ($party == null || !Hash::check($password, $party->user->password) || !$party->can_login || $party->type == PartyType::CREW || $party->is_archived) {
-            throw new AuthenticationException(trans('auth.failed'));
-        }
-        return $party;
-    }
-
-    public function getToken(Party $party, bool $sneaky = false): string {
-        $mailService = app()->make(MailingListService::class);
-        if (!$sneaky && $party->exists) $party->user->touchLogin($mailService);
-
-        $orgUuid = $this->context->organization()->uuid;
-        if ($party->isSurveycatAdmin) {
-            return is_null($party->oceanUserId)
-                ? $this->createSurveycatAdminToken($party->id, $orgUuid)
-                : $this->createSurveycatUserToken($party->oceanUserId, $orgUuid);
-        }
-
-        return $this->createPartyToken($party->id, $orgUuid);
+    public function authenticateByCredentials(string $username, string $password): ?Member {
+        //
+        return null;
     }
 
     /**
-     * Returns the party of a refresh token, invalidating it.
+     * @param \App\Models\Members\Member $member
+     * @param bool $sneaky
+     *
+     * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getToken(Member $member, bool $sneaky = false): string {
+        $mailService = app()->make(MailingListService::class);
+        if (!$sneaky && $member->exists) $member->user->touchLogin($mailService);
+
+        $scAdminUuid = $this->context->superAdmin()->uuid;
+        if ($member->isSurveycatAdmin) {
+            return is_null($member->isSurveyCatAdmin)
+                ? $this->createSurveycatAdminToken($member->id, $scAdminUuid)
+                : $this->createSurveycatUserToken($member->scAdmId, $scAdminUuid);
+        }
+
+        return $this->createMemberToken($member->id, $scAdminUuid);
+    }
+
+    /**
+     * Returns the
      *
      * @param string $refreshToken
      *
-     * @return Party
+     * @return Member
      * @throws \Illuminate\Auth\AuthenticationException
      * @throws \Throwable
      */
-    public function getPartyFromRefreshToken(string $refreshToken): Party {
+    public function getMemberFromRefreshToken(string $refreshToken): Member {
         $jti = $this->getTokenId($refreshToken);
         /** @var RefreshToken $matched */
         $matched = RefreshToken::query()->where([
@@ -84,13 +85,13 @@ class AuthService {
 
         /** @var UserRefreshToken $userMatched */
         $userMatched = UserRefreshToken::query()->where([
-            'jti'    => $jti,
-            'active' => true,
+            'authentication_type' => $jti,
+            'active'              => true,
         ])->first();
 
-        $isParty = $matched != null && !$matched->isExpired();
+        $isMember = $matched != null && !$matched->isExpired();
         $isSurveycatUser = $userMatched != null && !$userMatched->isExpired();
-        if (!$isParty && !$isSurveycatUser) {
+        if (!$isMember && !$isSurveycatUser) {
             throw new AuthenticationException(trans('auth.failed'));
         }
 
@@ -98,13 +99,13 @@ class AuthService {
         $token->active = false;
         $token->save();
 
-        return $isParty ? $token->party : $this->parties->getSurveycatParty($token->user);
+        return $isMember ? $token->member : $this->members->getSurveycatMember($token->user);
     }
 
-    public function getRefreshToken(Party $party, $accessToken): string {
-        $token = $party->id == null ?
-            new UserRefreshToken(['user_id' => $party->oceanUserId]) :
-            new RefreshToken(['party_id' => $party->id]);
+    public function getRefreshToken(Member $member, $accessToken): string {
+        $token = $member->id == null ?
+            new UserRefreshToken(['user_id' => $member->oceanUserId]) :
+            new RefreshToken(['member_id' => $member->id]);
 
         $jti = $this->getTokenId($accessToken);
 
@@ -112,57 +113,56 @@ class AuthService {
         $token->jti = $jti;
         $token->save();
         return $this->createRefreshToken(
-            $party->id,
-            $this->context->organization()->uuid,
+            $member->id,
+            $this->context->superAdmin()->uuid,
             $token->jti
         );
     }
 
-    public function register(Party $party, $username, $password) {
-        if (!$party->getNeedsCredentialsAttribute()) {
-            throw new InvalidOperationException('party_already_registered');
+    public function register(Member $member, $username, $password) {
+        if (!$member->getNeedsCredentialsAttribute()) {
+            throw new InvalidOperationException('member_already_registered');
         }
         $this->validateUsername($username);
         $this->validateRegexPassword($password);
 
-        $user = $party->user ?? new PartyUser();
-        $user->party_id = $party->id;
+        $user = $member->user ?? new MemberUser();
+        $user->member_id = $member->id;
         $user->username = $username;
         $user->password = Hash::make($password);
-        $party->can_login = true;
-        DB::transaction(function () use ($user, $party) {
-            $party->save();
+        $member->can_login = true;
+        DB::transaction(function () use ($user, $member) {
+            $member->save();
             $user->save();
-            $this->createDefaultFilters($party->id);
-            $party->invitation()->delete();
+            $member->invitation()->delete();
         });
-        return $party;
+        return $member;
     }
 
     public function requestPasswordReset($username) {
-        $party = $this->parties->findByUsername($username);
-        if ($party == null || !$party->can_login || $party->is_archived || $party->user == null) {
+        $member = $this->members->findByUsername($username);
+        if ($member == null || !$member->can_login || $member->is_archived || $member->user == null) {
             return false;
         }
 
-        $user = $party->user;
+        $user = $member->user;
         $user->password_reset_token = Str::random(64);
         $user->password_reset_at = Carbon::now();
 
-        DB::transaction(function () use ($user, $party) {
+        DB::transaction(function () use ($user, $member) {
             $user->save();
-            $party->notify(new PartyPasswordReset($this->context->organization(), $party));
+            $member->notify(new MemberPasswordReset($this->context->superAdmin(), $member));
         });
 
         return true;
     }
 
     public function resetPassword($token, $password) {
-        $party = $this->parties->findByResetToken($token);
-        if ($party == null || !$party->can_login || $party->is_archived || $party->user == null) {
+        $member = $this->members->findByResetToken($token);
+        if ($member == null || !$member->can_login || $member->is_archived || $member->user == null) {
             throw new InvalidOperationException('password_reset_invalid');
         }
-        $user = $party->user;
+        $user = $member->user;
         if ($user->isPasswordResetExpired()) {
             throw new InvalidOperationException('password_reset_expired');
         }
@@ -174,8 +174,8 @@ class AuthService {
         $user->save();
     }
 
-    public function changeCredentials(Party $party, array $params) {
-        $user = $party->user;
+    public function changeCredentials(Member $member, array $params) {
+        $user = $member->user;
         if (isset($params['username'])) {
             $this->validateUsername($params['username'], $user);
             $user->username = $params['username'];
@@ -187,18 +187,17 @@ class AuthService {
         $user->save();
     }
 
-    public function revokeAccess(Party $party) {
-        if (!$party->can_login) {
-            throw new InvalidOperationException('party_cannot_login');
+    public function revokeAccess(Member $member) {
+        if (!$member->can_login) {
+            throw new InvalidOperationException('member_cannot_login');
         }
-        $party->can_login = false;
-        $party->permission_template_id = null;
-        $party->settings = null;
+        $member->can_login = false;
+        $member->settings = null;
 
-        DB::transaction(function () use ($party) {
-            $party->save();
+        DB::transaction(function () use ($member) {
+            $member->save();
 
-            $party->user()->update([
+            $member->user()->update([
                 'username' => null,
                 'password' => null,
             ]);
@@ -207,47 +206,15 @@ class AuthService {
 
     public function logout($token) {
         $jti = $this->getTokenId($token);
-        Cache::put(self::BLACKLIST_PREFIX . $jti, $token, config('cache.default_ttl'));
         RefreshToken::query()->where('jti', $jti)->update(['active' => false]);
-    }
-
-    private function createDefaultFilters($party_id) {
-        $assigned_to_me = [
-            'table_label' => 'jobs_list',
-            'party_id'    => $party_id,
-            'name'        => 'Assigned to me',
-            'filters'     => [
-                [
-                    'name'      => 'assignee_id',
-                    'operation' => 'oneOf',
-                    'value'     => [$party_id],
-                ],
-            ],
-        ];
-        $watching = [
-            'table_label' => 'jobs_list',
-            'party_id'    => $party_id,
-            'name'        => 'Watching',
-            'filters'     => [
-                [
-                    'name'      => 'is_watcher',
-                    'operation' => '=',
-                    'value'     => 'true',
-                ],
-            ],
-        ];
-
-        $saved_table_repository = new SavedTableRepository;
-        $saved_table_repository->store($assigned_to_me);
-        $saved_table_repository->store($watching);
     }
 
     private function validateUsername($username, $existing_user = null) {
         if (!is_null($existing_user) && $username == $existing_user->username) return;
 
-        $exists = PartyUser::query()
-                           ->where('username', $username)
-                           ->exists();
+        $exists = Member::query()
+                        ->where('username', $username)
+                        ->exists();
         if ($exists) {
             throw new InvalidOperationException("username_exists");
         }
