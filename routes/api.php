@@ -18,10 +18,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['middleware' => ['aris'], 'namespace' => 'Auth'], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('register', 'AuthController@register');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('forgot-password', 'AuthController@forgotPassword');
+    Route::post('reset-password', 'AuthController@resetPassword');
+});
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
 // Resources
 Route::get('/posts/{id}', function ($id) {
     return new PostResource(Post::findOrFail($id));
@@ -43,16 +51,19 @@ Route::get('/posts-collection', function () {
 Route::get('/products/{product}', function ($id) {
     return response()->json(['productId' => "{$id}"], 201);
 });
+
 Route::get('/products', function () {
     return response()->json([
         'message' => 'msg: Products',
     ], 201);
 });
+
 Route::put('/products/{product}', function () {
     return response()->json([
         'message' => 'Update success',
     ], 200);
 });
+
 Route::delete('/products/{product}', function () {
     return response()->json(null, 204);
 });
