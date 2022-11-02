@@ -102,6 +102,12 @@ class AuthService {
         return $isMember ? $token->member : $this->members->getSurveycatMember($token->user);
     }
 
+    /**
+     * @param \App\Domain\Models\Members\Member $member
+     * @param $accessToken
+     *
+     * @return string
+     */
     public function getRefreshToken(Member $member, $accessToken): string {
         $token = $member->id == null ?
             new UserRefreshToken(['user_id' => $member->oceanUserId]) :
@@ -119,6 +125,13 @@ class AuthService {
         );
     }
 
+    /**
+     * @param \App\Domain\Models\Members\Member $member
+     * @param $username
+     * @param $password
+     *
+     * @return \App\Domain\Models\Members\Member
+     */
     public function register(Member $member, $username, $password) {
         if (!$member->getNeedsCredentialsAttribute()) {
             throw new InvalidOperationException('member_already_registered');
@@ -139,6 +152,11 @@ class AuthService {
         return $member;
     }
 
+    /**
+     * @param $username
+     *
+     * @return bool
+     */
     public function requestPasswordReset($username) {
         $member = $this->members->findByUsername($username);
         if ($member == null || !$member->can_login || $member->is_archived || $member->user == null) {
@@ -157,6 +175,12 @@ class AuthService {
         return true;
     }
 
+    /**
+     * @param $token
+     * @param $password
+     *
+     * @return void
+     */
     public function resetPassword($token, $password) {
         $member = $this->members->findByResetToken($token);
         if ($member == null || !$member->can_login || $member->is_archived || $member->user == null) {
@@ -174,6 +198,12 @@ class AuthService {
         $user->save();
     }
 
+    /**
+     * @param \App\Domain\Models\Members\Member $member
+     * @param array $params
+     *
+     * @return void
+     */
     public function changeCredentials(Member $member, array $params) {
         $user = $member->user;
         if (isset($params['username'])) {
@@ -187,6 +217,11 @@ class AuthService {
         $user->save();
     }
 
+    /**
+     * @param \App\Domain\Models\Members\Member $member
+     *
+     * @return void
+     */
     public function revokeAccess(Member $member) {
         if (!$member->can_login) {
             throw new InvalidOperationException('member_cannot_login');
@@ -204,11 +239,22 @@ class AuthService {
         });
     }
 
+    /**
+     * @param $token
+     *
+     * @return void
+     */
     public function logout($token) {
         $jti = $this->getTokenId($token);
         RefreshToken::query()->where('jti', $jti)->update(['active' => false]);
     }
 
+    /**
+     * @param $username
+     * @param $existing_user
+     *
+     * @return void
+     */
     private function validateUsername($username, $existing_user = null) {
         if (!is_null($existing_user) && $username == $existing_user->username) return;
 
@@ -220,6 +266,11 @@ class AuthService {
         }
     }
 
+    /**
+     * @param $input
+     *
+     * @return void
+     */
     private function validateRegexPassword($input) {
         if (!RegexUtils::validateRegexPassword($input)) {
             throw new InvalidOperationException("weak_password");
