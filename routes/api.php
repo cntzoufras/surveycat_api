@@ -2,6 +2,7 @@
     
     use App\Http\Resources\PostCollection;
     use App\Http\Controllers\VesselController;
+    use App\Http\Controllers\QuestionController;
     use App\Http\Resources\PostResource;
     use App\Models\Post;
     use Illuminate\Http\Request;
@@ -30,6 +31,7 @@
 //    Route::middleware('auth:api')->get('/user', function (Request $request) {
 //        return $request->user();
 //    });
+
 // Resources
     Route::get('/posts/{id}', function ($id) {
         return new PostResource(Post::findOrFail($id));
@@ -39,19 +41,28 @@
         return PostResource::collection(Post::all());
     });
     
-    Route::post('/posts', 'App\Http\Controllers\PostController@store');
-    Route::post('/vessels', [VesselController::class, 'store']);
-    Route::get('/vessels', [VesselController::class, 'index']);
-    Route::get('/vessels/{id}', [VesselController::class, 'show']);
-    
-    Route::get('/posts', function () {
+    Route::get('/posts-less-than-id-ten', function () {
         return new PostResource(Post::query()->where('id', '<', 10));
     });
+    
     Route::get('/posts-collection', function () {
         return new PostCollection(Post::paginate());
     });
     
-    // --
+    Route::post('/posts', 'App\Http\Controllers\PostController@store');
+    
+    Route::prefix('vessels')->group(function () {
+        Route::get('/', [VesselController::class, 'index']);
+        Route::post('/', [VesselController::class, 'store']);
+        Route::get('/{id}', [VesselController::class, 'show']);
+    });
+    
+    Route::prefix('questions')->group(function () {
+        Route::get('/', [QuestionController::class, 'index']);
+        Route::post('/', [QuestionController::class, 'store']);
+        Route::get('/{id}', [QuestionController::class, 'show']);
+    });
+    
     // Products
     Route::get('/products/{product}', function ($id) {
         return response()->json(['productId' => "{$id}"], 201);
