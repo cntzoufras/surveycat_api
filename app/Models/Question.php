@@ -9,7 +9,7 @@
         
         use HasFactory;
         
-        protected $fillable = ['title', 'description', 'format_id', 'is_public', 'style_id', 'status', 'question_tags',
+        protected $fillable = ['title', 'format_id', 'is_public', 'style_id', 'status', 'question_tags',
             'views',
         ];
     }

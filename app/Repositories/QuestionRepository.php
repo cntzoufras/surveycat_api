@@ -12,13 +12,12 @@
             try {
                 $limit = isset($params['limit']) ? $params['limit'] : 10;
                 return DB::transaction(function () use ($limit) {
-
-//                    $questions = Question::query()->paginate($limit);
-                    $questions = Question::query()->first();
-                    return $questions;
+                    
+                    //                    $questions = Question::query()->first();
+                    return Question::query()->paginate($limit);
                 });
             } catch (\Exception $e) {
-                throw new \Exception('Error occurred while retrieving  questions', 500);
+                throw new \Exception($e, 500);
             }
         }
         

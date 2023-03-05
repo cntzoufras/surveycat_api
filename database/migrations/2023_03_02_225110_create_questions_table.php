@@ -12,6 +12,7 @@
         public function up(): void {
             Schema::create('questions', function (Blueprint $table) {
                 $table->id();
+                $table->string('title');
                 $table->ulid('format_id')->nullable();
                 $table->ulid('is_public')->nullable();
                 $table->ulid('style_id')->nullable();
