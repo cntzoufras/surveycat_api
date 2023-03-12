@@ -12,6 +12,7 @@
          * @return void
          */
         public function run() {
-            \App\Models\Question::factory(50000)->create();
+            \App\Models\Question::factory(100)->create();
+            \App\Models\SurveyPages::factory(100)->create();
         }
     }

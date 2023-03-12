@@ -15,7 +15,6 @@
     class QuestionController extends Controller {
         
         protected $question_service;
-        private   $repo;
         
         
         public function __construct(QuestionService $question_service) {

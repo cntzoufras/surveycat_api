@@ -63,6 +63,12 @@
         Route::get('/{id}', [QuestionController::class, 'show']);
     });
     
+    Route::prefix('survey-pages')->group(function () {
+        Route::get('/', [\App\Http\Controllers\SurveyPagesController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\SurveyPagesController::class, 'store']);
+        Route::get('/{id}', [\App\Http\Controllers\SurveyPagesController::class, 'show']);
+    });
+    
     // Products
     Route::get('/products/{product}', function ($id) {
         return response()->json(['productId' => "{$id}"], 201);
