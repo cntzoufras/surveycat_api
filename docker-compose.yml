@@ -2,11 +2,11 @@ version: '3'
 services:
   laravel.test:
     build:
-      context: ./vendor/laravel/sail/runtimes/8.2
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.sail
       args:
         WWWGROUP: '${WWWGROUP}'
-    image: sail-8.2/app
+    image: sail-8.2/surveycat-api
     cpus: 20
     extra_hosts:
       - 'host.docker.internal:host-gateway'
@@ -20,6 +20,7 @@ services:
       XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
     volumes:
       - '.:/var/www/html'
+      - xdebug-log:/tmp
     networks:
       - sail
     depends_on:
@@ -54,4 +55,6 @@ networks:
     driver: bridge
 volumes:
   sail-pgsql:
+    driver: local
+  xdebug-log:
     driver: local
