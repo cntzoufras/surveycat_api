@@ -1,5 +1,6 @@
 <?php
     
+    use App\Http\Controllers\SurveyPagesController;
     use App\Http\Resources\PostCollection;
     use App\Http\Controllers\VesselController;
     use App\Http\Controllers\QuestionController;
@@ -31,7 +32,6 @@
 //    Route::middleware('auth:api')->get('/user', function (Request $request) {
 //        return $request->user();
 //    });
-
 // Resources
     Route::get('/posts/{id}', function ($id) {
         return new PostResource(Post::findOrFail($id));
@@ -64,9 +64,9 @@
     });
     
     Route::prefix('survey-pages')->group(function () {
-        Route::get('/', [\App\Http\Controllers\SurveyPagesController::class, 'index']);
-        Route::post('/', [\App\Http\Controllers\SurveyPagesController::class, 'store']);
-        Route::get('/{id}', [\App\Http\Controllers\SurveyPagesController::class, 'show']);
+        Route::get('/', [SurveyPagesController::class, 'index']);
+        Route::post('/', [SurveyPagesController::class, 'store']);
+        Route::get('/{id}', [SurveyPagesController::class, 'show']);
     });
     
     // Products
