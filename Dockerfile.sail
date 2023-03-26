@@ -1,6 +1,6 @@
-FROM ubuntu:22.04
+FROM debian:bullseye
 
-LABEL maintainer="Taylor Otwell"
+LABEL maintainer="Konstantinos Ntzoufras"
 
 ARG WWWGROUP
 ARG NODE_VERSION=18

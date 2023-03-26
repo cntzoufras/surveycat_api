@@ -2,7 +2,7 @@
     
     namespace App\Repositories;
     
-    use App\Models\Vessel;
+    use App\Models\SurveyTemplate;
     
     use Illuminate\Support\Facades\DB;
     
@@ -12,7 +12,7 @@
             try {
                 $limit = isset($params['limit']) ? $params['limit'] : 10;
                 return DB::transaction(function () use ($limit) {
-                    $vessels = Vessel::paginate($limit);
+                    $vessels = SurveyTemplate::paginate($limit);
                     return $vessels;
                 });
             } catch (\Exception $e) {
@@ -21,17 +21,17 @@
         }
         
         public function resolveModel($vessel_id) {
-            if ($vessel_id instanceof Vessel) {
+            if ($vessel_id instanceof SurveyTemplate) {
                 return $vessel_id;
             }
-            return Vessel::query()->findOrFail($vessel_id);
+            return SurveyTemplate::query()->findOrFail($vessel_id);
         }
         
         public function getIfExist($vessel_id) {
-            return Vessel::query()->find($vessel_id);
+            return SurveyTemplate::query()->find($vessel_id);
         }
         
-        public function update(Vessel $vessel, array $params) {
+        public function update(SurveyTemplate $vessel, array $params) {
             return DB::transaction(function () use ($params, $vessel) {
                 $vessel->fill($params);
                 $vessel->save();
@@ -39,16 +39,16 @@
             });
         }
         
-        public function store(array $params): Vessel {
+        public function store(array $params): SurveyTemplate {
             return DB::transaction(function () use ($params) {
-                $vessel = new Vessel();
+                $vessel = new SurveyTemplate();
                 $vessel->fill($params);
                 $vessel->save();
                 return $vessel;
             });
         }
         
-        public function delete(Vessel $vessel) {
+        public function delete(SurveyTemplate $vessel) {
             return DB::transaction(function () use ($vessel) {
                 $vessel->delete();
                 return $vessel;
