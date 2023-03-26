@@ -4,7 +4,7 @@
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
     
-    class CreateVesselsTable extends Migration {
+    class CreateSurveyTemplatesTable extends Migration {
         
         /**
          * Run the migrations.
@@ -12,7 +12,7 @@
          * @return void
          */
         public function up() {
-            Schema::create('vessels', function (Blueprint $table) {
+            Schema::create('survey_templates', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
                 $table->string('description');
@@ -26,6 +26,6 @@
          * @return void
          */
         public function down() {
-            Schema::dropIfExists('vessels');
+            Schema::dropIfExists('survey_templates');
         }
     }
