@@ -6,52 +6,52 @@
     
     use Illuminate\Support\Facades\DB;
     
-    class VesselRepository {
+    class SurveyTemplateRepository {
         
         public function index(array $params) {
             try {
                 $limit = isset($params['limit']) ? $params['limit'] : 10;
                 return DB::transaction(function () use ($limit) {
-                    $vessels = SurveyTemplate::paginate($limit);
-                    return $vessels;
+                    $survey_templates = SurveyTemplate::paginate($limit);
+                    return $survey_templates;
                 });
             } catch (\Exception $e) {
-                throw new \Exception('Error occurred while retrieving vessels', 500);
+                throw new \Exception('Error occurred while retrieving survey_templates', 500);
             }
         }
         
-        public function resolveModel($vessel_id) {
-            if ($vessel_id instanceof SurveyTemplate) {
-                return $vessel_id;
+        public function resolveModel($survey_template_id) {
+            if ($survey_template_id instanceof SurveyTemplate) {
+                return $survey_template_id;
             }
-            return SurveyTemplate::query()->findOrFail($vessel_id);
+            return SurveyTemplate::query()->findOrFail($survey_template_id);
         }
         
-        public function getIfExist($vessel_id) {
-            return SurveyTemplate::query()->find($vessel_id);
+        public function getIfExist($survey_template_id) {
+            return SurveyTemplate::query()->find($survey_template_id);
         }
         
-        public function update(SurveyTemplate $vessel, array $params) {
-            return DB::transaction(function () use ($params, $vessel) {
-                $vessel->fill($params);
-                $vessel->save();
-                return $vessel;
+        public function update(SurveyTemplate $survey_template, array $params) {
+            return DB::transaction(function () use ($params, $survey_template) {
+                $survey_template->fill($params);
+                $survey_template->save();
+                return $survey_template;
             });
         }
         
         public function store(array $params): SurveyTemplate {
             return DB::transaction(function () use ($params) {
-                $vessel = new SurveyTemplate();
-                $vessel->fill($params);
-                $vessel->save();
-                return $vessel;
+                $survey_template = new SurveyTemplate();
+                $survey_template->fill($params);
+                $survey_template->save();
+                return $survey_template;
             });
         }
         
-        public function delete(SurveyTemplate $vessel) {
-            return DB::transaction(function () use ($vessel) {
-                $vessel->delete();
-                return $vessel;
+        public function delete(SurveyTemplate $survey_template) {
+            return DB::transaction(function () use ($survey_template) {
+                $survey_template->delete();
+                return $survey_template;
             });
         }
         

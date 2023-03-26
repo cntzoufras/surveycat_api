@@ -31,7 +31,6 @@
         }
         
         public function show($params) {
-            
             return $this->survey_pages_repository->getIfExist($params);
         }
         

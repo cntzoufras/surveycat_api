@@ -8,6 +8,7 @@
     use App\Models\SurveyPages;
     use App\Services\SurveyPagesService;
     use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Validator;
     
     class SurveyPagesController extends Controller {
         
@@ -35,15 +36,14 @@
          * Store a newly created resource in storage.
          */
         public function store(StoreSurveyPagesRequest $request) {
-            dd(4);
             return SurveyPagesResource::collection($this->survey_pages_service->store($request->validated()));
         }
         
         /**
          * Display the specified resource.
          */
-        public function show(SurveyPages $surveyPages) {
-            //
+        public function show($id) {
+            return $this->survey_pages_service->show($id);
         }
         
         /**
@@ -57,6 +57,7 @@
          * Update the specified resource in storage.
          */
         public function update(SurveyPages $surveyPages, UpdateSurveyPagesRequest $request,) {
+            $validated = $request->validate(['pages' => 'string']);
             return SurveyPagesResource::make($this->survey_pages_service->update($surveyPages, $request->validated()));
         }
         

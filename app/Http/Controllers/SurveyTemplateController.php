@@ -2,26 +2,26 @@
     
     namespace App\Http\Controllers;
     
-    use App\Services\VesselService;
+    use App\Services\SurveyTemplateService;
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Resources\Json\JsonResource;
-    use App\Repositories\VesselRepository;
+    use App\Repositories\SurveyTemplateRepository;
     
     use Illuminate\Http\Request;
     
-    class VesselController extends Controller {
+    class SurveyTemplateController extends Controller {
         
-        protected $vessel_service;
+        protected $survey_template_service;
         private   $repo;
         
         
-        public function __construct(VesselService $vessel_service) {
-            $this->vessel_service = $vessel_service;
+        public function __construct(SurveyTemplateService $survey_template_service) {
+            $this->survey_template_service = $survey_template_service;
         }
         
         public function index(Request $request) {
             $validated = $request->validate(['limit' => 'integer|nullable|min:0|max:50']);
-            return $this->vessel_service->index($validated);
+            return $this->survey_template_service->index($validated);
         }
         
         public function show(Request $request) {
@@ -31,9 +31,9 @@
                     'id' => 'integer',
                 ]);
                 $offset = (int)$request['id'];
-                return $this->vessel_service->show($offset);
+                return $this->survey_template_service->show($offset);
             } catch (\Exception $e) {
-                throw new \Exception('Error occurred while retrieving vessels', 500);
+                throw new \Exception('Error occurred while retrieving survey_templates', 500);
             }
         }
         
@@ -43,7 +43,7 @@
                 'description' => 'required|string',
             
             ]);
-            return $this->vessel_service->store($validated);
+            return $this->survey_template_service->store($validated);
         }
         
         public function update($setting_id, Request $request) {
@@ -51,10 +51,10 @@
                 'name'     => 'string|required',
                 'settings' => 'required|array',
             ]);
-            return $this->vessel_service->update($setting_id, $validated);
+            return $this->survey_template_service->update($setting_id, $validated);
         }
         
         public function destroy($setting_id) {
-            return $this->vessel_service->delete($setting_id);
+            return $this->survey_template_service->delete($setting_id);
         }
     }
