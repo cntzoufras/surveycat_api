@@ -12,7 +12,8 @@
          * @return void
          */
         public function run() {
-            \App\Models\Question::factory(100)->create();
-            \App\Models\SurveyPages::factory(100)->create();
+            \App\Models\Question::factory(2000)->create();
+            \App\Models\SurveyPages::factory(2000)->create();
+            \App\Models\User::factory(50)->create();
         }
     }
