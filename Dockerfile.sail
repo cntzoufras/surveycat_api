@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM ubuntu:22.04
 
 LABEL maintainer="Konstantinos Ntzoufras"
 

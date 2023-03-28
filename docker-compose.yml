@@ -3,7 +3,7 @@ services:
   laravel.test:
     build:
       context: .
-      dockerfile: Dockerfile.prod.sail
+      dockerfile: Dockerfile.sail
       args:
         WWWGROUP: '${WWWGROUP}'
     image: sail-8.2/surveycat-api
@@ -53,4 +53,6 @@ networks:
     driver: bridge
 volumes:
   sail-pgsql:
+    driver: local
+  xdebug-log:
     driver: local
