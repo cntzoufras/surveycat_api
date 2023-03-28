@@ -2,12 +2,12 @@ name: Laravel CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 env:
-  APP_ENV: production
+  APP_ENV: local
   APP_KEY: ${{ secrets.APP_KEY }}
   APP_DEBUG: false
   APP_URL: https://example.com
