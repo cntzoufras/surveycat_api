@@ -5,12 +5,13 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch: # Add this line to enable manual workflow triggering
 
 env:
   APP_ENV: local
   APP_KEY: ${{ secrets.APP_KEY }}
-  APP_DEBUG: false
-  APP_URL: https://example.com
+  APP_DEBUG: true
+  APP_URL: https://localhost/api
 
   DB_CONNECTION: pgsql
   DB_HOST: localhost
