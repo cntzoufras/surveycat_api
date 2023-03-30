@@ -8,9 +8,9 @@
     use Illuminate\Support\Arr;
     
     /**
-     * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SurveyPages>
+     * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SurveyPage>
      */
-    class SurveyPagesFactory extends Factory {
+    class SurveyPageFactory extends Factory {
         
         /**
          * Define the model's default state.

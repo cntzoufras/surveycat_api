@@ -5,7 +5,7 @@
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
     
-    class SurveyPages extends Model {
+    class SurveyPage extends Model {
         
         use HasFactory;
         

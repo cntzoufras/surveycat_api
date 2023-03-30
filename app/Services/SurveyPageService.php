@@ -2,13 +2,13 @@
     
     namespace App\Services;
     
-    use App\Repositories\SurveyPagesRepository;
+    use App\Repositories\SurveyPageRepository;
     
-    class SurveyPagesService {
+    class SurveyPageService {
         
         protected $survey_pages_repository;
         
-        public function __construct(SurveyPagesRepository $survey_pages_repository) {
+        public function __construct(SurveyPageRepository $survey_pages_repository) {
             $this->survey_pages_repository = $survey_pages_repository;
         }
         

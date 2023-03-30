@@ -5,16 +5,16 @@
     use App\Http\Requests\StoreSurveyPagesRequest;
     use App\Http\Requests\UpdateSurveyPagesRequest;
     use App\Http\Resources\SurveyPagesResource;
-    use App\Models\SurveyPages;
-    use App\Services\SurveyPagesService;
+    use App\Models\SurveyPage;
+    use App\Services\SurveyPageService;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Validator;
     
-    class SurveyPagesController extends Controller {
+    class SurveyPageController extends Controller {
         
         protected $survey_pages_service;
         
-        public function __construct(SurveyPagesService $survey_pages_service) {
+        public function __construct(SurveyPageService $survey_pages_service) {
             $this->survey_pages_service = $survey_pages_service;
         }
         
@@ -49,14 +49,14 @@
         /**
          * Show the form for editing the specified resource.
          */
-        public function edit(SurveyPages $surveyPages) {
+        public function edit(SurveyPage $surveyPages) {
             //
         }
         
         /**
          * Update the specified resource in storage.
          */
-        public function update(SurveyPages $surveyPages, UpdateSurveyPagesRequest $request,) {
+        public function update(SurveyPage $surveyPages, UpdateSurveyPagesRequest $request,) {
             $validated = $request->validate(['pages' => 'string']);
             return SurveyPagesResource::make($this->survey_pages_service->update($surveyPages, $request->validated()));
         }
@@ -64,7 +64,7 @@
         /**
          * Remove the specified resource from storage.
          */
-        public function destroy(SurveyPages $surveyPages) {
+        public function destroy(SurveyPage $surveyPages) {
             //
         }
     }
