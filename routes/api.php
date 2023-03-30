@@ -1,7 +1,7 @@
 <?php
     
     use App\Http\Controllers\Auth\AuthenticationController;
-    use App\Http\Controllers\SurveyPagesController;
+    use App\Http\Controllers\SurveyPageController;
     use App\Http\Resources\PostCollection;
     use App\Http\Controllers\SurveyTemplateController;
     use App\Http\Controllers\QuestionController;
@@ -52,9 +52,9 @@
         Route::get('/{id}', [QuestionController::class, 'show']);
     });
     Route::prefix('survey-pages')->group(function () {
-        Route::get('/', [SurveyPagesController::class, 'index']);
-        Route::post('/', [SurveyPagesController::class, 'store']);
-        Route::get('/{id}', [SurveyPagesController::class, 'show']);
+        Route::get('/', [SurveyPageController::class, 'index']);
+        Route::post('/', [SurveyPageController::class, 'store']);
+        Route::get('/{id}', [SurveyPageController::class, 'show']);
     });
     Route::get('/posts-collection', function () {
         return new PostCollection(Post::paginate());
