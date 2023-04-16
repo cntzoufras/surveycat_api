@@ -4,13 +4,13 @@
     
     use Illuminate\Foundation\Http\FormRequest;
     
-    class StoreSurveyPagesRequest extends FormRequest {
+    class UpdateSurveySubmissionRequest extends FormRequest {
         
         /**
          * Determine if the user is authorized to make this request.
          */
         public function authorize(): bool {
-            return true;
+            return false;
         }
         
         /**
@@ -20,12 +20,7 @@
          */
         public function rules(): array {
             return [
-                'name'        => 'required|string|max:255',
-                'description' => 'required|string',
-                'uv'          => 'required|integer',
-                'pv'          => 'required|integer',
-                'amt'         => 'required|integer',
-                'pages'       => 'required|string',
+                //
             ];
         }
     }

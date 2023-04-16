@@ -4,7 +4,7 @@
     
     use Illuminate\Http\Resources\Json\JsonResource;
     
-    class SurveyPagesResource extends JsonResource {
+    class SurveySubmissionsResource extends JsonResource {
         
         /**
          * The "data" wrapper that should be applied.

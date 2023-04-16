@@ -13,7 +13,8 @@
             Schema::create('surveys', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
-                $table->string('survey_category_id');
+                $table->text('description');
+                $table->integer('survey_category_id');
                 $table->integer('survey_format_id');
                 $table->timestamps();
             });

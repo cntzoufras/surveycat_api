@@ -13,7 +13,7 @@
             return $this->belongsToMany(SurveyStyle::class);
         }
         
-        public function survey_pages() {
-            return $this->belongsToMany(SurveyPage::class);
+        public function survey_submissions() {
+            return $this->hasMany(SurveySubmission::class);
         }
     }

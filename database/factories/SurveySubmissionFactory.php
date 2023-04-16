@@ -10,7 +10,7 @@
     /**
      * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SurveyPage>
      */
-    class SurveyPageFactory extends Factory {
+    class SurveySubmissionFactory extends Factory {
         
         /**
          * Define the model's default state.

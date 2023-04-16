@@ -12,10 +12,6 @@
         public function up(): void {
             Schema::create('survey_pages', function (Blueprint $table) {
                 $table->id();
-                $table->enum('pages', ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F'])->nullable();
-                $table->integer('uv');
-                $table->integer('pv');
-                $table->integer('amt');
                 $table->timestamps();
             });
         }
