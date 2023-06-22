@@ -10,9 +10,11 @@
          * Run the migrations.
          */
         public function up(): void {
-            Schema::create('survey_pages', function (Blueprint $table) {
+            Schema::create('survey_question_types', function (Blueprint $table) {
                 $table->id();
-                $table->timestamps();
+                $table->string('title');
+                $table->string('type')->default('text');
+                $table->foreignUuid('survey_question_id')->references('id')->on('survey_questions');
             });
         }
         
@@ -20,6 +22,6 @@
          * Reverse the migrations.
          */
         public function down(): void {
-            Schema::dropIfExists('survey_pages');
+            Schema::dropIfExists('survey_question_types');
         }
     };

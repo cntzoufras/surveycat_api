@@ -10,15 +10,10 @@
          * Run the migrations.
          */
         public function up(): void {
-            Schema::create('questions', function (Blueprint $table) {
+            Schema::create('survey_categories', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
-                $table->ulid('format_id')->nullable();
-                $table->ulid('is_public')->nullable();
-                $table->ulid('style_id')->nullable();
-                $table->string('status')->nullable();
-                $table->jsonb('question_tags')->nullable();
-                $table->bigInteger('views')->nullable();
+                $table->string('description');
                 $table->timestamps();
             });
         }
@@ -27,6 +22,6 @@
          * Reverse the migrations.
          */
         public function down(): void {
-            Schema::dropIfExists('questions');
+            Schema::dropIfExists('survey_categories');
         }
     };

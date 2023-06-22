@@ -10,13 +10,13 @@
          * Run the migrations.
          */
         public function up(): void {
-            Schema::create('surveys', function (Blueprint $table) {
+            Schema::create('survey_user_statuses', function (Blueprint $table) {
                 $table->id();
-                $table->string('name');
-                $table->text('description');
-                $table->integer('survey_category_id');
-                $table->integer('survey_format_id');
+                $table->uuid('user_id');
+                $table->string('title')->index();
+                $table->string('description');
                 $table->timestamps();
+                $table->foreign('user_id')->references('id')->on('users');
             });
         }
         
@@ -24,6 +24,6 @@
          * Reverse the migrations.
          */
         public function down(): void {
-            Schema::dropIfExists('surveys');
+            Schema::dropIfExists('survey_user_statuses');
         }
     };
