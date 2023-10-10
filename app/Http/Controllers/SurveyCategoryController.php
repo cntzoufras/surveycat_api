@@ -8,7 +8,6 @@
     use App\Http\Requests\UpdateSurveyCategoryRequest;
     
     use App\Http\Resources\SurveyCategoryResource;
-    use App\Models\SurveyCategory;
     use App\Services\SurveyCategoryService;
     use Illuminate\Support\Facades\Validator;
     
@@ -66,7 +65,7 @@
          *
          * @return mixed
          */
-        public function destroy($id) {
+        public function delete($id) {
             return $this->survey_category_service->delete($id);
         }
     }
