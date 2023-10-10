@@ -39,6 +39,7 @@ RUN apt-get update \
     && apt-get install -y yarn \
     && apt-get install -y mysql-client \
     && apt-get install -y postgresql-client-$POSTGRES_VERSION \
+    && apt-get install -y postgresql-contrib \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -54,6 +55,11 @@ RUN dos2unix /usr/local/bin/start-container && chmod +x /usr/local/bin/start-con
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 COPY php.ini /etc/php/8.2/cli/conf.d/99-sail.ini
+
+# Enable the uuid-ossp extension
+# RUN echo "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";" >> /docker-entrypoint-initdb.d/init.sql
+
+# Copy your SQL migration files to the Docker container
 
 # Install Xdebug
 
