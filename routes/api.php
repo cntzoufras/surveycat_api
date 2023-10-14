@@ -1,6 +1,7 @@
 <?php
     
     use App\Http\Controllers\Auth\AuthenticationController;
+    use App\Http\Controllers\SurveyCategoryController;
     use App\Http\Controllers\SurveySubmissionController;
     use App\Http\Resources\PostCollection;
     use App\Http\Controllers\SurveyTemplateController;
@@ -20,6 +21,9 @@
     | is assigned the "api" middleware group. Enjoy building your API!
     |
     */
+    Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+        return $request->user();
+    });
     
     Route::controller(AuthenticationController::class)->group(function () {
         
@@ -41,10 +45,16 @@
     Route::get('/posts-less-than-id-ten', function () {
         return new PostResource(Post::query()->where('id', '<', 10));
     });
-    Route::prefix('SurveyTemplates')->group(function () {
+    Route::prefix('survey-templates')->group(function () {
         Route::get('/', [SurveyTemplateController::class, 'index']);
         Route::post('/', [SurveyTemplateController::class, 'store']);
         Route::get('/{id}', [SurveyTemplateController::class, 'show']);
+    });
+    Route::prefix('survey-categories')->group(function () {
+        Route::get('/', [SurveyCategoryController::class, 'index']);
+        Route::post('/', [SurveyCategoryController::class, 'store']);
+        Route::get('/{id}', [SurveyCategoryController::class, 'show']);
+        Route::delete('/{id}', [SurveyCategoryController::class, 'delete']);
     });
     Route::prefix('questions')->group(function () {
         Route::get('/', [QuestionController::class, 'index']);
