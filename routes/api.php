@@ -3,11 +3,8 @@
     use App\Http\Controllers\Auth\AuthenticationController;
     use App\Http\Controllers\SurveyCategoryController;
     use App\Http\Controllers\SurveySubmissionController;
-    use App\Http\Resources\PostCollection;
     use App\Http\Controllers\SurveyTemplateController;
     use App\Http\Controllers\QuestionController;
-    use App\Http\Resources\PostResource;
-    use App\Models\Post;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
     
