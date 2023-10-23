@@ -2,6 +2,7 @@
     
     namespace Database\Factories;
     
+    use App\Models\User;
     use Illuminate\Database\Eloquent\Factories\Factory;
     
     /**
@@ -122,9 +123,11 @@
             
             $index = $this->faker->unique()->numberBetween(0, count($titles) - 1);
             
+            $user = User::query()->first();
             return [
                 'title'       => $titles[$index],
                 'description' => $descriptions[$index],
+                'created_by'  => $user->id,
             ];
         }
     }

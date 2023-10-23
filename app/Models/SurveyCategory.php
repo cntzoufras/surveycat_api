@@ -18,6 +18,10 @@
         
         }
         
+        public function user(): BelongsTo {
+            return $this->belongsTo(User::class);
+        }
+        
         public function survey(): BelongsTo {
             return $this->belongsTo(Survey::class);
         }
