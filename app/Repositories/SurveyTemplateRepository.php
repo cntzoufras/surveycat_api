@@ -10,7 +10,7 @@
         
         public function index(array $params) {
             try {
-                $limit = isset($params['limit']) ? $params['limit'] : 10;
+                $limit = $params['limit'] ?? 10;
                 return DB::transaction(function () use ($limit) {
                     $survey_templates = SurveyTemplate::paginate($limit);
                     return $survey_templates;

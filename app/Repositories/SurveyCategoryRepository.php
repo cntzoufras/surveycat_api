@@ -11,7 +11,7 @@
         public function index(array $params) {
             
             try {
-                $limit = isset($params['limit']) ? $params['limit'] : 10;
+                $limit = $params['limit'] ?? 1000;
                 return DB::transaction(function () use ($limit) {
                     return SurveyCategory::query()->paginate($limit);
                 });

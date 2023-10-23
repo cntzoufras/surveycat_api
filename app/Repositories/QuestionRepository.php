@@ -2,7 +2,7 @@
     
     namespace App\Repositories;
     
-    use App\Models\Question;
+    use App\Models\SurveyQuestion;
     
     use Illuminate\Support\Facades\DB;
     
@@ -10,11 +10,9 @@
         
         public function index(array $params) {
             try {
-                $limit = isset($params['limit']) ? $params['limit'] : 10;
+                $limit = $params['limit'] ?? 10;
                 return DB::transaction(function () use ($limit) {
-                    
-                    //                    $questions = Question::query()->first();
-                    return Question::query()->paginate($limit);
+                    return SurveyQuestion::query()->paginate($limit);
                 });
             } catch (\Exception $e) {
                 throw new \Exception($e, 500);
@@ -22,17 +20,17 @@
         }
         
         public function resolveModel($question) {
-            if ($question instanceof Question) {
+            if ($question instanceof SurveyQuestion) {
                 return $question;
             }
-            return Question::query()->findOrFail($question);
+            return SurveyQuestion::query()->findOrFail($question);
         }
         
         public function getIfExist($question) {
-            return Question::query()->find($question);
+            return SurveyQuestion::query()->find($question);
         }
         
-        public function update(Question $question, array $params) {
+        public function update(SurveyQuestion $question, array $params) {
             return DB::transaction(function () use ($params, $question) {
                 $question->fill($params);
                 $question->save();
@@ -40,16 +38,16 @@
             });
         }
         
-        public function store(array $params): Question {
+        public function store(array $params): SurveyQuestion {
             return DB::transaction(function () use ($params) {
-                $question = new Question();
+                $question = new SurveyQuestion();
                 $question->fill($params);
                 $question->save();
                 return $question;
             });
         }
         
-        public function delete(Question $question) {
+        public function delete(SurveyQuestion $question) {
             return DB::transaction(function () use ($question) {
                 $question->delete();
                 return $question;
