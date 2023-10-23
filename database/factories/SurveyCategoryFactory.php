@@ -119,7 +119,8 @@
                 'Uncover hidden gems and urban wonders in bustling cities around the globe.',
                 'Explore the world of vintage treasures, from retro memorabilia to antique finds.',
             ];
-            $index = $this->faker->numberBetween(0, count($titles) - 1);
+            
+            $index = $this->faker->unique()->numberBetween(0, count($titles) - 1);
             
             return [
                 'title'       => $titles[$index],
