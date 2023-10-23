@@ -19,6 +19,6 @@
             }
             
             // Assert that the data has been stored in the database
-            $this->assertEquals(100, DgB::table('your_table')->count());
+            $this->assertEquals(100, DB::table('your_table')->count());
         }
     }
