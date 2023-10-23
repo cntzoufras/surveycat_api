@@ -5,7 +5,9 @@
     use App\Models\SurveyQuestion;
     use Illuminate\Database\Migrations\Migration;
     use Illuminate\Database\Schema\Blueprint;
+    use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Schema;
+    use Illuminate\Support\Str;
     
     return new class extends Migration {
         
@@ -14,13 +16,13 @@
          */
         public function up(): void {
             Schema::create('survey_questions', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
-                $table->boolean('is_required');
+                $table->uuid('id')->primary()->index();
+                $table->boolean('is_required')->nullable();
                 $table->string('title');
                 $table->boolean('is_question_bank')->nullable()->default(false);
                 $table->jsonb('question_tags')->nullable();
                 $table->timestamps();
-                $table->foreignIdFor(SurveyPage::class);
+                $table->foreignIdFor(SurveyPage::class)->nullable();
             });
         }
         

@@ -6,6 +6,7 @@
     use Illuminate\Database\Migrations\Migration;
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
+    use Illuminate\Support\Str;
     
     return new class extends Migration {
         
@@ -14,7 +15,7 @@
          */
         public function up(): void {
             Schema::create('surveys', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
+                $table->uuid('id')->primary()->index();
                 $table->string('title');
                 $table->string('page_title');
                 $table->boolean('show_page_title')->default(true);
@@ -28,7 +29,6 @@
                 $table->timestamps();
                 $table->foreignId('survey_category_id')->constrained('survey_categories');
                 $table->foreignId('survey_status_id')->constrained('survey_statuses');
-                $table->foreignId('survey_style_id')->constrained('survey_styles');
             });
         }
         
@@ -36,6 +36,11 @@
          * Reverse the migrations.
          */
         public function down(): void {
+            Schema::table('surveys', function (Blueprint $table) {
+//                $table->dropForeign('survey_category_id');
+//                $table->dropForeign('survey_status_id');
+            });
+            
             Schema::dropIfExists('surveys');
         }
     };

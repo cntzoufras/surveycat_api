@@ -14,13 +14,11 @@
         public function up() {
             Schema::create('survey_templates', function (Blueprint $table) {
                 $table->id();
-                $table->unsignedBigInteger('survey_category_Id');
                 $table->string('title');
                 $table->text('description');
                 $table->string('image')->nullable();
                 $table->timestamps();
-                $table->foreignUuId('survey_id')->references('id')->on('surveys')->onDelete('cascade');
-                $table->foreignId('survey_category_id')->constrained('survey_categories')->onDelete('cascade');
+                $table->foreignUuId('survey_id')->references('id')->on('surveys');
             });
         }
         

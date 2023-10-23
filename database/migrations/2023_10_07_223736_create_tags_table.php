@@ -10,11 +10,10 @@
          * Run the migrations.
          */
         public function up(): void {
-            Schema::create('survey_categories', function (Blueprint $table) {
-                $table->id()->index();
-                $table->string('title');
-                $table->string('description');
-                $table->string('created_by');
+            Schema::create('tags', function (Blueprint $table) {
+                $table->id();
+                $table->string('content');
+                
                 $table->timestamps();
             });
         }
@@ -23,6 +22,6 @@
          * Reverse the migrations.
          */
         public function down(): void {
-            Schema::dropIfExists('survey_categories');
+            Schema::dropIfExists('tags');
         }
     };
