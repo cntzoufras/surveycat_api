@@ -5,7 +5,11 @@
     use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Database\Eloquent\Model;
     
-    class Post extends Model {
+    class VariablePalettes extends Model {
         
         use HasFactory;
+        
+        protected $guarded = ['id'];
+        
+        protected $fillable = [''];
     }

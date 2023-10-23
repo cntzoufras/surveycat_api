@@ -11,11 +11,8 @@
         
         use HasFactory;
         
-        protected $table = 'survey_categories';
-        
+        protected $guarded  = [''];
         protected $fillable = ['title', 'description'];
-        
-        protected $guarded = [''];
         
         public function index() {
         

@@ -9,6 +9,8 @@
         
         use HasFactory;
         
+        protected $guarded = ['id'];
+        
         protected $fillable = ['title', 'format_id', 'is_public', 'style_id', 'status', 'question_tags',
             'views',
         ];
