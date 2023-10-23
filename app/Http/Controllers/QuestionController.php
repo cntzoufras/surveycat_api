@@ -2,6 +2,7 @@
     
     namespace App\Http\Controllers;
     
+    use App\Http\Requests\StoreSurveyQuestionRequest;
     use App\Services\QuestionService;
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Resources\Json\JsonResource;
@@ -39,7 +40,7 @@
             }
         }
         
-        public function store(Request $request) {
+        public function store(StoreSurveyQuestionRequest $request) {
             $validated = Validator::make($request->all(), [
                 'format_id'     => 'integer',
                 'is_public'     => 'integer',
@@ -49,7 +50,6 @@
                     'required',
                     'json',
                 ],
-                'views'         => 'integer',
             ]);
             $errors = $validated->errors();
             if ($validated->fails()) {
@@ -68,7 +68,7 @@
             return $this->question_service->update($setting_id, $validated);
         }
         
-        public function destroy($setting_id) {
+        public function delete($setting_id) {
             return $this->question_service->delete($setting_id);
         }
     }

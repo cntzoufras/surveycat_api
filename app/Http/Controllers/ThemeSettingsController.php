@@ -2,11 +2,11 @@
     
     namespace App\Http\Controllers;
     
-    use App\Http\Requests\StoreSurveyRequest;
-    use App\Http\Requests\UpdateSurveyRequest;
-    use App\Models\Survey;
+    use App\Http\Requests\StoreThemeSettingsRequest;
+    use App\Http\Requests\UpdateThemeSettingsRequest;
+    use App\Models\ThemeSettings;
     
-    class SurveyController extends Controller {
+    class ThemeSettingsController extends Controller {
         
         /**
          * Display a listing of the resource.
@@ -25,35 +25,35 @@
         /**
          * Store a newly created resource in storage.
          */
-        public function store(StoreSurveyRequest $request) {
+        public function store(StoreThemeSettingsRequest $request) {
             //
         }
         
         /**
          * Display the specified resource.
          */
-        public function show(Survey $survey) {
+        public function show(ThemeSettings $theme_settings) {
             //
         }
         
         /**
          * Show the form for editing the specified resource.
          */
-        public function edit(Survey $survey) {
+        public function edit(ThemeSettings $theme_settings) {
             //
         }
         
         /**
          * Update the specified resource in storage.
          */
-        public function update(UpdateSurveyRequest $request, Survey $survey) {
+        public function update(UpdateThemeSettingsRequest $request, ThemeSettings $theme_settings) {
             //
         }
         
         /**
          * Remove the specified resource from storage.
          */
-        public function destroy(Survey $survey) {
+        public function destroy(ThemeSettings $theme_settings) {
             //
         }
     }

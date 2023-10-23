@@ -2,11 +2,10 @@
     
     namespace App\Http\Controllers;
     
-    use App\Http\Requests\StoreSurveyRequest;
-    use App\Http\Requests\UpdateSurveyRequest;
-    use App\Models\Survey;
+    use App\Models\QuestionOption;
+    use Illuminate\Http\Request;
     
-    class SurveyController extends Controller {
+    class SurveyQuestionOptionController extends Controller {
         
         /**
          * Display a listing of the resource.
@@ -25,35 +24,35 @@
         /**
          * Store a newly created resource in storage.
          */
-        public function store(StoreSurveyRequest $request) {
+        public function store(Request $request) {
             //
         }
         
         /**
          * Display the specified resource.
          */
-        public function show(Survey $survey) {
+        public function show(QuestionOption $questionOption) {
             //
         }
         
         /**
          * Show the form for editing the specified resource.
          */
-        public function edit(Survey $survey) {
+        public function edit(QuestionOption $questionOption) {
             //
         }
         
         /**
          * Update the specified resource in storage.
          */
-        public function update(UpdateSurveyRequest $request, Survey $survey) {
+        public function update(Request $request, QuestionOption $questionOption) {
             //
         }
         
         /**
          * Remove the specified resource from storage.
          */
-        public function destroy(Survey $survey) {
+        public function destroy(QuestionOption $questionOption) {
             //
         }
     }

@@ -25,7 +25,7 @@
          */
         public function login(Request $request) {
             $this->validate($request, [
-                'username' => 'required',
+                'email'    => 'required',
                 'password' => 'required',
             ]);
             $party = $this->auth->authenticateByCredentials(
@@ -61,7 +61,7 @@
             $this->validate($request, [
                 'refresh_token' => 'required|string',
             ]);
-            $party = $this->auth->getPartyFromRefreshToken($request->input('refresh_token'));
+            $party = $this->auth->getUserFromRefreshToken($request->input('refresh_token'));
             $token = $this->auth->getToken($party, true);
             
             return response()->json([

@@ -29,14 +29,15 @@
         /**
          * Store a newly created resource in storage.
          */
-        public function store(StoreSurveyCategoryRequest $request) {
+        public function store(StoreSurveyCategoryRequest $request): \App\Models\SurveyCategory {
             return $this->survey_category_service->store($request->validated());
         }
         
         /**
          * Display the specified resource.
          */
-        public function show($id) {
+        public function show($id): SurveyCategoryResource|\Illuminate\Http\JsonResponse {
+            
             $validated = Validator::make(['id' => $id], [
                 'id' => 'required|integer|gt:0|exists:survey_categories,id',
             ]);
@@ -51,7 +52,7 @@
         /**
          * Show the form for editing the specified resource.
          */
-        public function update(UpdateSurveyCategoryRequest $request, $id) {
+        public function update(UpdateSurveyCategoryRequest $request, $id): \Illuminate\Http\JsonResponse {
             $survey_category = $this->survey_category_service->update($id, $request->validated());
             return response()->json(['msg'             => 'success',
                                      'survey_category' => $survey_category,
@@ -65,7 +66,7 @@
          *
          * @return mixed
          */
-        public function delete($id) {
+        public function delete($id): mixed {
             return $this->survey_category_service->delete($id);
         }
     }
