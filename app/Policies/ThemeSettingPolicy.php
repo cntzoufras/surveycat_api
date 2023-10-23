@@ -2,11 +2,11 @@
     
     namespace App\Policies;
     
-    use App\Models\SurveyQuestionType;
+    use App\Models\ThemeSetting;
     use App\Models\User;
     use Illuminate\Auth\Access\Response;
     
-    class QuestionTypePolicy {
+    class ThemeSettingPolicy {
         
         /**
          * Determine whether the user can view any models.
@@ -18,7 +18,7 @@
         /**
          * Determine whether the user can view the model.
          */
-        public function view(User $user, SurveyQuestionType $questionType): bool {
+        public function view(User $user, ThemeSetting $surveyStyle): bool {
             //
         }
         
@@ -32,28 +32,28 @@
         /**
          * Determine whether the user can update the model.
          */
-        public function update(User $user, SurveyQuestionType $questionType): bool {
+        public function update(User $user, ThemeSetting $surveyStyle): bool {
             //
         }
         
         /**
          * Determine whether the user can delete the model.
          */
-        public function delete(User $user, SurveyQuestionType $questionType): bool {
+        public function delete(User $user, ThemeSetting $surveyStyle): bool {
             //
         }
         
         /**
          * Determine whether the user can restore the model.
          */
-        public function restore(User $user, SurveyQuestionType $questionType): bool {
+        public function restore(User $user, ThemeSetting $surveyStyle): bool {
             //
         }
         
         /**
          * Determine whether the user can permanently delete the model.
          */
-        public function forceDelete(User $user, SurveyQuestionType $questionType): bool {
+        public function forceDelete(User $user, ThemeSetting $surveyStyle): bool {
             //
         }
     }
