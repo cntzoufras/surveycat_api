@@ -2,17 +2,22 @@
     
     namespace App\Services;
     
+    use AllowDynamicProperties;
     use App\Repositories\SurveySubmissionRepository;
+    use Illuminate\Contracts\Auth\Access\Authorizable;
     
-    class SurveySubmissionService {
+    #[AllowDynamicProperties] class SurveySubmissionService {
         
         protected $survey_submissions_repository;
         
-        public function __construct(SurveySubmissionRepository $survey_submissions_repository) {
+        public function __construct(SurveySubmissionRepository $survey_submissions_repository, Authorizable $authorizable) {
+            $this->authorizable = $authorizable;
             $this->survey_submissions_repository = $survey_submissions_repository;
         }
         
         public function index(array $params) {
+            $this->authorizable->authorize('index', $params);
+            
             return $this->survey_submissions_repository->index($params);
         }
         

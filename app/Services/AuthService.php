@@ -1,21 +1,20 @@
 <?php
-
-//    namespace App\Services;
     
+    namespace App\Services;
+    
+    use App\Models\User;
     use App\Models\UserRefreshToken;
-    use App\Models\Members\Member;
-    use App\Models\Members\MemberUser;
-    use App\Models\Members\RefreshToken;
-    use App\Repositories\Members\MemberRepository;
-    use App\Repositories\SavedTableRepository;
-    use App\Notifications\MemberPasswordReset;
+    
+    use App\Models\Users\RefreshToken;
     use App\Repositories\UserRepository;
+    use App\Repositories\SavedTableRepository;
+    use App\Notifications\UserPasswordReset;
     use Carbon\Carbon;
     use Illuminate\Auth\AuthenticationException;
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Hash;
     use Illuminate\Support\Str;
-    use Members\Enums\MemberType;
+    use Users\Enums\UserType;
     use Utils\RegexUtils;
     
     class AuthService {
@@ -36,32 +35,32 @@
          * @param string $username
          * @param string $password
          *
-         * @return \App\Models\Members\Member|null
+         * @return \App\Models\User|null
          */
-        public function authenticateByCredentials(string $username, string $password): ?Member {
+        public function authenticateByCredentials(string $username, string $password): ?User {
             //
             return null;
         }
         
         /**
-         * @param \App\Models\Members\Member $member
+         * @param \App\Models\User $user
          * @param bool $sneaky
          *
          * @return string
          * @throws \Illuminate\Contracts\Container\BindingResolutionException
          */
-        public function getToken(Member $member, bool $sneaky = false): string {
-            $mailService = app()->make(MailingListService::class);
-            if (!$sneaky && $member->exists) $member->user->touchLogin($mailService);
+        public function getToken(User $user, bool $sneaky = false): string {
+//            $mailService = app()->make(MailingListService::class);
+//            if (!$sneaky && $user->exists) $user->user->touchLogin($mailService);
             
             $scAdminUuid = $this->context->superAdmin()->uuid;
-            if ($member->isSurveycatAdmin) {
-                return is_null($member->isSurveyCatAdmin)
-                    ? $this->createSurveycatAdminToken($member->id, $scAdminUuid)
-                    : $this->createSurveycatUserToken($member->scAdmId, $scAdminUuid);
+            if ($user->isSurveycatAdmin) {
+                return is_null($user->isSurveyCatAdmin)
+                    ? $this->createSurveycatAdminToken($user->id, $scAdminUuid)
+                    : $this->createSurveycatUserToken($user->scAdmId, $scAdminUuid);
             }
             
-            return $this->createMemberToken($member->id, $scAdminUuid);
+            return $this->createUserToken($user->id, $scAdminUuid);
         }
         
         /**
@@ -69,11 +68,11 @@
          *
          * @param string $refreshToken
          *
-         * @return Member
+         * @return User
          * @throws \Illuminate\Auth\AuthenticationException
          * @throws \Throwable
          */
-        public function getMemberFromRefreshToken(string $refreshToken): Member {
+        public function getUserFromRefreshToken(string $refreshToken): User {
             $jti = $this->getTokenId($refreshToken);
             /** @var RefreshToken $matched */
             $matched = RefreshToken::query()->where([
@@ -87,9 +86,9 @@
                 'active'              => true,
             ])->first();
             
-            $isMember = $matched != null && !$matched->isExpired();
+            $isUser = $matched != null && !$matched->isExpired();
             $isSurveycatUser = $userMatched != null && !$userMatched->isExpired();
-            if (!$isMember && !$isSurveycatUser) {
+            if (!$isUser && !$isSurveycatUser) {
                 throw new AuthenticationException(trans('auth.failed'));
             }
             
@@ -97,19 +96,19 @@
             $token->active = false;
             $token->save();
             
-            return $isMember ? $token->member : $this->members->getSurveycatMember($token->user);
+            return $isUser ? $token->member : $this->members->getSurveycatUser($token->user);
         }
         
         /**
-         * @param \App\Models\Members\Member $member
+         * @param \App\Models\User $user
          * @param $accessToken
          *
          * @return string
          */
-        public function getRefreshToken(Member $member, $accessToken): string {
-            $token = $member->id == null ?
-                new UserRefreshToken(['user_id' => $member->oceanUserId]) :
-                new RefreshToken(['member_id' => $member->id]);
+        public function getRefreshToken(User $user, $accessToken): string {
+            $token = $user->id == null ?
+                new UserRefreshToken(['user_id' => $user->oceanUserId]) :
+                new RefreshToken(['member_id' => $user->id]);
             
             $jti = $this->getTokenId($accessToken);
             
@@ -117,36 +116,35 @@
             $token->jti = $jti;
             $token->save();
             return $this->createRefreshToken(
-                $member->id,
+                $user->id,
                 $this->context->superAdmin()->uuid,
                 $token->jti
             );
         }
         
         /**
-         * @param \App\Models\Members\Member $member
+         * @param \App\Models\User $user
          * @param $username
          * @param $password
          *
-         * @return \App\Models\Members\Member
+         * @return \App\Models\User
          */
-        public function register(Member $member, $username, $password) {
-            if (!$member->getNeedsCredentialsAttribute()) {
+        public function register(User $user, $username, $password) {
+            if (!$user->getNeedsCredentialsAttribute()) {
                 throw new InvalidOperationException('member_already_registered');
             }
             $this->validateUsername($username);
             $this->validateRegexPassword($password);
             
-            $user = $member->user ?? new MemberUser();
-            $user->member_id = $member->id;
+            $user = $user->user ?? new UserUser();
+            $user->member_id = $user->id;
             $user->username = $username;
             $user->password = Hash::make($password);
-            $member->can_login = true;
-            DB::transaction(function () use ($user, $member) {
-                $member->save();
+            $user->can_login = true;
+            DB::transaction(function () use ($user) {
                 $user->save();
             });
-            return $member;
+            return $user;
         }
         
         /**
@@ -155,18 +153,18 @@
          * @return bool
          */
         public function requestPasswordReset($username) {
-            $member = $this->members->findByUsername($username);
-            if ($member == null || !$member->can_login || $member->is_archived || $member->user == null) {
+            $user = $this->members->findByUsername($username);
+            if ($user == null || !$user->can_login || $user->is_archived || $user->user == null) {
                 return false;
             }
             
-            $user = $member->user;
+            $user = $user->user;
             $user->password_reset_token = Str::random(64);
             $user->password_reset_at = Carbon::now();
             
-            DB::transaction(function () use ($user, $member) {
+            DB::transaction(function () use ($user) {
                 $user->save();
-                $member->notify(new MemberPasswordReset($this->context->superAdmin(), $member));
+                $user->notify(new UserPasswordReset($this->context->superAdmin(), $user));
             });
             
             return true;
@@ -179,11 +177,11 @@
          * @return void
          */
         public function resetPassword($token, $password) {
-            $member = $this->members->findByResetToken($token);
-            if ($member == null || !$member->can_login || $member->is_archived || $member->user == null) {
+            $user = $this->members->findByResetToken($token);
+            if ($user == null || !$user->can_login || $user->is_archived || $user->user == null) {
                 throw new InvalidOperationException('password_reset_invalid');
             }
-            $user = $member->user;
+            $user = $user->user;
             if ($user->isPasswordResetExpired()) {
                 throw new InvalidOperationException('password_reset_expired');
             }
@@ -196,13 +194,13 @@
         }
         
         /**
-         * @param \App\Models\Members\Member $member
+         * @param \App\Models\User $user
          * @param array $params
          *
          * @return void
          */
-        public function changeCredentials(Member $member, array $params) {
-            $user = $member->user;
+        public function changeCredentials(User $user, array $params) {
+            $user = $user->user;
             if (isset($params['username'])) {
                 $this->validateUsername($params['username'], $user);
                 $user->username = $params['username'];
@@ -215,21 +213,21 @@
         }
         
         /**
-         * @param \App\Models\Members\Member $member
+         * @param \App\Models\User $user
          *
          * @return void
          */
-        public function revokeAccess(Member $member) {
-            if (!$member->can_login) {
+        public function revokeAccess(User $user) {
+            if (!$user->can_login) {
                 throw new InvalidOperationException('member_cannot_login');
             }
-            $member->can_login = false;
-            $member->settings = null;
+            $user->can_login = false;
+            $user->settings = null;
             
-            DB::transaction(function () use ($member) {
-                $member->save();
+            DB::transaction(function () use ($user) {
+                $user->save();
                 
-                $member->user()->update([
+                $user->user()->update([
                     'username' => null,
                     'password' => null,
                 ]);
@@ -255,9 +253,9 @@
         private function validateUsername($username, $existing_user = null) {
             if (!is_null($existing_user) && $username == $existing_user->username) return;
             
-            $exists = Member::query()
-                            ->where('username', $username)
-                            ->exists();
+            $exists = User::query()
+                          ->where('username', $username)
+                          ->exists();
             if ($exists) {
                 throw new InvalidOperationException("username_exists");
             }
