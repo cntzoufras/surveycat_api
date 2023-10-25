@@ -11,7 +11,7 @@
         
         public $timestamps = false;
         
-        protected $guarded = ['id'];
+        protected $guarded = ['id', 'title', 'description'];
         
-        protected $fillable = ['title', 'description'];
+        protected $fillable = [''];
     }
