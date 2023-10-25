@@ -20,7 +20,6 @@
                 $table->timestamps();
                 $table->foreignUuId('survey_id')->references('id')->on('surveys')->onDelete('cascade');
                 $table->foreignUuid('survey_respondent_id')->references('id')->on('survey_respondents');
-                $table->foreignUuid('user_id')->references('id')->on('users');
             });
         }
         
