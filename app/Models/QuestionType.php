@@ -11,5 +11,5 @@
         
         protected $guarded = ['id'];
         
-        protected $fillable = [''];
+        protected $fillable = ['title', 'description'];
     }
