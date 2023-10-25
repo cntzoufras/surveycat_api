@@ -9,6 +9,8 @@
         
         use HasFactory;
         
+        public $timestamps = false;
+        
         protected $guarded = ['id'];
         
         protected $fillable = ['title', 'description'];

@@ -14,7 +14,6 @@
                 $table->id();
                 $table->string('title')->nullable();
                 $table->string('type');
-                $table->timestamps();
             });
         }
         
