@@ -23,8 +23,8 @@
          */
         public function down(): void {
             Schema::table('survey_categories_surveys', function (Blueprint $table) {
-                $table->dropForeign('survey_category_id');
-                $table->dropForeign('survey_id');
+                $table->dropForeign('survey_categories_surveys_survey_category_id_foreign');
+                $table->dropForeign('survey_categories_surveys_survey_id_foreign');
             });
             Schema::dropIfExists('survey_categories_surveys');
         }

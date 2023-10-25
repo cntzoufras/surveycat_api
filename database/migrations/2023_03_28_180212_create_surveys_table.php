@@ -37,10 +37,9 @@
          */
         public function down(): void {
             Schema::table('surveys', function (Blueprint $table) {
-//                $table->dropForeign('survey_category_id');
-//                $table->dropForeign('survey_status_id');
+                $table->dropForeign('surveys_survey_category_id_foreign');
+                $table->dropForeign('surveys_survey_status_id_foreign');
             });
-            
             Schema::dropIfExists('surveys');
         }
     };

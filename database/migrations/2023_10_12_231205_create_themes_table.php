@@ -17,6 +17,7 @@
                 $table->string('created_by');
                 $table->timestamps();
                 $table->foreignUuid('user_id')->constrained('users');
+                $table->foreignUuid('theme_setting_id')->constrained('theme_settings');
             });
         }
         
@@ -26,8 +27,8 @@
         public function down(): void {
             
             Schema::table('themes', function (Blueprint $table) {
-//                $table->dropForeign('theme_setting_id');
-//                $table->dropForeign('user_id');
+                $table->dropForeign('themes_theme_setting_id_foreign');
+                $table->dropForeign('themes_user_id_foreign');
             });
             Schema::dropIfExists('themes');
         }

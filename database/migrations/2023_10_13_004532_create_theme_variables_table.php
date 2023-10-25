@@ -26,7 +26,7 @@
          */
         public function down(): void {
             Schema::table('theme_variables', function (Blueprint $table) {
-//                $table->dropForeign('theme_id');
+                $table->dropForeign('theme_variables_theme_id_foreign');
             });
             Schema::dropIfExists('theme_variables');
         }
