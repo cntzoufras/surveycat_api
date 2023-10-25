@@ -17,10 +17,10 @@
         public function up(): void {
             Schema::create('survey_questions', function (Blueprint $table) {
                 $table->uuid('id')->primary()->index();
-                $table->boolean('is_required')->nullable();
                 $table->string('title');
-                $table->boolean('is_question_bank')->nullable()->default(false);
-                $table->jsonb('question_tags')->nullable();
+                $table->boolean('is_required');
+                $table->string('question_type');
+                $table->jsonb('additional_settings')->nullable();
                 $table->timestamps();
                 $table->foreignIdFor(SurveyPage::class)->nullable();
             });
