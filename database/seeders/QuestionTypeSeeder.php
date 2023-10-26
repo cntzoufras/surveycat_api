@@ -41,6 +41,6 @@
          * @param string $question_type
          */
         private function seedQuestionType(string $question_type): void {
-            QuestionType::create(['type' => $question_type]);
+            QuestionType::create(['title' => $question_type]);
         }
     }

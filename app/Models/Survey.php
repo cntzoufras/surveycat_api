@@ -8,6 +8,7 @@
     use Illuminate\Database\Eloquent\Relations\HasMany;
     use Illuminate\Database\Eloquent\Relations\HasOne;
     use App\Traits\Uuids;
+    use Illuminate\Database\Eloquent\Relations\MorphMany;
     use Illuminate\Notifications\Notifiable;
     
     class Survey extends Model {
@@ -17,8 +18,8 @@
         protected $guarded  = ['uuid'];
         protected $fillable = [''];
         
-        public function theme(): BelongsTo {
-            return $this->belongsTo(Theme::class);
+        public function theme(): hasOne {
+            return $this->hasOne(Theme::class);
         }
         
         public function survey_submissions(): HasMany {
@@ -32,5 +33,12 @@
         
         public function survey_status(): HasOne {
             return $this->hasOne(SurveyStatus::class);
+        }
+        
+        /**
+         * Get all of the post's comments.
+         */
+        public function comments(): MorphMany {
+            return $this->morphMany(Comment::class, 'commentable');
         }
     }
