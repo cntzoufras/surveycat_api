@@ -12,8 +12,8 @@
         public function up(): void {
             Schema::create('question_types', function (Blueprint $table) {
                 $table->id();
-                $table->string('title')->nullable();
-                $table->string('type');
+                $table->string('title')->index();
+                $table->string('description')->nullable();
             });
         }
         
