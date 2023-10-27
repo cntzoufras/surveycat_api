@@ -18,7 +18,6 @@
                 $table->text('description');
                 $table->string('image')->nullable();
                 $table->timestamps();
-                $table->foreignUuId('survey_id')->references('id')->on('surveys');
             });
         }
         
