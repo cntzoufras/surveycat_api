@@ -24,7 +24,6 @@
          * Reverse the migrations.
          */
         public function down(): void {
-            
             Schema::table('survey_submissions', function (Blueprint $table) {
                 $table->dropForeign('survey_submissions_survey_respondent_id_foreign');
             });
