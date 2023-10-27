@@ -12,8 +12,8 @@
         public function up(): void {
             Schema::create('survey_pages', function (Blueprint $table) {
                 $table->id();
-                $table->string('survey_page_title');
-                $table->string('survey_page_description')->nullable();
+                $table->string('title');
+                $table->string('description')->nullable();
                 $table->enum('align', ['left', 'center', 'right'])->default('left');
                 $table->unsignedInteger('sort_index')->default(0)->index();
                 $table->boolean('require_questions')->default(false);
@@ -26,6 +26,9 @@
          * Reverse the migrations.
          */
         public function down(): void {
+            Schema::table('survey_pages', function (Blueprint $table) {
+                $table->dropForeign('survey_pages_survey_id_foreign');
+            });
             Schema::dropIfExists('survey_pages');
         }
     };
