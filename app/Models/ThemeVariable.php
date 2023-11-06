@@ -9,7 +9,5 @@
         
         use HasFactory;
         
-        ;
-        
         protected $fillable = [''];
     }
