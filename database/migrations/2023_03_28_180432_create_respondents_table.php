@@ -10,12 +10,10 @@
          * Run the migrations.
          */
         public function up(): void {
-            Schema::create('survey_respondents', function (Blueprint $table) {
+            Schema::create('respondents', function (Blueprint $table) {
                 $table->uuid('id')->primary()->index();
                 $table->string('email')->nullable();
                 $table->jsonb('details');
-                $table->string('ip_address');
-                $table->string('device');
                 $table->timestamps();
             });
         }
@@ -24,6 +22,6 @@
          * Reverse the migrations.
          */
         public function down(): void {
-            Schema::dropIfExists('survey_respondents');
+            Schema::dropIfExists('respondents');
         }
     };

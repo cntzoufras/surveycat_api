@@ -2,13 +2,13 @@
     
     namespace App\Services;
     
-    use App\Repositories\SurveyRespondentRepository;
+    use App\Repositories\RespondentRepository;
     
-    class SurveyRespondentService {
+    class RespondentService {
         
-        protected SurveyRespondentRepository $survey_respondent_repository;
+        protected RespondentRepository $survey_respondent_repository;
         
-        public function __construct(SurveyRespondentRepository $survey_respondent_repository) {
+        public function __construct(RespondentRepository $survey_respondent_repository) {
             $this->survey_respondent_repository = $survey_respondent_repository;
         }
         
@@ -17,7 +17,7 @@
             return $this->survey_respondent_repository->index($params);
         }
         
-        public function store(array $params): \App\Models\SurveyRespondent {
+        public function store(array $params): \App\Models\Respondent {
             return $this->survey_respondent_repository->store($params);
         }
         
@@ -32,7 +32,7 @@
             return $this->survey_respondent_repository->delete($survey_category);
         }
         
-        public function show($params): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\App\Models\SurveyRespondent|\Illuminate\Database\Eloquent\Builder|array|null {
+        public function show($params): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\App\Models\Respondent|\Illuminate\Database\Eloquent\Builder|array|null {
             return $this->survey_respondent_repository->resolveModel($params);
         }
         

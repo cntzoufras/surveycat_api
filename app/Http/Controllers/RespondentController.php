@@ -3,17 +3,17 @@
     namespace App\Http\Controllers;
     
     use AllowDynamicProperties;
-    use App\Http\Requests\IndexSurveyRespondentRequest;
-    use App\Http\Requests\StoreSurveyRespondentRequest;
-    use App\Http\Requests\UpdateSurveyRespondentRequest;
+    use App\Http\Requests\IndexRespondentRequest;
+    use App\Http\Requests\StoreRespondentRequest;
+    use App\Http\Requests\UpdateRespondentRequest;
     
     use App\Http\Resources\SurveyRespondentResource;
-    use App\Services\SurveyRespondentService;
+    use App\Services\RespondentService;
     use Illuminate\Support\Facades\Validator;
     
-    #[AllowDynamicProperties] class SurveyRespondentController extends Controller {
+    #[AllowDynamicProperties] class RespondentController extends Controller {
         
-        public function __construct(SurveyRespondentService $survey_respondent_service) {
+        public function __construct(RespondentService $survey_respondent_service) {
             $this->survey_respondent_service = $survey_respondent_service;
         }
         
@@ -21,7 +21,7 @@
         /**
          * Display a listing of the resource.
          */
-        public function index(IndexSurveyRespondentRequest $request) {
+        public function index(IndexRespondentRequest $request) {
             $validated = $request->validated();
             
             return $this->survey_respondent_service->index($validated);
@@ -30,7 +30,7 @@
         /**
          * Store a newly created resource in storage.
          */
-        public function store(StoreSurveyRespondentRequest $request): \App\Models\SurveyRespondent {
+        public function store(StoreRespondentRequest $request): \App\Models\Respondent {
             return $this->survey_respondent_service->store($request->validated());
         }
         
@@ -53,7 +53,7 @@
         /**
          * Show the form for editing the specified resource.
          */
-        public function update(UpdateSurveyRespondentRequest $request, $id): \Illuminate\Http\JsonResponse {
+        public function update(UpdateRespondentRequest $request, $id): \Illuminate\Http\JsonResponse {
             $survey_respondent = $this->survey_respondent_service->update($id, $request->validated());
             return response()->json(['msg'             => 'success',
                                      'survey_category' => $survey_respondent,

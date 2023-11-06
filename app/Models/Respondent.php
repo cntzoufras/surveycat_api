@@ -7,7 +7,7 @@
     use Illuminate\Database\Eloquent\Relations\BelongsTo;
     use Illuminate\Database\Eloquent\Relations\HasMany;
     
-    class SurveyRespondent extends Model {
+    class Respondent extends Model {
         
         use HasFactory;
         

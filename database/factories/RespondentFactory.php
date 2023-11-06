@@ -5,9 +5,9 @@
     use Illuminate\Database\Eloquent\Factories\Factory;
     
     /**
-     * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SurveyRespondent>
+     * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Respondent>
      */
-    class SurveyRespondentFactory extends Factory {
+    class RespondentFactory extends Factory {
         
         /**
          * Define the model's default state.
