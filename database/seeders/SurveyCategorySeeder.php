@@ -12,6 +12,6 @@
          * Run the database seeds.
          */
         public function run(): void {
-            SurveyCategory::factory()->count(50)->create();
+            SurveyCategory::factory()->count(68)->create();
         }
     }
