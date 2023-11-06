@@ -10,6 +10,9 @@
      */
     class SurveyCategoryFactory extends Factory {
         
+        
+        private static int $index = 0;
+        
         /**
          * Define the model's default state.
          *
@@ -17,7 +20,26 @@
          */
         public function definition(): array {
             
-            $titles = ['Art and Culture',
+            $titles = [
+                'Survey Category',
+                'Community or volunteer feedback',
+                'Customer feedback',
+                'Concept, product, or ad testing',
+                'Brand tracking or awareness',
+                'General market research',
+                'Employee engagement',
+                'Employee performance',
+                'General employee feedback',
+                'Event registration',
+                'Event feedback',
+                'Academic research',
+                'Course evaluation',
+                'Student or parent feedback',
+                'Quiz',
+                'Other',
+                'Form or application',
+                'Vote or poll',
+                'Art and Culture',
                 'Business',
                 'Cars and Automotive',
                 'Cryptocurrency',
