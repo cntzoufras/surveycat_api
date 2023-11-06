@@ -11,7 +11,7 @@
         
         use HasFactory;
         
-        protected $guarded  = [''];
+        protected $guarded  = ['id'];
         protected $fillable = ['title', 'description'];
         
         public function index() {
