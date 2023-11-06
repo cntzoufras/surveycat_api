@@ -20,8 +20,7 @@
          */
         public function rules(): array {
             return [
-                'title'       => 'required|unique:survey_categories|max:255',
-                'description' => 'required',
+                'title' => 'required|unique:survey_categories|max:255',
             ];
         }
     }
