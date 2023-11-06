@@ -11,13 +11,11 @@
          *
          * @return void
          */
-        public function up() {
+        public function up(): void {
             Schema::create('survey_templates', function (Blueprint $table) {
-                $table->id();
-                $table->string('title');
-                $table->text('description');
-                $table->string('image')->nullable();
+                $table->id()->index();
                 $table->timestamps();
+                $table->foreignUuid('survey_id')->constrained('surveys');
             });
         }
         
@@ -26,7 +24,10 @@
          *
          * @return void
          */
-        public function down() {
+        public function down(): void {
+            Schema::table('survey_templates', function (Blueprint $table) {
+                $table->dropForeign('survey_templates_survey_id_foreign');
+            });
             Schema::dropIfExists('survey_templates');
         }
     };
