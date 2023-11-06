@@ -91,6 +91,24 @@
                 'Vintage Collectibles',
             ];
             $descriptions = [
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
                 'Explore the rich tapestry of human creativity, from timeless masterpieces to contemporary expressions of art and culture.',
                 'Dive into the world of commerce and entrepreneurship, where innovation, strategy, and ambition drive economic growth.',
                 'Navigate the fascinating realm of automobiles, from classic cars to cutting-edge technology in the automotive industry.',
@@ -145,11 +163,9 @@
             
             $index = $this->faker->unique()->numberBetween(0, count($titles) - 1);
             
-            $user = User::query()->first();
             return [
                 'title'       => $titles[$index],
                 'description' => $descriptions[$index],
-                'created_by'  => $user->id,
             ];
         }
     }
