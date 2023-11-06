@@ -3,7 +3,7 @@
     use App\Http\Controllers\Auth\AuthenticationController;
     use App\Http\Controllers\SurveyCategoryController;
     use App\Http\Controllers\SurveyPageController;
-    use App\Http\Controllers\SurveyRespondentController;
+    use App\Http\Controllers\RespondentController;
     use App\Http\Controllers\SurveySubmissionController;
     use App\Http\Controllers\SurveyTemplateController;
     use App\Http\Controllers\QuestionController;
@@ -60,11 +60,11 @@
         Route::delete('/{id}', [ThemeSettingsController::class, 'delete']);
     });
     Route::prefix('survey-respondents')->group(function () {
-        Route::get('/', [SurveyRespondentController::class, 'index']);
-        Route::post('/', [SurveyRespondentController::class, 'store']);
-        Route::put('/', [SurveyRespondentController::class, 'update']);
-        Route::get('/{id}', [SurveyRespondentController::class, 'show']);
-        Route::delete('/{id}', [SurveyRespondentController::class, 'delete']);
+        Route::get('/', [RespondentController::class, 'index']);
+        Route::post('/', [RespondentController::class, 'store']);
+        Route::put('/', [RespondentController::class, 'update']);
+        Route::get('/{id}', [RespondentController::class, 'show']);
+        Route::delete('/{id}', [RespondentController::class, 'delete']);
     });
     
     Route::prefix('survey-categories')->group(function () {
