@@ -14,7 +14,6 @@
                 $table->id()->index();
                 $table->string('title');
                 $table->string('description')->nullable();
-                $table->string('created_by');
                 $table->timestamps();
             });
         }
