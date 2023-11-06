@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('theme_settings', function (Blueprint $table) {
-                $table->uuid('id')->primary()->index();
+                $table->uuid('id')->primary()->unique()->index();
                 $table->string('title');
                 $table->string('footer');
                 $table->jsonb('settings'); // logo, fonts, primary_color, secondary_color
@@ -19,6 +19,7 @@
                 $table->boolean('is_public');
                 $table->boolean('is_archived');
                 $table->timestamps();
+                $table->foreignUuid('user_id')->constrained('users');
             });
         }
         
@@ -26,6 +27,9 @@
          * Reverse the migrations.
          */
         public function down(): void {
+            Schema::table('theme_settings', function (Blueprint $table) {
+                $table->dropForeign('theme_settings_user_id_foreign');
+            });
             Schema::dropIfExists('theme_settings');
         }
     };
