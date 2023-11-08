@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('comments', function (Blueprint $table) {
-                $table->uuid('id')->primary();
+                $table->uuid('id')->primary()->unique()->index();
                 $table->string('body');
                 $table->uuidMorphs('commentable');
                 $table->timestamps();
