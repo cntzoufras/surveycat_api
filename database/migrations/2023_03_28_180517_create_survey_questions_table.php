@@ -18,7 +18,7 @@
                 $table->jsonb('additional_settings')->nullable();
                 $table->string('commentable_type')->nullable();
                 $table->timestamps();
-                $table->foreignId('commentable_id')->nullable()->constrained('comments');
+                $table->foreignUuid('commentable_id')->nullable()->constrained('comments');
                 $table->foreignId('question_type_id')->constrained('question_types');
                 $table->foreignId('survey_page_id')->constrained('survey_pages');
                 $table->foreignId('taggable_id')->nullable()->constrained('tags');
