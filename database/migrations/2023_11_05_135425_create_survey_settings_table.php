@@ -21,6 +21,7 @@
                 $table->string('public_link')->nullable()->default(null);
                 $table->string('banner_image')->nullable()->default(null);
                 $table->timestamps();
+                $table->foreignUuid('survey_id')->constrained('surveys');
             });
         }
         
@@ -28,6 +29,9 @@
          * Reverse the migrations.
          */
         public function down(): void {
+            Schema::table('survey_settings', function (Blueprint $table) {
+                $table->dropForeign('survey_settings_survey_id_foreign');
+            });
             Schema::dropIfExists('survey_settings');
         }
     };
