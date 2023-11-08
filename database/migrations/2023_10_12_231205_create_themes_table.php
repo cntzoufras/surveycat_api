@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('themes', function (Blueprint $table) {
-                $table->uuid('id')->primary()->index();
+                $table->uuid('id')->primary()->unique()->index();
                 $table->string('name');
                 $table->string('description');
                 $table->string('created_by');
