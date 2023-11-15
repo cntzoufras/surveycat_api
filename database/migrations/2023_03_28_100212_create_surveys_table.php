@@ -13,12 +13,11 @@
             Schema::create('surveys', function (Blueprint $table) {
                 $table->uuid('id')->primary()->unique();
                 $table->string('title');
-                $table->string('description');
+                $table->string('description')->nullable();
                 $table->timestamps();
                 $table->integer('views')->default(0);
                 $table->foreignId('survey_category_id')->constrained('survey_categories');
                 $table->foreignId('survey_status_id')->constrained('survey_statuses');
-                $table->foreignId('taggable_id')->nullable()->constrained('tags');
                 $table->index(['id', 'title']);
             });
         }
@@ -29,7 +28,6 @@
         public function down(): void {
             Schema::table('surveys', function (Blueprint $table) {
                 $table->dropForeign('surveys_survey_category_id_foreign');
-                $table->dropForeign('surveys_taggable_id_foreign');
                 $table->dropForeign('surveys_survey_status_id_foreign');
             });
             Schema::dropIfExists('surveys');
