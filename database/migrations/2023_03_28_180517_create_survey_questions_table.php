@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('survey_questions', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique()->index();
+                $table->uuid('id')->primary();
                 $table->string('title')->index();
                 $table->boolean('is_required');
                 $table->string('question_type');
@@ -20,8 +20,8 @@
                 $table->timestamps();
                 $table->foreignUuid('commentable_id')->nullable()->constrained('comments');
                 $table->foreignId('question_type_id')->constrained('question_types');
-                $table->foreignId('survey_page_id')->constrained('survey_pages');
                 $table->foreignId('taggable_id')->nullable()->constrained('tags');
+                $table->foreignId('survey_page_id')->constrained('survey_pages');
             });
         }
         
@@ -31,8 +31,8 @@
         public function down(): void {
             Schema::table('survey_questions', function (Blueprint $table) {
                 $table->dropForeign('survey_questions_commentable_id_foreign');
-                $table->dropForeign('survey_questions_taggable_id_foreign');
                 $table->dropForeign('survey_questions_question_type_id_foreign');
+                $table->dropForeign('survey_questions_taggable_id_foreign');
                 $table->dropForeign('survey_questions_survey_page_id_foreign');
             });
             Schema::dropIfExists('survey_questions');
