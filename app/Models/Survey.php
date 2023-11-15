@@ -15,8 +15,8 @@
         
         use HasFactory, Notifiable, Uuids;
         
-        protected $guarded  = ['uuid'];
-        protected $fillable = [''];
+        protected $guarded  = ['id'];
+        protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id'];
         
         public function theme(): hasOne {
             return $this->hasOne(Theme::class);
@@ -36,7 +36,7 @@
         }
         
         /**
-         * Get all of the post's comments.
+         * Get all survey comments.
          */
         public function comments(): MorphMany {
             return $this->morphMany(Comment::class, 'commentable');
