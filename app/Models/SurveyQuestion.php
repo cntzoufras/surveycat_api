@@ -6,7 +6,9 @@
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\Relations\BelongsTo;
     use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+    use Illuminate\Database\Eloquent\Relations\HasMany;
     use Illuminate\Database\Eloquent\Relations\HasOne;
+    use Illuminate\Database\Eloquent\Relations\MorphMany;
     
     class SurveyQuestion extends Model {
         
@@ -27,5 +29,19 @@
             return $this->hasOne(QuestionType::class);
         }
         
+        public function theme(): hasMany {
+            return $this->hasMany(Theme::class);
+        }
+        
+        public function tags(): MorphMany {
+            return $this->morphMany(Tag::class, 'taggable');
+        }
+        
+        /**
+         * Get all of the post's comments.
+         */
+        public function comments(): MorphMany {
+            return $this->morphMany(Comment::class, 'commentable');
+        }
         
     }
