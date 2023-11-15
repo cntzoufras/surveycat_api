@@ -16,11 +16,12 @@
                 $table->boolean('is_required');
                 $table->string('question_type');
                 $table->jsonb('additional_settings')->nullable();
-                $table->string('commentable_type')->nullable();
                 $table->timestamps();
-                $table->foreignUuid('commentable_id')->nullable()->constrained('comments');
                 $table->foreignId('question_type_id')->constrained('question_types');
+                $table->foreignUuid('commentable_id')->nullable()->constrained('comments');
+                $table->string('commentable_type')->nullable();
                 $table->foreignId('taggable_id')->nullable()->constrained('tags');
+                $table->foreignId('taggable_type')->nullable()->constrained('tags');
                 $table->foreignId('survey_page_id')->constrained('survey_pages');
             });
         }
