@@ -11,11 +11,15 @@
         
         use HasFactory, Uuids;
         
-        protected $fillable     = ['body', 'commentable_type', 'user_id'];
-        protected $guarded      = ['id'];
         public    $incrementing = false;
         protected $keyType      = 'string';
         
+        protected $guarded  = ['id'];
+        protected $fillable = ['content', 'user_id'];
+        
+        /**
+         * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+         */
         public function commentable(): MorphTo {
             return $this->morphTo();
         }
