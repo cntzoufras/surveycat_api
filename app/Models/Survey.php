@@ -35,6 +35,10 @@
             return $this->hasOne(SurveyStatus::class);
         }
         
+        public function tags(): MorphMany {
+            return $this->morphMany(Tag::class, 'taggable');
+        }
+        
         /**
          * Get all survey comments.
          */
