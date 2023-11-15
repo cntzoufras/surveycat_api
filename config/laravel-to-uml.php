@@ -21,7 +21,7 @@
         'jobs'          => false,
         'listeners'     => false,
         'mails'         => false,
-        'middlewares'   => false,
+        'middlewares'   => true,
         'models'        => true,
         'notifications' => false,
         'observers'     => false,
