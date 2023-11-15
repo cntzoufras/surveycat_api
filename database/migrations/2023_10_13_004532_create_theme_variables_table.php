@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('theme_variables', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique()->index();
+                $table->uuid('id')->primary()->unique();
                 $table->string('default_palette');
                 $table->string('layout_applied');
                 $table->string('primary_background_alpha');

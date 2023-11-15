@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('variable_palettes', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique()->index();
+                $table->uuid('id')->primary()->unique();
                 $table->string('answer_color');
                 $table->string('primary_accent');
                 $table->string('primary_background');

@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('theme_settings', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique()->index();
+                $table->uuid('id')->primary()->unique();
                 $table->string('title');
                 $table->string('footer');
                 $table->jsonb('settings'); // logo, fonts, primary_color, secondary_color
@@ -20,6 +20,7 @@
                 $table->boolean('is_archived');
                 $table->timestamps();
                 $table->foreignUuid('user_id')->constrained('users');
+                $table->foreignUuid('survey_id')->constrained('surveys');
             });
         }
         
@@ -28,6 +29,7 @@
          */
         public function down(): void {
             Schema::table('theme_settings', function (Blueprint $table) {
+                $table->dropForeign('theme_settings_survey_id_foreign');
                 $table->dropForeign('theme_settings_user_id_foreign');
             });
             Schema::dropIfExists('theme_settings');

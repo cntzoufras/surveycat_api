@@ -13,7 +13,7 @@
          */
         public function up(): void {
             Schema::create('survey_templates', function (Blueprint $table) {
-                $table->id()->index();
+                $table->id();
                 $table->timestamps();
                 $table->foreignUuid('survey_id')->constrained('surveys');
             });

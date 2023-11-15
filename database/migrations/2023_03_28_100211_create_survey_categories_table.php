@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('survey_categories', function (Blueprint $table) {
-                $table->id()->index();
+                $table->id();
                 $table->string('title');
                 $table->string('description')->nullable();
                 $table->timestamps();
