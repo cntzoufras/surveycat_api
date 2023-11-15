@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('survey_submissions', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
+                $table->uuid('id')->primary();
                 $table->timestamps();
                 $table->foreignUuId('survey_id')->references('id')->on('surveys')->onDelete('cascade');
                 $table->foreignUuId('survey_response_id')->references('id')->on('survey_responses');

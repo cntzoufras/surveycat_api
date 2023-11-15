@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('respondents', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
+                $table->uuid('id')->primary();
                 $table->string('email')->nullable();
                 $table->jsonb('details');
                 $table->timestamps();

@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('theme_settings', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
+                $table->uuid('id')->primary();
                 $table->string('title');
                 $table->string('footer');
                 $table->jsonb('settings'); // logo, fonts, primary_color, secondary_color

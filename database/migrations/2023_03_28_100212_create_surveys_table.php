@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('surveys', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
+                $table->uuid('id')->primary();
                 $table->string('title');
                 $table->string('description')->nullable();
                 $table->timestamps();

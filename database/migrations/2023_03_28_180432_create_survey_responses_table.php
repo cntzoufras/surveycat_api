@@ -11,7 +11,7 @@
          */
         public function up(): void {
             Schema::create('survey_responses', function (Blueprint $table) {
-                $table->uuid('id')->primary()->unique();
+                $table->uuid('id')->primary();
                 $table->string('ip_address');
                 $table->string('device');
                 $table->unsignedBigInteger('completion_time')->nullable();
