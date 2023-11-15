@@ -14,6 +14,7 @@
                 $table->id();
                 $table->string('content');
                 $table->timestamps();
+                $table->foreignUuid('user_id')->constrained('users');
             });
         }
         
@@ -21,6 +22,9 @@
          * Reverse the migrations.
          */
         public function down(): void {
+            Schema::table('tags', function (Blueprint $table) {
+                $table->dropForeign(['user_id']);
+            });
             Schema::dropIfExists('tags');
         }
     };
