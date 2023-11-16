@@ -25,7 +25,7 @@
          */
         public function down(): void {
             Schema::table('survey_responses', function (Blueprint $table) {
-                $table->dropForeign('survey_responses_survey_id_foreign');
+                $table->dropForeign(['survey_id']);
             });
             Schema::dropIfExists('survey_responses');
         }

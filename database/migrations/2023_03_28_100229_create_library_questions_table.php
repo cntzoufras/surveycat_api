@@ -24,7 +24,7 @@
         public function down(): void {
             
             Schema::table('library_questions', function (Blueprint $table) {
-                $table->dropForeign('library_questions_question_type_id_foreign');
+                $table->dropForeign(['question_type_id']);
             });
             Schema::dropIfExists('library_questions');
         }

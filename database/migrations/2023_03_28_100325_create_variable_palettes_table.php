@@ -29,7 +29,7 @@
          */
         public function down(): void {
             Schema::table('variable_palettes', function (Blueprint $table) {
-                $table->dropForeign('variable_palettes_theme_variable_id_foreign');
+                $table->dropForeign(['theme_variable_id']);
             });
             Schema::dropIfExists('variable_palettes');
         }
