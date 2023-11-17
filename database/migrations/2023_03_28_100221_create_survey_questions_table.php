@@ -17,6 +17,7 @@
                 $table->foreignId('question_type_id')->constrained('question_types');
                 $table->jsonb('additional_settings')->nullable();
                 $table->foreignId('survey_page_id')->constrained('survey_pages');
+                $table->softDeletes();
                 $table->timestamps();
             });
         }

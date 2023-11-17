@@ -16,6 +16,7 @@
                 $table->foreignUuid('user_id')->constrained('users');
                 $table->uuid('commentable_id')->nullable();
                 $table->string('commentable_type')->nullable();
+                $table->softDeletes();
                 $table->timestamps();
             });
         }

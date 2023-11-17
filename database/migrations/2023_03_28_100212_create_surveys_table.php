@@ -16,6 +16,7 @@
                 $table->string('description')->nullable();
                 $table->timestamps();
                 $table->integer('views')->default(0);
+                $table->softDeletes();
                 $table->foreignId('survey_category_id')->constrained('survey_categories');
                 $table->foreignId('survey_status_id')->constrained('survey_statuses');
                 $table->index(['id', 'title']);

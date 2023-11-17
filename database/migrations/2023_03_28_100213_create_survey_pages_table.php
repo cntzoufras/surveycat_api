@@ -17,6 +17,7 @@
                 $table->enum('align', ['left', 'center', 'right'])->default('left');
                 $table->unsignedInteger('sort_index')->default(0)->index();
                 $table->boolean('require_questions')->default(false);
+                $table->softDeletes();
                 $table->timestamps();
                 $table->foreignUuid('survey_id')->references('id')->on('surveys');
             });
