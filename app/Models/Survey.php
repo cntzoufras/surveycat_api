@@ -9,11 +9,12 @@
     use Illuminate\Database\Eloquent\Relations\HasOne;
     use App\Traits\Uuids;
     use Illuminate\Database\Eloquent\Relations\MorphMany;
+    use Illuminate\Database\Eloquent\SoftDeletes;
     use Illuminate\Notifications\Notifiable;
     
     class Survey extends Model {
         
-        use HasFactory, Notifiable, Uuids;
+        use HasFactory, Notifiable, Uuids, SoftDeletes;
         
         protected $guarded  = ['id'];
         protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id'];
