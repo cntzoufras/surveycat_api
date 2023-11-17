@@ -15,6 +15,8 @@
                 $table->string('title');
                 $table->text('description')->nullable();
                 $table->foreignId('question_type_id')->constrained('question_types');
+                $table->jsonb('additional_settings')->nullable();
+                $table->timestamps();
             });
         }
         
