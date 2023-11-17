@@ -12,7 +12,7 @@
         public function up(): void {
             Schema::create('tags', function (Blueprint $table) {
                 $table->id();
-                $table->string('content');
+                $table->string('content')->index();
                 $table->timestamps();
                 $table->foreignUuid('user_id')->constrained('users');
             });
