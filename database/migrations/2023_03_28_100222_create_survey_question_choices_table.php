@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('survey_question_choices', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->index();
+            $table->string('content')->index();
             $table->integer('sort_index')->default(0);
             $table->foreignUuid('survey_question_id')->constrained('survey_questions');
             $table->timestamps();
