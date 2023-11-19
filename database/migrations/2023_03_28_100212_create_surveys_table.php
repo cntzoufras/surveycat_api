@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->foreignId('survey_category_id')->constrained('survey_categories');
             $table->foreignUuid('theme_id')->constrained('themes');
             $table->foreignId('survey_status_id')->constrained('survey_statuses');
+            $table->foreignUuid('user_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +32,7 @@ return new class extends Migration {
         Schema::table('surveys', function (Blueprint $table) {
             $table->dropForeign(['survey_category_id']);
             $table->dropForeign(['survey_status_id']);
+            $table->dropForeign(['user_id']);
         });
         Schema::dropIfExists('surveys');
     }
