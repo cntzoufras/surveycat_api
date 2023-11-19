@@ -15,20 +15,20 @@ class SurveyTemplate extends Model {
     protected $fillable = ['title', 'description', 'survey_id', 'user_id'];
 
     /**
-     * Get the linked Survey
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function survey(): BelongsTo {
-        return $this->belongsTo(Survey::class);
-    }
-
-    /**
      * Get the user who owns this template.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the linked Survey
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function survey(): BelongsTo {
+        return $this->belongsTo(Survey::class);
     }
 }
