@@ -20,6 +20,15 @@ class Theme extends Model {
     protected $fillable = ['name', 'description', 'user_id', 'theme_setting_id'];
 
     /**
+     * Get the user that created this survey
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Get the theme settings
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -36,4 +45,6 @@ class Theme extends Model {
     public function survey(): BelongsToMany {
         return $this->belongsToMany(Survey::class);
     }
+
+
 }

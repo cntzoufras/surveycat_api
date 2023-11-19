@@ -20,26 +20,28 @@ class Survey extends Model {
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id'];
+    protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id', 'user_id'];
 
     protected $attributes = [
         'survey_status_id' => 1,
     ];
 
     /**
+     * Get the user that created this survey
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the theme associated to this survey
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function theme(): hasOne {
         return $this->hasOne(Theme::class, 'theme_id', 'id');
-    }
-
-    /**
-     * Get the submissions using this survey
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function survey_submissions(): HasMany {
-        return $this->hasMany(SurveySubmission::class);
     }
 
     /**
@@ -76,5 +78,14 @@ class Survey extends Model {
      */
     public function comments(): MorphMany {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    /**
+     * Get the submissions using this survey
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function survey_submissions(): HasMany {
+        return $this->hasMany(SurveySubmission::class);
     }
 }

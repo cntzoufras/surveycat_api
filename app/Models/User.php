@@ -45,4 +45,29 @@ class User extends Authenticatable {
         'email_verified_at' => 'datetime',
     ];
 
+    public function surveys(): HasMany {
+        return $this->hasMany(Survey::class);
+    }
+
+    public function themes(): HasMany {
+        return $this->hasMany(Theme::class);
+    }
+
+    public function theme_settings(): HasMany {
+        return $this->hasMany(ThemeSetting::class);
+    }
+
+    public function tags(): \Illuminate\Database\Eloquent\Relations\MorphTo {
+        return $this->morphTo(Tag::class, 'taggable');
+    }
+
+    public function comments(): \Illuminate\Database\Eloquent\Relations\MorphTo {
+        return $this->morphTo(Comment::class, 'commentable');
+    }
+
+    public function survey_teplates(): HasMany {
+        return $this->hasMany(SurveyTemplate::class);
+    }
+
+
 }

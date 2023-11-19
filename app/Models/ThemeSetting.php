@@ -17,7 +17,16 @@ class ThemeSetting extends Model {
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['title', 'footer', 'settings', 'image'];
+    protected $fillable = ['title', 'footer', 'settings', 'image', 'user_id'];
+
+    /**
+     * Get the user who created this theme setting.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the themes
