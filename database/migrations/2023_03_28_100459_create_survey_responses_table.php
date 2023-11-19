@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->timestamp('submitted_at')->default(null);
             $table->string('session_id')->index();
             $table->foreignUuid('survey_id')->constrained('surveys');
-            $table->foreignUuid('survey_submission_id')->constrained('survey_submissions');
             $table->foreignUuid('respondent_id')->constrained('respondents');
             $table->timestamps();
         });
@@ -29,7 +28,8 @@ return new class extends Migration {
      */
     public function down(): void {
         Schema::table('survey_responses', function (Blueprint $table) {
-            $table->dropForeign(['survey_id', 'survey_submission_id', 'respondent_id']);
+            $table->dropForeign(['respondent_id']);
+            $table->dropForeign(['survey_id']);
         });
         Schema::dropIfExists('survey_responses');
     }

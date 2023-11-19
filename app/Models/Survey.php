@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 class Survey extends Model {
-    
+
     use HasFactory, Notifiable, Uuids, SoftDeletes;
 
     public $incrementing = false;
@@ -30,7 +30,7 @@ class Survey extends Model {
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function theme(): hasOne {
-        return $this->hasOne(Theme::class);
+        return $this->hasOne(Theme::class, 'theme_id', 'id');
     }
 
     /**

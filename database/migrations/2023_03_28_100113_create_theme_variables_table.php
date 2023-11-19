@@ -10,13 +10,10 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('theme_settings', function (Blueprint $table) {
+        Schema::create('theme_variables', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('title');
-            $table->string('footer');
-            $table->jsonb('settings'); // logo, fonts, primary_color, secondary_color
-            $table->text('image');
-            $table->foreignUuid('user_id')->constrained('users');
+            $table->string('primary_background_alpha');
+            $table->string('theme_thumb'); // link to theme thumb png
             $table->foreignUuid('theme_id')->constrained('themes');
             $table->timestamps();
         });
@@ -26,9 +23,9 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void {
-        Schema::table('theme_settings', function (Blueprint $table) {
-            $table->dropForeign(['theme_id', 'user_id']);
+        Schema::table('theme_variables', function (Blueprint $table) {
+            $table->dropForeign(['theme_id']);
         });
-        Schema::dropIfExists('theme_settings');
+        Schema::dropIfExists('theme_variables');
     }
 };

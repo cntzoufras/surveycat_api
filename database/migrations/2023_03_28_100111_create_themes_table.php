@@ -8,15 +8,13 @@ return new class extends Migration {
 
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up(): void {
-        Schema::create('survey_templates', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
+        Schema::create('themes', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name');
             $table->string('description');
-            $table->foreignUuid('survey_id')->constrained('surveys');
+            $table->foreignUuid('theme_setting_id')->constrained('theme_settings');
             $table->foreignUuid('user_id')->constrained('users');
             $table->timestamps();
         });
@@ -24,14 +22,12 @@ return new class extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void {
-        Schema::table('survey_templates', function (Blueprint $table) {
+        Schema::table('themes', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
-            $table->dropForeign(['survey_id']);
+            $table->dropForeign(['theme_setting_id']);
         });
-        Schema::dropIfExists('survey_templates');
+        Schema::dropIfExists('themes');
     }
 };

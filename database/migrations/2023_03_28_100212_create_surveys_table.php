@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('public_link')->nullable()->default(null);
             $table->integer('views')->default(0);
             $table->foreignId('survey_category_id')->constrained('survey_categories');
-            $table->foreignId('theme_id')->constrained('themes');
+            $table->foreignUuid('theme_id')->constrained('themes');
             $table->foreignId('survey_status_id')->constrained('survey_statuses');
             $table->timestamps();
             $table->softDeletes();
