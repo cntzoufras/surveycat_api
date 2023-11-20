@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Survey;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyResponse\StoreSurveyResponseRequest;
-use App\Http\Requests\SurveyResponse\UpdateSurveyResponseRequest;
-use App\Models\Response;
+use App\Models\Survey\SurveyResponse;
 
 class SurveyResponseController extends Controller {
 
@@ -33,28 +32,14 @@ class SurveyResponseController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show(Response $surveyResponse) {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Response $surveyResponse) {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSurveyResponseRequest $request, Response $surveyResponse) {
+    public function show(SurveyResponse $survey_response) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Response $surveyResponse) {
+    public function destroy(SurveyResponse $survey_response) {
         //
     }
 }
