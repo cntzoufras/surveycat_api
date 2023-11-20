@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Survey\Theme;
+namespace App\Repositories\Theme;
 
 use App\Models\Theme\ThemeSetting;
 use Illuminate\Support\Facades\DB;
