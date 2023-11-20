@@ -85,7 +85,7 @@ class SurveyQuestionController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SurveyQuestion $surveyQuestion) {
-        return $this->survey_question_service->delete($survey_question_service);
+    public function destroy(SurveyQuestion $survey_question) {
+        return $this->survey_question_service->delete($survey_question);
     }
 }
