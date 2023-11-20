@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Survey;
 
-use App\Http\Requests\Tag\StoreTagRequest;
-use App\Http\Requests\Tag\UpdateTagRequest;
-use App\Models\Tag;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Survey\StoreSurveyRequest;
+use App\Http\Requests\Survey\UpdateSurveyRequest;
+use App\Models\Survey\Survey;
 
-class TagController extends Controller {
+class SurveyController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -25,35 +26,35 @@ class TagController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTagRequest $request) {
+    public function store(StoreSurveyRequest $request) {
         //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Tag $tag) {
+    public function show(Survey $survey) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tag $tag) {
+    public function edit(Survey $survey) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTagRequest $request, Tag $tag) {
+    public function update(UpdateSurveyRequest $request, Survey $survey) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tag $tag) {
+    public function destroy(Survey $survey) {
         //
     }
 }

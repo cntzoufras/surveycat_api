@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Theme;
 
-use App\Http\Requests\Tag\StoreTagRequest;
-use App\Http\Requests\Tag\UpdateTagRequest;
-use App\Models\Tag;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreThemeSettingsRequest;
+use App\Http\Requests\UpdateThemeSettingsRequest;
+use App\Models\ThemeSettings;
 
-class TagController extends Controller {
+class ThemeSettingsController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -25,35 +26,35 @@ class TagController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTagRequest $request) {
+    public function store(StoreThemeSettingsRequest $request) {
         //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Tag $tag) {
+    public function show(ThemeSettings $theme_settings) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tag $tag) {
+    public function edit(ThemeSettings $theme_settings) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTagRequest $request, Tag $tag) {
+    public function update(UpdateThemeSettingsRequest $request, ThemeSettings $theme_settings) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tag $tag) {
+    public function destroy(ThemeSettings $theme_settings) {
         //
     }
 }
