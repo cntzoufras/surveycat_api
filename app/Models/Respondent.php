@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Survey\SurveyResponse;
+use App\Models\Survey\SurveySubmission;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
