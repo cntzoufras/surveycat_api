@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Theme;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\VariablePalette\StoreVariablePalettesRequest;
-use App\Http\Requests\VariablePalette\UpdateVariablePalettesRequest;
-use App\Models\VariablePalettes;
+use App\Http\Requests\VariablePalette\StoreVariablePaletteRequest;
+use App\Http\Requests\VariablePalette\UpdateVariablePaletteRequest;
+use App\Models\Theme\VariablePalette;
 
 class VariablePalettesController extends Controller {
 
@@ -26,35 +26,35 @@ class VariablePalettesController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreVariablePalettesRequest $request) {
+    public function store(StoreVariablePaletteRequest $request) {
         //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(VariablePalettes $variablePalettes) {
+    public function show(VariablePalette $variable_palette) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(VariablePalettes $variablePalettes) {
+    public function edit(VariablePalette $variable_palette) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateVariablePalettesRequest $request, VariablePalettes $variablePalettes) {
+    public function update(UpdateVariablePaletteRequest $request, VariablePalette $variable_palette) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(VariablePalettes $variablePalettes) {
+    public function destroy(VariablePalette $variable_palette) {
         //
     }
 }
