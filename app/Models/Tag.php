@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Survey\Survey;
+use App\Models\Survey\SurveyCategory;
+use App\Models\Survey\SurveyQuestion;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +27,7 @@ class Tag extends Model {
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * Get all surveys that are assigned this tag.
      *
