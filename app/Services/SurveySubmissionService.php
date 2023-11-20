@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use AllowDynamicProperties;
-use App\Repositories\Survey\Survey\SurveySubmissionRepository;
+use App\Repositories\Survey\SurveySubmissionRepository;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 
 #[AllowDynamicProperties] class SurveySubmissionService {

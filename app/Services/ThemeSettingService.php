@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Repositories\Survey\Theme\ThemeSettingRepository;
+use App\Repositories\Theme\ThemeSettingRepository;
 
 class ThemeSettingService {
 
-    protected $theme_setting_repository;
+    protected ThemeSettingRepository $theme_setting_repository;
 
     public function __construct(ThemeSettingRepository $theme_setting_repository) {
         $this->theme_setting_repository = $theme_setting_repository;

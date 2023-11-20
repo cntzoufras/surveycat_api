@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\Survey\Survey\SurveyRepository;
+use App\Repositories\Survey\SurveyRepository;
 
 class SurveyService {
 
