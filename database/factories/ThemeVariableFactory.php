@@ -5,17 +5,16 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ThemeVariable>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Theme\ThemeVariable>
  */
-class ThemeVariableFactory extends Factory
-{
+class ThemeVariableFactory extends Factory {
+
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
+    public function definition(): array {
         return [
             //
         ];
