@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 LABEL maintainer="Konstantinos Ntzoufras"
 
 ARG WWWGROUP
-ARG NODE_VERSION=18
+ARG NODE_VERSION=20
 ARG POSTGRES_VERSION=15
 
 WORKDIR /var/www/html
