@@ -36,14 +36,14 @@ class SurveyCategoryController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show($id): SurveyCategoryResource|\Illuminate\Http\JsonResponse {
+    public function show($id): mixed {
         $validated = Validator::make(['id' => $id], [
             'id' => 'required|integer|gt:0|exists:survey_categories,id',
         ]);
         if ($validated->fails()) {
-            return response()->json(['message' => 'Validation errors', $validated->errors()], 422);
+            return response()->json(['error' => 'Survey Category does not exist'], 400);
         }
-        return new SurveyCategoryResource($this->survey_category_service->show($id));
+        return $this->survey_category_service->show($validated);
     }
 
     /**

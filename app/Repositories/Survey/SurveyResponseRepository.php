@@ -41,8 +41,11 @@ class SurveyResponseRepository {
         return DB::transaction(function () use ($params) {
             $survey_response = new SurveyResponse();
             $survey_response->fill($params);
-            isset($params['respondent_ip']) ? ($survey_response->ip_address = $params['respondent_ip']) : '';
-            isset($params['respondent_id']) ? ($survey_response->respondent_id = $params['respondent_id']) : '';
+            $survey_response->ip_address = $params['respondent_ip'] ?? null;
+            $survey_response->respondent_id = $params['respondent_id'] ?? null;
+            if (!$survey_response->ip_address || !$survey_response->respondent_id) {
+                return null;
+            }
             $survey_response->save();
             return $survey_response;
         });
