@@ -19,7 +19,7 @@ class RespondentController extends Controller {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        $validated = $request->validate();
+        $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->respondent_service->index($validated);
     }
 

@@ -25,7 +25,7 @@ class ThemeController extends Controller {
      * @throws \Exception
      */
     public function index(Request $request) {
-        $validated = $request->validate(['limit' => 'integer|nullable|min:0|max:100']);
+        $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->theme_service->index($validated);
     }
 
