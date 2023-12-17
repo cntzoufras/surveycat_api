@@ -16,8 +16,7 @@ class Comment extends Model {
     public    $incrementing = false;
     protected $keyType      = 'string';
 
-    protected $guarded = ['id'];
-
+    protected $guarded  = ['id'];
     protected $fillable = ['content', 'user_id'];
 
     /**
@@ -28,7 +27,7 @@ class Comment extends Model {
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
