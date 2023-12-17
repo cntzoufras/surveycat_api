@@ -1,12 +1,12 @@
-question_type
-Multiple Choice
-Checkboxes
-Star Rating
-Best worst scale
-Single Textbox
-Comment Box
-Dropdown
-Ranking
-Slider
-Multiple Checkboxes
-Date / Time
+title,description
+Multiple Choice,Choose one option from a list.
+Checkboxes,Select multiple options from a list.
+Star Rating,Rate using a star-based system.
+Best worst scale,Rank items from best to worst.
+Single Textbox,Provide a short text response.
+Comment Box,Enter a longer text comment.
+Dropdown,Select an option from a dropdown menu.
+Ranking,Order items according to preference.
+Slider,Select a value on a sliding scale.
+Multiple Checkboxes,Choose several options via checkboxes.
+Date / Time,Enter a date or time.
