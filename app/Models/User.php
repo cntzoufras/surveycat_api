@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Survey\Survey;
+use App\Models\Survey\SurveyTemplate;
+use App\Models\Theme\Theme;
+use App\Models\Theme\ThemeSetting;
+use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\Uuids;
 
 class User extends Authenticatable {
 
@@ -24,7 +27,7 @@ class User extends Authenticatable {
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'password', 'first_name', 'middle_name', 'last_name'];
+    protected $fillable = ['username', 'email', 'role', 'first_name', 'last_name', 'photo', 'password',];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -65,7 +68,7 @@ class User extends Authenticatable {
         return $this->morphTo(Comment::class, 'commentable');
     }
 
-    public function survey_teplates(): HasMany {
+    public function survey_templates(): HasMany {
         return $this->hasMany(SurveyTemplate::class);
     }
 
