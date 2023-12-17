@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\SurveySettings;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
 class UpdateSurveySettingsRequest extends BaseRequest {
 
