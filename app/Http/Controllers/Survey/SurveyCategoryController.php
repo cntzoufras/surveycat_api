@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Survey;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyCategory\StoreSurveyCategoryRequest;
 use App\Http\Requests\SurveyCategory\UpdateSurveyCategoryRequest;
-use App\Http\Resources\SurveyCategoryResource;
 use App\Models\Survey\SurveyCategory;
 use App\Services\Survey\SurveyCategoryService;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class SurveyCategoryController extends Controller {
@@ -21,7 +22,7 @@ class SurveyCategoryController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexSurveyCategoryRequest $request) {
+    public function index(Request $request) {
         return $this->survey_category_service->index($request->validated());
     }
 

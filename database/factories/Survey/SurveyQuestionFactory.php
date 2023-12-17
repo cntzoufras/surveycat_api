@@ -16,7 +16,7 @@ class SurveyQuestionFactory extends Factory {
      *
      * @var string
      */
-    protected $model = Question::class;
+    protected $model = SurveyQuestion::class;
 
     /**
      * Define the model's default state.

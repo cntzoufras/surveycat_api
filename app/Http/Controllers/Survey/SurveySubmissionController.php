@@ -37,6 +37,7 @@ class SurveySubmissionController extends Controller {
                 return $this->survey_submission_service->store($request->validated());
             }
         }
+        return;
     }
 
     /**

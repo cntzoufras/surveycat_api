@@ -12,6 +12,7 @@ class SurveySettingsPolicy {
      */
     public function viewAny(User $user): bool {
         //
+//        return;
     }
 
     /**

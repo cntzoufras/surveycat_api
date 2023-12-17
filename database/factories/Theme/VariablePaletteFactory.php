@@ -4,9 +4,6 @@ namespace Database\Factories\Theme;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\VariablePalettes>
- */
 class VariablePaletteFactory extends Factory {
 
     /**
