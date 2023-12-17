@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyQuestion\StoreSurveyQuestionRequest;
 use App\Http\Requests\SurveyQuestion\UpdateSurveyQuestionRequest;
 use App\Models\Survey\SurveyQuestion;
-use App\Services\SurveyQuestionService;
-use Illuminate\Support\Facades\Log;
+use App\Services\Survey\SurveyQuestionService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class SurveyQuestionController extends Controller {
 
@@ -20,65 +21,46 @@ class SurveyQuestionController extends Controller {
 
     /**
      * Display a listing of the resource.
+     *
+     * @throws \Exception
      */
-    public function index(UpdateSurveyQuestionRequest $survey_question_request) {
-        $validated = $survey_question_request->validate(['limit' => 'integer|nullable|min:0|max:50']);
+    public function index(Request $request) {
+        $validated = $request->validate(['limit' => 'integer|sometimes|']);
         return $this->survey_question_service->index($validated);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveyQuestionRequest $request): \Illuminate\Http\JsonResponse|SurveyQuestion {
-        $validated = Validator::make($request->all(), [
-            'title'          => 'string|lte:255',
-            'is_required'    => 'integer|digits_between:0,1|min:0|max:1',
-            'theme_style_id' => 'integer|exists:theme_styles',
-            'question_tags'  => [
-                'required',
-                'json',
-            ],
-        ]);
-        $errors = $validated->errors();
-        if ($validated->fails()) {
-            Log::error('Validation errors:', $errors->toArray());
-            return response()->json(['errors' => $errors], 422);
-        }
-
+    public function store(StoreSurveyQuestionRequest $request): SurveyQuestion {
         return $this->survey_question_service->store($request->all());
     }
 
     /**
      * Display the specified resource.
+     *
+     * @throws \Exception
      */
-    public function show(UpdateSurveyQuestionRequest $survey_question_request) {
+    public function show(Request $request): mixed {
         try {
-            $id = $request->id ?? '';
-            $validated = $request->validate([
-                'id' => 'integer',
-            ]);
-            $offset = (int)$request['id'];
-            return $this->survey_question_service->show($offset);
+            if (isset($request['id'])) {
+                Validator::validate(['id' => $request['id']], [
+                    'id' => 'uuid|required|exists:survey_questions,id',
+                ]);
+                return $this->survey_question_service->show($request['id']);
+            }
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            throw new \Exception('Error occurred while retrieving questions', 500);
+            throw new \Exception($e->getMessage(), 500);
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SurveyQuestion $surveyQuestion) {
-        //
+        return null;
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateSurveyQuestionRequest $request, SurveyQuestion $survey_question) {
-        $validated = $request->validate([
-            'name'     => 'string|required',
-            'settings' => 'required|array',
-        ]);
         return $this->survey_question_service->update($survey_question, $request->validated());
     }
 

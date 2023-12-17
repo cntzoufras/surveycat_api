@@ -8,16 +8,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed $ip_address
+ */
 class SurveyResponse extends Model {
+
 
     use HasFactory, Uuids;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
+    public       $incrementing = false;
+    public mixed $respondent_id;
+    protected    $keyType      = 'string';
 
-    protected $guarded = ['id'];
-
-    protected $fillable = ['survey_id', 'survey_submission_id', 'respondent_id'];
+    protected $guarded  = ['id'];
+    protected $fillable = [
+        'ip_address', 'device', 'session_id', 'survey_id', 'survey_submission_id', 'respondent_id',
+        'country', 'timezone',
+    ];
 
     /**
      * Returns the used survey

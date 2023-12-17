@@ -2,14 +2,19 @@
 
 namespace App\Repositories\Survey;
 
+use App\Contracts\ListingRepositoryInterface;
+use App\Models\QuestionType;
 use App\Models\Survey\SurveyQuestion;
 use Illuminate\Support\Facades\DB;
 
 class SurveyQuestionRepository {
 
+    /**
+     * @throws \Exception
+     */
     public function index(array $params) {
         try {
-            $limit = $params['limit'] ?? 10;
+            $limit = $params['limit'] ?? 20;
             return DB::transaction(function () use ($limit) {
                 return SurveyQuestion::query()->paginate($limit);
             });
@@ -18,19 +23,20 @@ class SurveyQuestionRepository {
         }
     }
 
-    public function resolveModel($survey_question) {
+    public function resolveModel($survey_question): mixed {
         if ($survey_question instanceof SurveyQuestion) {
             return $survey_question;
         }
         return SurveyQuestion::query()->findOrFail($survey_question);
     }
 
-    public function getIfExist($survey_question): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Builder|array|null {
+    public function getIfExist($survey_question): mixed {
         return SurveyQuestion::query()->find($survey_question);
     }
 
     public function update(SurveyQuestion $survey_question, array $params) {
         return DB::transaction(function () use ($params, $survey_question) {
+//            dd($params);
             $survey_question->fill($params);
             $survey_question->save();
             return $survey_question;

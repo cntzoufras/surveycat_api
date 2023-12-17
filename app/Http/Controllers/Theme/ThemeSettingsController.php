@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Theme;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreThemeSettingsRequest;
-use App\Http\Requests\UpdateThemeSettingsRequest;
-use App\Models\ThemeSettings;
+use App\Http\Requests\ThemeSetting\StoreThemeSettingRequest;
+use App\Http\Requests\ThemeSetting\UpdateThemeSettingRequest;
+use App\Models\Theme\ThemeSetting;
 
 class ThemeSettingsController extends Controller {
 
@@ -26,35 +26,35 @@ class ThemeSettingsController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreThemeSettingsRequest $request) {
+    public function store(StoreThemeSettingRequest $request) {
         //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ThemeSettings $theme_settings) {
+    public function show(ThemeSetting $theme_setting) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ThemeSettings $theme_settings) {
+    public function edit(ThemeSetting $theme_setting) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateThemeSettingsRequest $request, ThemeSettings $theme_settings) {
+    public function update(UpdateThemeSettingRequest $request, ThemeSetting $theme_setting) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ThemeSettings $theme_settings) {
+    public function destroy(ThemeSetting $theme_setting) {
         //
     }
 }

@@ -14,8 +14,7 @@ class VariablePalette extends Model {
     public    $incrementing = false;
     protected $keyType      = 'string';
 
-    protected $guarded = ['id'];
-
+    protected $guarded  = ['id'];
     protected $fillable = ['answer_color', 'primary_accent', 'primary_background', 'question_color', 'secondary_accent',
         'secondary_background', 'title_color', 'theme_variable_id',
     ];

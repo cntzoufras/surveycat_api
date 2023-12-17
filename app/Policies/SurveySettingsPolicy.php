@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Survey\SurveySetting;
+use App\Models\Survey\SurveySettings;
 use App\Models\User;
 
 class SurveySettingsPolicy {
@@ -17,7 +17,7 @@ class SurveySettingsPolicy {
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, SurveySetting $surveySettings): bool {
+    public function view(User $user, SurveySettings $surveySettings): bool {
         //
     }
 
@@ -31,28 +31,28 @@ class SurveySettingsPolicy {
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, SurveySetting $surveySettings): bool {
+    public function update(User $user, SurveySettings $surveySettings): bool {
         //
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, SurveySetting $surveySettings): bool {
+    public function delete(User $user, SurveySettings $surveySettings): bool {
         //
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, SurveySetting $surveySettings): bool {
+    public function restore(User $user, SurveySettings $surveySettings): bool {
         //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, SurveySetting $surveySettings): bool {
+    public function forceDelete(User $user, SurveySettings $surveySettings): bool {
         //
     }
 }

@@ -16,26 +16,17 @@ class ThemeSetting extends Model {
     public    $incrementing = false;
     protected $keyType      = 'string';
 
-    protected $guarded = ['id'];
+    protected $guarded  = ['id'];
+    protected $fillable = ['settings', 'theme_id'];
 
-    protected $fillable = ['title', 'footer', 'settings', 'image', 'user_id'];
-
-    /**
-     * Get the user who created this theme setting.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user(): BelongsTo {
-        return $this->belongsTo(User::class);
-    }
 
     /**
      * Get the themes
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function theme(): BelongsToMany {
-        return $this->belongsTomany(Theme::class, 'theme_id', 'id');
+    public function theme(): BelongsTo {
+        return $this->belongsTo(Theme::class, 'theme_id', 'id');
     }
 
     /**

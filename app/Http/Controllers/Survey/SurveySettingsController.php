@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Survey;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveySettings\StoreSurveySettingsRequest;
 use App\Http\Requests\SurveySettings\UpdateSurveySettingsRequest;
-use App\Models\Survey\SurveySetting;
+use App\Models\Survey\SurveySettings;
 
 class SurveySettingsController extends Controller {
 
@@ -33,28 +33,28 @@ class SurveySettingsController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show(SurveySetting $surveySettings) {
+    public function show(SurveySettings $surveySettings) {
         //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SurveySetting $surveySettings) {
+    public function edit(SurveySettings $surveySettings) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSurveySettingsRequest $request, SurveySetting $surveySettings) {
+    public function update(UpdateSurveySettingsRequest $request, SurveySettings $surveySettings) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SurveySetting $surveySettings) {
+    public function destroy(SurveySettings $surveySettings) {
         //
     }
 }

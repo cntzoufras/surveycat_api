@@ -22,9 +22,11 @@ class Survey extends Model {
 
     public $incrementing = false;
 
+    protected $keyType = 'string';
+    
     protected $guarded = ['id'];
 
-    protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id', 'user_id'];
+    protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id', 'user_id', 'theme_id'];
 
     protected $attributes = [
         'survey_status_id' => 1,

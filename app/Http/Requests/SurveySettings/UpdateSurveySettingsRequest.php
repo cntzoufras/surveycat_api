@@ -4,7 +4,7 @@ namespace App\Http\Requests\SurveySettings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateSurveySettingsRequest extends FormRequest {
+class UpdateSurveySettingsRequest extends BaseRequest {
 
     /**
      * Determine if the user is authorized to make this request.

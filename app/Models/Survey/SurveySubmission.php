@@ -15,9 +15,13 @@ class SurveySubmission extends Model {
     public    $incrementing = false;
     protected $keyType      = 'string';
 
-    protected $guarded = ['id'];
+    protected $guarded  = ['id'];
+    protected $fillable = ['submission_data', 'survey_id', 'survey_response_id', 'respondent_id'];
 
-    protected $fillable = ['survey_id', 'survey_response_id', 'respondent_id'];
+    protected $casts = [
+        'submission_data' => 'array',
+    ];
+
 
     /**
      * Get the survey of this submission

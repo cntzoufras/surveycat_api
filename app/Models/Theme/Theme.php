@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Theme extends Model {
 
@@ -17,9 +18,8 @@ class Theme extends Model {
     public    $incrementing = false;
     protected $keyType      = 'string';
 
-    protected $guarded = ['id'];
-
-    protected $fillable = ['name', 'description', 'user_id', 'theme_setting_id'];
+    protected $guarded  = ['id'];
+    protected $fillable = ['title', 'description', 'footer', 'user_id'];
 
     /**
      * Get the user that created this survey
@@ -33,10 +33,19 @@ class Theme extends Model {
     /**
      * Get the theme settings
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function theme_setting(): BelongsTo {
-        return $this->belongsTo(ThemeSetting::class, 'theme_setting_id', 'id');
+    public function theme_setting(): HasOne {
+        return $this->hasOne(ThemeSetting::class, 'theme_setting_id', 'id');
+    }
+
+    /**
+     * Get the theme settings
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function theme_variable(): HasOne {
+        return $this->hasOne(ThemeVariable::class, 'theme_variable_id', 'id');
     }
 
     /**
@@ -47,6 +56,5 @@ class Theme extends Model {
     public function survey(): BelongsToMany {
         return $this->belongsToMany(Survey::class);
     }
-
 
 }

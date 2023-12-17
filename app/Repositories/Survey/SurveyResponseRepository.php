@@ -18,14 +18,14 @@ class SurveyResponseRepository {
         }
     }
 
-    public function resolveModel($survey_response) {
+    public function resolveModel($survey_response): mixed {
         if ($survey_response instanceof SurveyResponse) {
             return $survey_response;
         }
         return SurveyResponse::query()->findOrFail($survey_response);
     }
 
-    public function getIfExist($survey_response) {
+    public function getIfExist($survey_response): mixed {
         return SurveyResponse::query()->find($survey_response);
     }
 
@@ -41,16 +41,10 @@ class SurveyResponseRepository {
         return DB::transaction(function () use ($params) {
             $survey_response = new SurveyResponse();
             $survey_response->fill($params);
+            isset($params['respondent_ip']) ? ($survey_response->ip_address = $params['respondent_ip']) : '';
+            isset($params['respondent_id']) ? ($survey_response->respondent_id = $params['respondent_id']) : '';
             $survey_response->save();
             return $survey_response;
         });
     }
-
-    public function delete(SurveyResponse $survey_response) {
-        return DB::transaction(function () use ($survey_response) {
-            $survey_response->delete();
-            return $survey_response;
-        });
-    }
-
 }

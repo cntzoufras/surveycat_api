@@ -18,14 +18,14 @@ class SurveySubmissionRepository {
         }
     }
 
-    public function resolveModel($survey_submission) {
+    public function resolveModel($survey_submission): mixed {
         if ($survey_submission instanceof SurveySubmission) {
             return $survey_submission;
         }
         return SurveySubmission::query()->findOrFail($survey_submission);
     }
 
-    public function getIfExist($survey_submission) {
+    public function getIfExist($survey_submission): mixed {
         return SurveySubmission::query()->find($survey_submission);
     }
 
@@ -46,11 +46,11 @@ class SurveySubmissionRepository {
         });
     }
 
-    public function delete(SurveySubmission $survey_submission) {
-        return DB::transaction(function () use ($survey_submission) {
-            $survey_submission->delete();
-            return $survey_submission;
-        });
+    public function isUniqueSubmission($respondent_id, $survey_response_id): bool {
+        return !SurveySubmission::query()
+                                ->where('respondent_id', $respondent_id)
+                                ->where('survey_response_id', $survey_response_id)
+                                ->exists();
     }
 
 }

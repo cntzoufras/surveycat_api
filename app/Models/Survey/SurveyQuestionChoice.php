@@ -20,7 +20,7 @@ class SurveyQuestionChoice extends Model {
     protected $fillable = ['content', 'survey_question_id', 'sort_index'];
 
     /**
-     * Get all survvey questions this theme is associated to
+     * Get all survey questions this theme is associated to
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

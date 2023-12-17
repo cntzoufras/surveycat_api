@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\ThemeVariable;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateThemeVariableRequest extends FormRequest {
+class UpdateThemeVariableRequest extends BaseRequest {
 
     /**
      * Determine if the user is authorized to make this request.

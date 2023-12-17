@@ -10,9 +10,11 @@ class ThemeVariable extends Model {
 
     use HasFactory;
 
-    protected $guarded = ['id'];
+    public    $incrementing = false;
+    protected $keyType      = 'string';
 
-    protected $fillable = ['default_palette', 'layout_applied', 'primary_background_alpha', 'theme_thumb'];
+    protected $guarded  = ['id'];
+    protected $fillable = ['primary_background_alpha', 'theme_thumb', 'theme_id'];
 
     /**
      * Get the theme associated with this variable.

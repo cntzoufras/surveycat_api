@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\VariablePalette;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class UpdateVariablePaletteRequest extends FormRequest {
+class UpdateVariablePaletteRequest extends BaseRequest {
 
     /**
      * Determine if the user is authorized to make this request.

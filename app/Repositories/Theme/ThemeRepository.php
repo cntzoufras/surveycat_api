@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class ThemeRepository {
 
-    public function index(array $params) {
 
+    public function index(array $params) {
         try {
-            $limit = $params['limit'] ?? 10;
+            $limit = $params['limit'] ?? 20;
             return DB::transaction(function () use ($limit) {
                 return Theme::query()->paginate($limit);
             });
@@ -26,7 +26,7 @@ class ThemeRepository {
         return Theme::query()->findOrFail($theme);
     }
 
-    public function getIfExist($theme) {
+    public function getIfExist($theme): mixed {
         return Theme::query()->find($theme);
     }
 

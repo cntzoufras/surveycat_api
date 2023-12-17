@@ -6,14 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyPage\StoreSurveyPageRequest;
 use App\Http\Requests\SurveyPage\UpdateSurveyPageRequest;
 use App\Models\Survey\SurveyPage;
+use App\Services\Survey\SurveyQuestionService;
+use Illuminate\Http\Request;
 
 class SurveyPageController extends Controller {
 
+    protected SurveyQuestionService $survey_question_service;
+
+    public function __construct(SurveyQuestionService $survey_question_service) {
+        $this->survey_question_service = $survey_question_service;
+    }
+
     /**
      * Display a listing of the resource.
+     *
+     * @throws \Exception
      */
-    public function index() {
-        //
+    public function index(Request $request) {
+        $validated = $request->validate(['limit' => 'integer|sometimes|']);
+        return $this->survey_question_service->index($validated);
     }
 
     /**

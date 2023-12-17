@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\SurveySubmission;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class StoreSurveySubmissionsRequest extends FormRequest {
+class StoreSurveySubmissionsRequest extends BaseRequest {
 
     /**
      * Determine if the user is authorized to make this request.
@@ -20,9 +20,9 @@ class StoreSurveySubmissionsRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'pages'       => 'required|string',
+            'submission_data'    => 'required|json',
+            'survey_response_id' => 'required|uuid|exists:survey_responses,id',
+            'respondent_id'      => 'required|uuid|exists:respondents,id',
         ];
     }
 }

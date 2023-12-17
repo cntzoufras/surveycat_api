@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\SurveyCategory;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class StoreSurveyCategoryRequest extends FormRequest {
+class StoreSurveyCategoryRequest extends BaseRequest {
 
     /**
      * Determine if the user is authorized to make this request.

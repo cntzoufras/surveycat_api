@@ -11,8 +11,10 @@ class SurveyPage extends Model {
 
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id'];
+    public    $incrementing = false;
+    protected $keyType      = 'string';
 
+    protected $guarded  = ['id'];
     protected $fillable = ['title', 'description', 'align', 'sort_index', 'require_questions', 'survey_id'];
 
     /**
