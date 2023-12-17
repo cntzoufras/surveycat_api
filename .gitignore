@@ -5,6 +5,7 @@
 /vendor
 .env
 .env.backup
+.env.prod
 .phpunit.result.cache
 docker-compose.override.yml
 npm-debug.log
@@ -21,3 +22,5 @@ sftp-config.json
 auth.json
 .DS_Store
 .github/
+docker-compose.prod.yml
+Dockerfile.prod
