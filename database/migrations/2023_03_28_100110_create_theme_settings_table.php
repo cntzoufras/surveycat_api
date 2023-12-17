@@ -12,11 +12,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('theme_settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('title');
-            $table->string('footer');
-            $table->jsonb('settings'); // logo, fonts, primary_color, secondary_color
-            $table->text('image');
-            $table->foreignUuid('user_id')->constrained('users');
+            $table->jsonb('settings'); // logo, fonts
+            $table->foreignUuid('theme_id')->constrained('themes');
             $table->timestamps();
         });
     }
@@ -26,7 +23,7 @@ return new class extends Migration {
      */
     public function down(): void {
         Schema::table('theme_settings', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            $table->dropForeign(['theme_id']);
         });
         Schema::dropIfExists('theme_settings');
     }

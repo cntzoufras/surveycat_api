@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('primary_background_alpha');
             $table->string('theme_thumb'); // link to theme thumb png
-            $table->foreignUuid('theme_id')->constrained('themes');
+            $table->foreignUuid('theme_setting_id')->constrained('theme_settings');
             $table->timestamps();
         });
     }
@@ -24,7 +24,7 @@ return new class extends Migration {
      */
     public function down(): void {
         Schema::table('theme_variables', function (Blueprint $table) {
-            $table->dropForeign(['theme_id']);
+            $table->dropForeign(['theme_setting_id']);
         });
         Schema::dropIfExists('theme_variables');
     }

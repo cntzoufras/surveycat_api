@@ -15,11 +15,14 @@ return new class extends Migration {
             $table->string('ip_address');
             $table->string('device');
             $table->timestamp('started_at')->useCurrent();
-            $table->timestamp('submitted_at')->default(null);
-            $table->string('session_id')->index();
+            $table->timestamp('completed_at')->nullable();
+            $table->string('session_id');
             $table->foreignUuid('survey_id')->constrained('surveys');
-            $table->foreignUuid('respondent_id')->constrained('respondents');
+            $table->foreignUuid('respondent_id')->nullable()->constrained('respondents');
+            $table->string('country');
+            $table->string('timezone');
             $table->timestamps();
+            $table->index(['session_id', 'survey_id', 'respondent_id']);
         });
     }
 
