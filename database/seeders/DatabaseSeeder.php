@@ -2,6 +2,12 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Survey\SurveyCategorySeeder;
+use Database\Seeders\Survey\SurveyStatusSeeder;
+use Database\Seeders\Theme\ThemeSeeder;
+use Database\Seeders\Theme\ThemeSettingSeeder;
+use Database\Seeders\Theme\ThemeVariableSeeder;
+use Database\Seeders\Theme\VariablePaletteSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder {
@@ -11,13 +17,16 @@ class DatabaseSeeder extends Seeder {
      *
      * @return void
      */
-    public function run() {
-//            \App\Models\Question::factory(2000)->create();
-//            \App\Models\Survey\SurveyPage::factory(5)->create();
-//            $this->call(UserSeeder::class);
-        \App\Models\User::factory(50)->create();
+    public function run(): void {
+        $this->call(UserSeeder::class);
+        $this->call(ThemeSeeder::class);
+        $this->call(ThemeSettingSeeder::class);
+        $this->call(ThemeVariableSeeder::class);
+//        $this->call(VariablePaletteSeeder::class);
         $this->call(QuestionTypeSeeder::class);
         $this->call(SurveyCategorySeeder::class);
         $this->call(SurveyStatusSeeder::class);
+//        $this->call(CountrySeeder::class);
+
     }
 }
