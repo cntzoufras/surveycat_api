@@ -1,10 +1,6 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="public/app-logo.png" width="400"></a></p>
 
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Design & trace your survey results
 
 ## Installation
 
