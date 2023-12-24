@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="public/app-logo.png" width="400"></a></p>
 
 - [Powerful dependency injection container](https://laravel.com/docs/container).
 - Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
@@ -8,8 +8,9 @@
 
 ## Installation
 
-- Run `sail install` inside the project folder
-- Select `[2]` for Postgres database setup
+- Clone repository
+- Run `php artisan sail:install` inside the project folder
+- Select Postgres database, Redis & Memcached
 - Run `sail up` inside the project folder
 - Access the database using the following:
     - username: `sail`
@@ -18,7 +19,8 @@
     - database: `surveycat`
 - Add `alias sailbash='docker exec -it api-laravel.test-1 /bin/bash'` inside your `~/.bash_aliases`
 - Run `source ~/.bash_aliases`
-- Run `sailbash`
+- Run `sailbash` for shell in dev container.
+- Access `Telescope` dashboard in https://localhost/telescope
 - Containers will start then can be inspected running using the `docker ps` command in the hosts bash
 - To access the containers in Windows use the `Docker Desktop` executable or the `sailbash` command.
 
