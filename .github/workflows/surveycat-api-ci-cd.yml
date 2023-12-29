@@ -45,17 +45,8 @@ jobs:
 
       - name: Composer Dump Autoload
         run: |
-          composer dump-autoload
-
-      - name: Require Laravel Telescope
-        run: |
-          composer require laravel/telescope
+          composer dump-autoload --optimize
 
       - name: Run Migrations
         run: |
-          php artisan telescope:install
           php artisan migrate
-
-#      - name: Run Tests
-#        run: |
-#          sudo docker-compose run --rm php vendor/bin/phpunit
