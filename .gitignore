@@ -22,5 +22,5 @@ sftp-config.json
 auth.json
 .DS_Store
 .github/
-docker-compose.prod.yml
-Dockerfile.prod
+#docker-compose.prod.yml
+#Dockerfile.prod
