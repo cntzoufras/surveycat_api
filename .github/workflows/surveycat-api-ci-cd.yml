@@ -1,4 +1,4 @@
-name: Surveycat CI
+name: Build and Deploy Docker Images
 
 on:
   push:
@@ -13,12 +13,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           extensions: mbstring, xml, zip, pcntl
           coverage: none
 
@@ -42,7 +42,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libzip-dev
           composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
-          
+
 
       - name: Run Migrations
         run: |
