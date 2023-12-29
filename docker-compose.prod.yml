@@ -1,0 +1,56 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+      - /etc/ssl/certs/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
+      - /etc/ssl/private/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
+    networks:
+      - webnet
+  surveycat-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: surveycat-api
+    cpus: 2
+    environment:
+      WWWUSER: '${WWWUSER}'
+    networks:
+      - webnet
+    depends_on:
+      - pgsql
+      - memcached
+      - redis
+  pgsql:
+    image: 'postgres:15'
+    environment:
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - 'prod-pgsql:/var/lib/postgresql/data'
+    networks:
+      - webnet
+  memcached:
+    image: 'memcached:alpine'
+    networks:
+      - webnet
+  redis:
+    image: 'redis:alpine'
+    volumes:
+      - 'prod-redis:/data'
+    networks:
+      - webnet
+networks:
+  webnet:
+    driver: bridge
+
+volumes:
+  prod-pgsql:
+    driver: local
+  prod-redis:
+    driver: local
