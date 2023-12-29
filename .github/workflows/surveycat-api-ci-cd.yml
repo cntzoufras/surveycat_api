@@ -43,6 +43,13 @@ jobs:
           sudo apt-get install -y libzip-dev
           composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
+      - name: Composer Dump Autoload
+        run: |
+          composer dump-autoload
+
+      - name: Require Laravel Telescope
+        run: |
+          composer require laravel/telescope
 
       - name: Run Migrations
         run: |
