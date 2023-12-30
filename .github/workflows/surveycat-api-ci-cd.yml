@@ -46,7 +46,7 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
 
-      - name: Check container statuss
+      - name: Check container status
         run: |
           docker ps -a
         continue-on-error: true
