@@ -24,15 +24,6 @@ jobs:
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
 
-      - name: Build and Deploy
-        run: |
-          ssh -v -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr '
-          if ! command -v docker-compose &> /dev/null; then
-            curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose
-            chmod +x /usr/local/bin/docker-compose
-          fi
-          cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d --build'
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
