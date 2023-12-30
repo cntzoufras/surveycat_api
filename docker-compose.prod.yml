@@ -31,6 +31,8 @@ services:
       - pgsql
       - memcached
       - redis
+    volumes:
+      - .env:/var/www/html/.env
   pgsql:
     image: 'postgres:15'
     environment:
