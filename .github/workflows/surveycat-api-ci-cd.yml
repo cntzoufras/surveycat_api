@@ -66,3 +66,9 @@ jobs:
       - name: Check container logs
         run: |
           docker-compose -f docker-compose.prod.yml logs
+
+      - name: Check container status
+        run: |
+          docker ps -a
+          continue-on-error: true
+
