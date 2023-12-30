@@ -54,6 +54,9 @@ jobs:
 
       - name: Deploy to Production Server
         run: |
+          pwd
+          ls -laR
+          
           echo "APP_ENV=production" > .env
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
           echo "APP_DEBUG=false" >> .env
@@ -66,6 +69,9 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          
+          cat .env
+          ls -l .env
           
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && cp /var/www/surveycat_api/.env /var/www/html/.env && docker-compose -f docker-compose.prod.yml up -d --build'
 
