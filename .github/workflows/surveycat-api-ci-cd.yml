@@ -16,7 +16,7 @@ jobs:
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.GH_API_SECRET }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
 
