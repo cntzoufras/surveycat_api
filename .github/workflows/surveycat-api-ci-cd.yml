@@ -40,7 +40,7 @@ jobs:
           ls -al
           pwd
 
-      #      - name: Build and run production containers
+      #      - name: Build and run production containers trdt
       #        run: |
       #          docker-compose -f docker-compose.prod.yml up -d --build
       #        env:
