@@ -31,8 +31,8 @@ jobs:
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
           echo "APP_DEBUG=false" >> .env
           echo "APP_URL=https://snf-893977.vm.okeanos.grnet.gr/api" >> .env
-          echo "SANCTUM_STATEFUL_DOMAINS=snf-893977.vm.okeanos.grnet.gr >> .env
-          echo "SESSION_DOMAIN=snf-893977.vm.okeanos.grnet.gr >> .env
+          echo "SANCTUM_STATEFUL_DOMAINS=snf-893977.vm.okeanos.grnet.gr" >> .env
+          echo "SESSION_DOMAIN=snf-893977.vm.okeanos.grnet.gr" >> .env
           echo "DB_CONNECTION=pgsql" >> .env
           echo "DB_HOST=api-pgsql-1" >> .env
           echo "DB_PORT=5432" >> .env
