@@ -23,7 +23,7 @@ jobs:
           coverage: none
 
       - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+        run: php -r "file_exists('.env') || copy('.env.example', '.env.prod');"
 
       - name: Create .env.prod file
         run: |
