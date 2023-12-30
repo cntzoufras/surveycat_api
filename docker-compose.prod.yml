@@ -23,7 +23,8 @@ services:
         limits:
           cpus: '2'
     environment:
-      WWWUSER: '${WWWUSER}'
+      WWWUSER: 1000
+      WWWGROUP: 1000
     networks:
       - webnet
     depends_on:
