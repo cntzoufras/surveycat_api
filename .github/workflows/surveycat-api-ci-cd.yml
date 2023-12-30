@@ -57,7 +57,7 @@ jobs:
 
       - name: Run database migrations and seed
         run: |
-          docker-compose -f docker-compose.prod.yml exec surveycat-api php artisan migrate:fresh --seed
+          docker-compose -f docker-compose.prod.yml exec --tty surveycat-api php artisan migrate:fresh --seed
 
       - name: Set directory permissions
         run: |
