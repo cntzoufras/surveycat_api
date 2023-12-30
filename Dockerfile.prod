@@ -28,7 +28,7 @@ RUN docker-php-ext-install pdo_pgsql pgsql gd
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Add user for the application
-ARG WWWGROUP
+ARG WWWGROUP=1000
 RUN groupadd --force -g $WWWGROUP www
 RUN useradd -G www-data,www -u 1337 -ms /bin/bash www
 
