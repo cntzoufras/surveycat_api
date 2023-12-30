@@ -70,5 +70,5 @@ jobs:
       - name: Check container status
         run: |
           docker ps -a
-          continue-on-error: true
+        continue-on-error: true
 
