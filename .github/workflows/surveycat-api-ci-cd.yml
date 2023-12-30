@@ -53,7 +53,7 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          docker-compose -f docker-compose.prod.yml exec surveycat-api composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+          docker-compose -f docker-compose.prod.yml exec -T surveycat-api composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
       - name: Run database migrations and seed
         run: |
