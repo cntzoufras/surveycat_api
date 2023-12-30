@@ -16,6 +16,8 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     image: surveycat-api
+    env_file:
+      - .env
     cpus: 2
     environment:
       WWWUSER: '${WWWUSER}'
