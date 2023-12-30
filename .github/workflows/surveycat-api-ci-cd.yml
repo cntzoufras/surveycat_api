@@ -1,4 +1,4 @@
-name: Build, Push, and Deploy Surveycat API Docker Imagesd
+name: Build, Push, and Deploy Surveycat API Docker Images
 
 on:
   push:
