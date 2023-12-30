@@ -46,6 +46,7 @@ jobs:
         run: scp -p 54222 -i ${{ secrets.SSH_PRIVATE_KEY }} .env.prod cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api/
 
 
+      # test
       - name: Install Dependencies
         run: |
           sudo apt-get update
