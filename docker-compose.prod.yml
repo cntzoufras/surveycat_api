@@ -3,8 +3,7 @@ services:
   surveycat-api-nginx:
     image: nginx:latest
     ports:
-      - "80:80"
-      - "443:443"
+      - "40000:40000"
     volumes:
       - ./nginx.prod.conf:/etc/nginx/nginx.conf
       - /etc/ssl/certs/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
