@@ -49,11 +49,11 @@ jobs:
       # test
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libzip-dev
-          composer dump-autoload
-          php artisan cache:clear
-          composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+               sudo apt-get update
+               sudo apt-get install -y libzip-dev
+          #          composer dump-autoload
+               php artisan cache:clear
+               composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
       - name: Composer Dump Autoload
         run: |
