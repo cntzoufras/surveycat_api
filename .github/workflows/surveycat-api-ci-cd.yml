@@ -47,7 +47,7 @@ jobs:
       #          DOCKER_BUILDKIT: 1
       - name: Build and push Docker images
         run: |
-          echo "${{ secrets.DOCKERHUB_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker-compose -f docker-compose.prod.yml build
           docker-compose -f docker-compose.prod.yml push
 
