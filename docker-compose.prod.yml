@@ -18,7 +18,10 @@ services:
     image: surveycat-api
     env_file:
       - .env
-    cpus: 2
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
     environment:
       WWWUSER: '${WWWUSER}'
     networks:
