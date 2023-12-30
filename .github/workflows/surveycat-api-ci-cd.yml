@@ -45,11 +45,6 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          pwd
-          ls -al
-          cat .env
-          whoami
-          w
 
       - name: Build and push Docker images
         run: |
@@ -59,7 +54,9 @@ jobs:
 
       - name: Deploy to Production Server
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d --build'
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && && cp /var/www/surveycat_api/.env /var/www/html/.env && docker-compose -f docker-compose.prod.yml up -d --build'
+        volumes:
+          - /var/www/surveycat_api/.env:/var/www/html/.env
 
       - name: Check container status
         run: |
