@@ -18,11 +18,15 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          ls -l ~/.ssh/deploy_key
+          cat ~/.ssh/deploy_key
+
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
+          cat ~/.ssh/known_hosts
 
       - name: Build and Deploy
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr '
+          ssh -v -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr '
           if ! command -v docker-compose &> /dev/null; then
             curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose
             chmod +x /usr/local/bin/docker-compose
