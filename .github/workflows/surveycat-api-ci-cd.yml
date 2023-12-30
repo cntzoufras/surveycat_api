@@ -54,7 +54,7 @@ jobs:
 
       - name: Deploy to Production Server
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && && cp /var/www/surveycat_api/.env /var/www/html/.env && docker-compose -f docker-compose.prod.yml up -d --build'
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && cp /var/www/surveycat_api/.env /var/www/html/.env && docker-compose -f docker-compose.prod.yml up -d --build'
 
       - name: Check container status
         run: |
