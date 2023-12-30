@@ -22,7 +22,7 @@ jobs:
           extensions: mbstring, xml, zip, pcntl
           coverage: none
 
-      - name: Copy .env
+      - name: Copy .env from example
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Create .env file
