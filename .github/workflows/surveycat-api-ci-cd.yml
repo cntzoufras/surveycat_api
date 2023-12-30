@@ -18,6 +18,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.GH_API_SECRET }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          cat ~/.ssh/deploy_key
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
 
       - name: Build and Deploy
