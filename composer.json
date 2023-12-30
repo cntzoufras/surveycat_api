@@ -60,7 +60,7 @@
       "@php artisan package:discover --ansi"
     ],
     "post-root-package-install": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+      "@if [ \"$APP_ENV\" = \"local\" ]; then php -r \"file_exists('.env') || copy('.env.example', '.env');\"; fi"
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi"
