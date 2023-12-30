@@ -51,7 +51,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libzip-dev
-          php artisan cache:clear
           composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
       - name: Composer Dump Autoload
