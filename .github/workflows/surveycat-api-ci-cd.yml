@@ -1,4 +1,4 @@
-name: Build and Deploy Surveycat API Docker Images
+name: Build, Push, and Deploy Surveycat API Docker Images
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_and_push:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,11 +40,21 @@ jobs:
           ls -al
           pwd
 
-      - name: Build and run production containers
+      #      - name: Build and run production containers
+      #        run: |
+      #          docker-compose -f docker-compose.prod.yml up -d --build
+      #        env:
+      #          DOCKER_BUILDKIT: 1
+      - name: Build and push Docker images
         run: |
-          docker-compose -f docker-compose.prod.yml up -d --build
-        env:
-          DOCKER_BUILDKIT: 1
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          docker-compose -f docker-compose.prod.yml build
+          docker-compose -f docker-compose.prod.yml push
+          
+          - name: Deploy to Production Server
+            run: |
+              docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+              ssh -p 54222 cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api/app && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d'
 
       - name: Check container status
         run: |
