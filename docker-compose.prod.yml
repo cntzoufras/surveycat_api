@@ -18,6 +18,8 @@ services:
     image: surveycat-api
     env_file:
       - .env
+    environment:
+      WWWUSER: "1000"
     deploy:
       resources:
         limits:
