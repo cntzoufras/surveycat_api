@@ -22,23 +22,27 @@ jobs:
           extensions: mbstring, xml, zip, pcntl
           coverage: none
 
-      - name: Copy .env from example
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      #      - name: Copy .env from example
+      #        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-      - name: Create .env file
+      - name: Create .env.prod file
         run: |
-          echo "APP_ENV=production" >> .env
-          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
-          echo "APP_DEBUG=false" >> .env
-          echo "APP_URL=https://snf-893977.vm.okeanos.grnet.gr/api" >> .env
-          echo "SANCTUM_STATEFUL_DOMAINS=snf-893977.vm.okeanos.grnet.gr" >> .env
-          echo "SESSION_DOMAIN=snf-893977.vm.okeanos.grnet.gr" >> .env
-          echo "DB_CONNECTION=pgsql" >> .env
-          echo "DB_HOST=api-pgsql-1" >> .env
-          echo "DB_PORT=5432" >> .env
-          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "APP_ENV=production" > .env.prod
+          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env.prod
+          echo "APP_DEBUG=false" >> .env.prod
+          echo "APP_URL=https://snf-893977.vm.okeanos.grnet.gr/api" >> .env.prod
+          echo "SANCTUM_STATEFUL_DOMAINS=snf-893977.vm.okeanos.grnet.gr" >> .env.prod
+          echo "SESSION_DOMAIN=snf-893977.vm.okeanos.grnet.gr" >> .env.prod
+          echo "DB_CONNECTION=pgsql" >> .env.prod
+          echo "DB_HOST=api-pgsql-1" >> .env.prod
+          echo "DB_PORT=5432" >> .env.prod
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env.prod
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env.prod
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.prod
+
+      - name: Copy .env.prod to Production Server
+        run: scp -i ${{ secrets.SSH_PRIVATE_KEY }} .env.prod cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/path/to/your/project
+
 
       - name: Install Dependencies
         run: |
