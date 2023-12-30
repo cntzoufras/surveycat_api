@@ -42,8 +42,8 @@ jobs:
           ls -al
           pwd
 
-      - name: Copy .env.prod to Production Server
-        run: scp -p 54222 -i ${{ secrets.SSH_PRIVATE_KEY }} .env.prod snf-893977.vm.okeanos.grnet.gr:/var/www/
+      #      - name: Copy .env.prod to Production Server
+      #        run: scp -p 54222 -i ${{ secrets.SSH_PRIVATE_KEY }} .env.prod snf-893977.vm.okeanos.grnet.gr:/var/www/
 
 
       # test
