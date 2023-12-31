@@ -69,7 +69,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.prod.yml exec --tty surveycat-api php artisan migrate:fresh --seed
 
-      - name: Set directory permissions
+      - name: Set directories permissions
         run: |
           docker-compose -f docker-compose.prod.yml exec -tty surveycat-api chmod -R 777 storage bootstrap/cache
 
