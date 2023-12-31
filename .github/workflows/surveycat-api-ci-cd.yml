@@ -56,6 +56,10 @@ jobs:
           docker-compose -f docker-compose.prod.yml build
           docker-compose -f docker-compose.prod.yml push
 
+      - name: Install Dependencies
+        run: |
+          docker exec -it surveycat-api composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
       - name: Deploy to Production Server
         run: |
           scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
@@ -63,11 +67,7 @@ jobs:
 
       - name: Check container status
         run: |
-          docker ps -a
-
-      - name: Install Composer dependencies
-        run: |
-          docker-compose -f docker-compose.prod.yml exec surveycat-api composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+          docker ps
 
       - name: Run database migrations and seed
         run: |
