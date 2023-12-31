@@ -55,7 +55,7 @@ jobs:
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker-compose -f docker-compose.prod.yml build
           docker-compose -f docker-compose.prod.yml push
-     
+
       - name: Deploy to Production Server
         run: |
           scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
@@ -71,7 +71,8 @@ jobs:
 
       - name: Set directory permissions
         run: |
-          docker-compose -f docker-compose.prod.yml exec -T surveycat-api chmod -R 777 storage bootstrap/cache
+          docker exec -it surveycat_api_surveycat-api_1 chmod -R 777 storage bootstrap/cache
+      #          docker-compose -f docker-compose.prod.yml exec -T surveycat-api chmod -R 777 storage bootstrap/cache
 
       - name: Check container logs
         run: |
@@ -79,5 +80,5 @@ jobs:
 
       - name: Check container status
         run: |
-          docker ps -a
+          docker ps
 
