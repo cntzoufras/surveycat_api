@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -14,7 +13,7 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function register(): void {
-        
+
     }
 
     /**
