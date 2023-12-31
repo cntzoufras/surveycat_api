@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   surveycat-api-nginx:
-    image: nginx:latest
+    image: cntzoufras/api-nginx:latest
     ports:
       - "40000:40000"
     volumes:
