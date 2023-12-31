@@ -50,9 +50,9 @@ services:
       - 'prod-redis:/data'
     networks:
       - webnet
-networks:
+networks: # manually created in prod server with network create
   webnet:
-    driver: bridge
+    external: true
 
 volumes:
   prod-pgsql:
