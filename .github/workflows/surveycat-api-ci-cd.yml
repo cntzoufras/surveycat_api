@@ -77,7 +77,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.prod.yml logs
 
-      - name: Check container status
+      - name: Check containers' status
         run: |
           docker ps
 
