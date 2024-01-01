@@ -1,4 +1,4 @@
-version: '3.2'
+version: '1'
 services:
   surveycat-api-nginx:
     image: cntzoufras/api-nginx:latest
