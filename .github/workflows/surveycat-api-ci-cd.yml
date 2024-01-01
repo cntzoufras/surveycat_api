@@ -15,7 +15,7 @@ jobs:
         run: echo "Docker Host set successfully."
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up SSH Key
         run: |
@@ -32,10 +32,6 @@ jobs:
         run: |
           echo "Current branch: $(git branch --show-current)"
           echo "Current commit: $(git rev-parse HEAD)"
-
-      - name: Fetch latest code changes
-        run: |
-          git pull
 
       - name: Stop existing containers
         run: |
@@ -81,10 +77,6 @@ jobs:
         run: |
           scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml up -d'
-
-      - name: Check container status
-        run: |
-          docker ps
 
       - name: Run database migrations and seed
         run: |
