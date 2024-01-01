@@ -28,6 +28,11 @@ jobs:
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
 
+      - name: Debug Workflow
+        run: |
+          echo "Current branch: $(git branch --show-current)"
+          echo "Current commit: $(git rev-parse HEAD)"
+
       - name: Fetch latest code changes
         run: |
           git pull
