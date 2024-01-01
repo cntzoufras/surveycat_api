@@ -30,8 +30,7 @@ jobs:
 
       - name: Stop existing containers and pull
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no 
-          -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_front && docker-compose -f docker-compose.prod.yml down && docker rm surveycat_api_surveycat-api_1 && docker-compose -f docker-compose.prod.yml pull'
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_front && docker-compose -f docker-compose.prod.yml down && docker rm surveycat_api_surveycat-api_1 && docker-compose -f docker-compose.prod.yml pull'
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
