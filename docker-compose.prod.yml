@@ -1,15 +1,5 @@
 version: '3.2'
 services:
-  surveycat-api-nginx:
-    image: cntzoufras/api-nginx:latest
-    ports:
-      - "40000:40000"
-    volumes:
-      - ./nginx.prod.conf:/etc/nginx/nginx.conf
-      - /etc/ssl/certs/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
-      - /etc/ssl/private/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
-    networks:
-      - webnet
   surveycat-api:
     build:
       context: .
