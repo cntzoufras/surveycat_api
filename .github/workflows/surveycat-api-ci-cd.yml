@@ -80,9 +80,9 @@ jobs:
           TAG="$NEW_IMAGE_VERSION"
           #          IMAGE_VERSION="1.3" # Set the desired version here
           
-          docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION=${TAG}
+          docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION="1.4"
           
-          docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$TAG
+          docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$IMAGE_VERSION
           
           docker-compose -f docker-compose.prod.yml push
 
