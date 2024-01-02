@@ -28,11 +28,6 @@ jobs:
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
 
-      - name: Debug Workflow
-        run: |
-          echo "Current branch: $(git branch --show-current)"
-          echo "Current commit: $(git rev-parse HEAD)"
-
       - name: Stop existing containers
         run: |
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml down'

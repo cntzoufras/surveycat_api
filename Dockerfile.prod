@@ -34,6 +34,8 @@ COPY . .
 # Copy your custom PHP-FPM configuration into the container
 # COPY php-fpm.prod.conf /usr/local/etc/php-fpm.d/zz-custom.conf
 
+COPY api.conf /etc/apache2/sites-available/
+
 # Copy Composer files and run install, optimizing for production
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
