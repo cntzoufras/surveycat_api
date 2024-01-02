@@ -64,7 +64,7 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
-      - name: Pull latest Docker image
+      - name: Pull latest Docker images
         run: |
           docker pull cntzoufras/surveycat-api-apache
 
