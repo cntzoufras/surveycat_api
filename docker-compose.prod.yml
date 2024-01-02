@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:1.25
+    image: cntzoufras/surveycat-api-apache:1.26
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -49,7 +49,7 @@ services:
   pgsql:
     image: 'postgres:15'
     environment:
-      POSTGRES_HOST: '${DB_HOST}'
+      POSTGRES_HOST: postgres
       POSTGRES_DB: '${DB_DATABASE}'
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
