@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install net-tools
+RUN apt-get install net-tools
+
 # Install PHP extensions
 RUN docker-php-ext-install pdo_pgsql pgsql gd
 
