@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:1.24
+    image: cntzoufras/surveycat-api-apache:1.25
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -14,6 +14,7 @@ services:
         limits:
           cpus: '2'
     environment:
+      APACHE_SERVER_NAME: "snf-893977.vm.okeanos.grnet.gr"
       WWWUSER: 1000
       WWWGROUP: 1000
     networks:
