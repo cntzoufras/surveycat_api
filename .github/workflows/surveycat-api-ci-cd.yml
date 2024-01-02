@@ -6,14 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_push:
+  build_push_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Docker Host
-        env:
-          DOCKER_HOST: tcp://snf-893977.vm.okeanos.grnet.gr:2375
-        run: echo "Docker Host set successfully."
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -27,6 +22,11 @@ jobs:
 
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
           cat ~/.ssh/known_hosts
+
+      - name: Set Docker Host
+        env:
+          DOCKER_HOST: tcp://snf-893977.vm.okeanos.grnet.gr:2375
+        run: echo "Docker Host set successfully."
 
       - name: Stop existing containers
         run: |
@@ -66,7 +66,9 @@ jobs:
         run: |
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker-compose -f docker-compose.prod.yml build
-          docker tag cntzoufras/surveycat-api-apache:1.0 cntzoufras/surveycat-api-apache:1.1
+          # Increment the tag for each new version
+          TAG="1.$((1+$(docker images -q cntzoufras/surveycat-api-apache | wc -l)))"
+          docker tag cntzoufras/surveycat-api-apache:1.0 cntzoufras/surveycat-api-apache:$TAG
           docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
