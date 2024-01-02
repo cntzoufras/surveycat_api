@@ -33,10 +33,6 @@ COPY . .
 
 # Copy your custom PHP-FPM configuration into the container
 COPY php-fpm.prod.conf /usr/local/etc/php-fpm.d/zz-custom.conf
-# Add entries to the hosts file
-RUN echo "172.19.0.5 surveycat_api_surveycat-api_1" >> /etc/hosts \
-    && echo "surveycat_api_surveycat-api_1 surveycat_api_surveycat-api_1" >> /etc/hosts
-
 
 # Copy Composer files and run install, optimizing for production
 COPY composer.json composer.lock ./
