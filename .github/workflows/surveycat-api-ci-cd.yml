@@ -75,7 +75,7 @@ jobs:
           
           
           TAG="1.$((1+$(docker images -q cntzoufras/surveycat-api-apache | wc -l)))"
-          docker tag cntzoufras/surveycat-api-apache:1.1 cntzoufras/surveycat-api-apache:1.2
+          docker tag cntzoufras/surveycat-api-apache:1.2 cntzoufras/surveycat-api-apache:1.2
           docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
