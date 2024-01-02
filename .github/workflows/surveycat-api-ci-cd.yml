@@ -85,12 +85,3 @@ jobs:
       - name: Set directories permissions
         run: |
           docker-compose -f docker-compose.prod.yml exec -tty surveycat-api chmod -R 777 storage bootstrap/cache
-
-      - name: Check container logs
-        run: |
-          docker-compose -f docker-compose.prod.yml logs
-
-      - name: Check containers' status
-        run: |
-          docker ps
-
