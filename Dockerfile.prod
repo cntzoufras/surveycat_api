@@ -51,7 +51,7 @@ RUN a2ensite api
 RUN a2dissite 000-default.conf
 
 # Restart Apache to apply the changes
-RUN systemctl restart apache2
+RUN service apache2 restart
 
 # Copy Composer files and run install, optimizing for production
 COPY composer.json composer.lock ./
