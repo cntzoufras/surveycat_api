@@ -74,8 +74,8 @@ jobs:
           docker-compose -f docker-compose.prod.yml build
           
           
-          TAG="1.$((1+$(docker images -q cntzoufras/surveycat-api-apache | wc -l)))"
-          docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$IMAGE_VERSION
+          TAG="1.$(IMAGE_VERSION+1))"
+          docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$TAG
           docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
