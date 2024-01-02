@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "1.1"
+      IMAGE_VERSION: "1.2"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -66,7 +66,7 @@ jobs:
 
       - name: Pull latest Docker images
         run: |
-          docker pull cntzoufras/surveycat-api-apache
+          docker pull cntzoufras/surveycat-api-apache:$IMAGE_VERSION
 
       - name: Build and push Docker images to Dockerhub
         run: |
