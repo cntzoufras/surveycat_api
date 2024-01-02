@@ -2,7 +2,7 @@
 FROM php:8.2-apache
 RUN a2enmod rewrite
 RUN a2enmod headers
-RUN a2enmod log_config
+RUN a2enmod mod_log_config
 
 ARG IMAGE_VERSION
 LABEL version=$IMAGE_VERSION
