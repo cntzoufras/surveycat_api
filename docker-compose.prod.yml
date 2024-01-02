@@ -20,6 +20,7 @@ services:
       - pgsql
       - memcached
       - redis
+    entrypoint: /entrypoint.sh
   pgsql:
     image: 'postgres:15'
     environment:
