@@ -41,6 +41,8 @@ RUN composer install --no-dev --optimize-autoloader
 # Copy necessary configurations
 COPY php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
+RUN chmod +x entrypoint.sh
+
 # Expose port 40000 and start php-fpm server
 EXPOSE 40000
 CMD ["php-fpm"]
