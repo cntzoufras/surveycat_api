@@ -1,5 +1,6 @@
 # Use Apache to speed up deployment
 FROM php:8.2-apache
+RUN a2enmod rewrite
 
 ARG IMAGE_VERSION
 LABEL version=$IMAGE_VERSION
