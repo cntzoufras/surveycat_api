@@ -70,21 +70,21 @@ jobs:
 
       - name: Build and push Docker images to Dockerhub
         run: |
-          echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION=${IMAGE_VERSION}
-
-          IFS='.' read -ra version_parts <<< "$IMAGE_VERSION"
-          major_version="${version_parts[0]}"
-          minor_version="${version_parts[1]}"
-          minor_version=$((minor_version + 1))
-          NEW_IMAGE_VERSION="$major_version.$minor_version"
-          TAG="$NEW_IMAGE_VERSION"
-
-          IMAGE_VERSION="1.3" # Set the desired version here
-
-          docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$TAG
-
-          docker-compose -f docker-compose.prod.yml push
+               echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+               docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION=${IMAGE_VERSION}
+               
+               IFS='.' read -ra version_parts <<< "$IMAGE_VERSION"
+               major_version="${version_parts[0]}"
+               minor_version="${version_parts[1]}"
+               minor_version=$((minor_version + 1))
+               NEW_IMAGE_VERSION="$major_version.$minor_version"
+               TAG="$NEW_IMAGE_VERSION"
+          
+          #          IMAGE_VERSION="1.3" # Set the desired version here
+               
+               docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$TAG
+               
+               docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
         run: |
