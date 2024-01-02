@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
+      args:
+        - IMAGE_VERSION=${IMAGE_VERSION}
     env_file:
       - .env
     deploy:

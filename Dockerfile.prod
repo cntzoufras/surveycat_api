@@ -1,6 +1,9 @@
 # Use Apache to speed up deployment
 FROM php:8.2-apache
 
+ARG IMAGE_VERSION
+LABEL version=$IMAGE_VERSION
+
 # Set working directory
 WORKDIR /var/www/html
 
