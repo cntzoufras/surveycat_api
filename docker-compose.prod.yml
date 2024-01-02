@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:1.10
+    image: cntzoufras/surveycat-api-apache:1.11
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -18,6 +18,8 @@ services:
       WWWGROUP: 1000
     networks:
       - webnet
+    ports:
+      - "40000:40000"
     depends_on:
       - pgsql
       - memcached
