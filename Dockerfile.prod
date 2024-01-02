@@ -1,5 +1,5 @@
-# Use a more lightweight base image
-FROM php:8.2-fpm
+# Use Apache to speed up deployment
+FROM php:8.2-apache
 
 # Set working directory
 WORKDIR /var/www/html
@@ -32,7 +32,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ 
 COPY . .
 
 # Copy your custom PHP-FPM configuration into the container
-COPY php-fpm.prod.conf /usr/local/etc/php-fpm.d/zz-custom.conf
+# COPY php-fpm.prod.conf /usr/local/etc/php-fpm.d/zz-custom.conf
 
 # Copy Composer files and run install, optimizing for production
 COPY composer.json composer.lock ./
@@ -43,6 +43,5 @@ COPY php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
 RUN chmod +x entrypoint.sh
 
-# Expose port 40000 and start php-fpm server
+# Expose port 40000
 EXPOSE 40000
-CMD ["php-fpm"]
