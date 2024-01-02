@@ -56,5 +56,5 @@ COPY php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
 RUN chmod +x entrypoint.sh
 
-# Expose port 80
-EXPOSE 80
+# Expose port 40000
+EXPOSE 40000
