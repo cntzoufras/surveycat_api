@@ -1,10 +1,10 @@
 version: '3.2'
 services:
-  surveycat-api:
+  surveycat-api-apache:
+    image: cntzoufras/surveycat-api-apache:1.0
     build:
       context: .
       dockerfile: Dockerfile.prod
-    image: cntzoufras/surveycat-api:latest
     env_file:
       - .env
     deploy:
@@ -20,7 +20,27 @@ services:
       - pgsql
       - memcached
       - redis
-    entrypoint: ./entrypoint.sh
+  #  surveycat-api:
+  #    build:
+  #      context: .
+  #      dockerfile: Dockerfile.prod
+  #    image: cntzoufras/surveycat-api:latest
+  #    env_file:
+  #      - .env
+  #    deploy:
+  #      resources:
+  #        limits:
+  #          cpus: '2'
+  #    environment:
+  #      WWWUSER: 1000
+  #      WWWGROUP: 1000
+  #    networks:
+  #      - webnet
+  #    depends_on:
+  #      - pgsql
+  #      - memcached
+  #      - redis
+  #    entrypoint: ./entrypoint.sh
   pgsql:
     image: 'postgres:15'
     environment:
