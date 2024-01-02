@@ -67,7 +67,7 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
-      - name: Build and push Docker images
+      - name: Build and push Docker images to Dockerhub
         run: |
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker-compose -f docker-compose.prod.yml build
