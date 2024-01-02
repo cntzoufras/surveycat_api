@@ -2,6 +2,7 @@
 FROM php:8.2-apache
 RUN a2enmod rewrite
 RUN a2enmod headers
+RUN a2enmod log_config
 
 ARG IMAGE_VERSION
 LABEL version=$IMAGE_VERSION
@@ -52,6 +53,10 @@ RUN a2dissite 000-default.conf
 
 # Change ownership of the storage folder to www-data
 RUN chown -R www-data:www-data /var/www/html/storage
+
+# Change ownership of the apache log folders to apache user
+chown www-data:www-data /var/log/apache2/access.log
+chown www-data:www-data /var/log/apache2/error.log
 
 # Copy Composer files and run install, optimizing for production
 COPY composer.json composer.lock ./
