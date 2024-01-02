@@ -15,7 +15,8 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller {
 
     protected UserService $user_service;
-    private               $user_id = User::class('getCurrentUserId');
+
+//    private               $user_id = User::class('getCurrentUserId');
 
     public function __construct(UserService $user_service) {
         $this->user_service = $user_service;
@@ -28,7 +29,7 @@ class UserController extends Controller {
      */
     public function index(Request $request) {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
-        return $this->user_service->getUserRegisteredUsers($user_id);
+//        return $this->user_service->getUserRegisteredUsers($user_id);
     }
 
     /**
