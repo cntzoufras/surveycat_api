@@ -70,14 +70,14 @@ jobs:
 
       - name: Build and push Docker images to Dockerhub
         run: |
-               echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-               docker-compose -f docker-compose.prod.yml build
-               
-               IMAGE_VERSION=$((IMAGE_VERSION + 1))
+          echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker-compose -f docker-compose.prod.yml build
+          
+          IMAGE_VERSION=$((IMAGE_VERSION + 1))
           
           #          TAG="1.$((1+$(docker images -q cntzoufras/surveycat-api-apache | wc -l)))"
-               docker tag cntzoufras/surveycat-api-apache:1.0 cntzoufras/surveycat-api-apache:IMAGE_VERSION
-               docker-compose -f docker-compose.prod.yml push
+          docker tag cntzoufras/surveycat-api-apache:1.0 cntzoufras/surveycat-api-apache:IMAGE_VERSION
+          docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
         run: |
