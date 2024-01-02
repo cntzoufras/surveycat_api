@@ -41,7 +41,7 @@ services:
       - 'prod-redis:/data'
     networks:
       - webnet
-networks: # manually created in prod server with network create
+networks: # network create webnet
   webnet:
     external: true
 
