@@ -72,10 +72,15 @@ jobs:
         run: |
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker-compose -f docker-compose.prod.yml build
-          
-          
-          TAG="1.$(IMAGE_VERSION+1))"
+
+          IFS='.' read -ra version_parts <<< "$IMAGE_VERSION"
+          major_version="${version_parts[0]}"
+          minor_version="${version_parts[1]}"
+          minor_version=$((minor_version + 1))
+          NEW_IMAGE_VERSION="$major_version.$minor_version"
+          TAG="$NEW_IMAGE_VERSION"
           docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$TAG
+
           docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
