@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:1.29
+    image: cntzoufras/surveycat-api-apache:1.30
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -54,8 +54,8 @@ services:
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
     volumes:
-      - 'prod-pgsql:/var/lib/postgresql/data:/var/lib/postgresql/data'
-    #      - 'pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf'
+      - 'prod-pgsql:/var/lib/postgresql/data'
+      - 'pg_hba:/var/lib/postgresql/data/pg_hba.conf:ro'
     networks:
       - webnet
     ports:
