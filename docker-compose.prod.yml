@@ -54,6 +54,7 @@ services:
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
       POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_PASSWORD_ENCRYPTION: scram-sha-256
     #      PGDATA: '/var/lib/postgresql/data/pgdata'
     #    volumes:
     #      - './pg_data:/var/lib/postgresql/data'
