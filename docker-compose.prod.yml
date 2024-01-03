@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:1.36
+    image: cntzoufras/surveycat-api-apache:1.37
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -54,10 +54,10 @@ services:
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
       POSTGRES_HOST_AUTH_METHOD: md5
-      PGDATA: /var/lib/postgresql/data/pgdata
+    #      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - 'prod-pgsql:/var/lib/postgresql/data'
-    #      - './pg_hba:/var/lib/postgresql/data/pg_hba.conf'
+      #      - 'prod-pgsql:/var/lib/postgresql/data'
+      - './pg_hba:/var/lib/postgresql/data/pg_hba.conf'
     networks:
       - webnet
     ports:
@@ -77,8 +77,8 @@ networks: # network create webnet manual
     external: true
 
 volumes: # REMOVE possibly already mounting local pg_data
-  prod-pgsql:
-    driver: local
+  #  prod-pgsql:
+  #    driver: local
 
   prod-redis:
     driver: local
