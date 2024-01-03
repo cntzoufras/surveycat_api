@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "1.42"
+      IMAGE_VERSION: "1.43"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,11 +30,7 @@ jobs:
           DOCKER_HOST: tcp://snf-893977.vm.okeanos.grnet.gr:2375
         run: echo "Docker Host set successfully."
 
-      - name: Stop existing containers
-        run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml down'
-
-      - name: Remove containers, images, and volumes
+      - name: Stop running & remove volumes
         run: |
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml down --volumes'
 
@@ -71,25 +67,23 @@ jobs:
       - name: Build and push Docker images to Dockerhub
         run: |
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          IFS='.' read -ra version_parts <<< "$IMAGE_VERSION"
           
-          major_version="${version_parts[0]}"
-          minor_version="${version_parts[1]}"
-          minor_version=$((minor_version + 1))
-          NEW_IMAGE_VERSION="$major_version.$minor_version"
-          TAG="$NEW_IMAGE_VERSION"
-          #          IMAGE_VERSION="1.3" # Set the desired version here
-          
+          # Build with image version
           docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION=$IMAGE_VERSION
           
+          # Add version tag in built image
           docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$IMAGE_VERSION
           
+          # Deploy containers
+          docker-compose -f docker-compose.prod.yml up -d
+          
+          # Push to Dockerhub
           docker-compose -f docker-compose.prod.yml push
 
-      - name: Deploy to Production Server
-        run: |
-          scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d '
+      #      - name: Deploy to Production Server
+      #        run: |
+      #          scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
+      #          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d '
 
       - name: Run database migrations and seed
         run: |
