@@ -1,0 +1,8 @@
+# Use the official PostgreSQL image as a base
+FROM postgres:15
+
+# Copy your custom pg_hba.conf into the container's data directory
+COPY pg_hba.conf /var/lib/postgresql/data/pg_hba.conf
+
+# Expose the default PostgreSQL port (5432)
+EXPOSE 5432
