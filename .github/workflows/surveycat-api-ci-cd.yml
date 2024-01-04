@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "1.45"
+      IMAGE_VERSION: "1.46"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -84,8 +84,8 @@ jobs:
 
       - name: Run database migrations and seed
         run: |
-          docker-compose -f docker-compose.prod.yml exec surveycat-api php artisan migrate:fresh --seed
+          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache php artisan migrate:fresh --seed
 
       - name: Set directories permissions
         run: |
-          docker-compose -f docker-compose.prod.yml exec -tty surveycat-api chmod -R 777 storage bootstrap/cache
+          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache chmod -R 777 storage bootstrap/cache
