@@ -20,9 +20,10 @@ class StoreThemeRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'user_id'     => 'nullable|uuid|exists:users,id',
+            'user_id'     => 'required|uuid|exists:users,id',
+            'title'       => 'required|string',
+            'footer'      => 'nullable|string|lte:255',
         ];
     }
 }
