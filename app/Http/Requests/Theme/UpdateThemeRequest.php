@@ -10,7 +10,7 @@ class UpdateThemeRequest extends BaseRequest {
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool {
-        return false;
+        return true;
     }
 
     /**
@@ -20,7 +20,10 @@ class UpdateThemeRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            //
+            'description' => 'nullable|string',
+            'user_id'     => 'required|uuid|exists:users,id',
+            'title'       => 'required|string',
+            'footer'      => 'nullable|string|max:255',
         ];
     }
 }
