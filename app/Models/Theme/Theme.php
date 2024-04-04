@@ -17,6 +17,9 @@ class Theme extends Model {
 
     public    $incrementing = false;
     protected $keyType      = 'string';
+    protected $casts        = [
+        'settings' => 'array',
+    ];
 
     protected $guarded  = ['id'];
     protected $fillable = ['title', 'description', 'footer', 'user_id'];
