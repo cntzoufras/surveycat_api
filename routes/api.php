@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticationController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Survey\SurveyCategoryController;
 use App\Http\Controllers\Survey\SurveyController;
 use App\Http\Controllers\Survey\SurveyQuestionController;
 use App\Http\Controllers\RespondentController;
@@ -25,18 +26,17 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-//
-//    return $request->user();
-//});
 
-Route::controller(AuthenticationController::class)->group(function () {
-//    Route::post('/login', [AuthenticationController::class, 'login'])->name('login');
-//    Route::post('logout', [AuthenticationController::class, 'logout']);
-//    Route::post('register', [AuthenticationController::class, 'register']);
-//    Route::post('refresh', [AuthenticationController::class, 'refresh']);
-//    Route::post('forgot-password', [AuthenticationController::class, 'forgot-password']);
-//    Route::post('reset-password', [AuthenticationController::class, 'reset-password']);
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('reset-password', [AuthController::class, 'resetPassword']);
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('logout', [AuthController::class, 'logout']);
+        Route::get('user', [AuthController::class, 'user']);
+    });
 });
 
 Route::prefix('survey-templates')->group(function () {
@@ -68,6 +68,10 @@ Route::prefix('surveys')->group(function () {
     Route::post('/', [SurveyController::class, 'store']);
     Route::put('/', [SurveyController::class, 'update']);
     Route::get('/{id}', [SurveyController::class, 'show']);
+});
+
+Route::prefix('survey-categories')->group(function () {
+    Route::get('/', [SurveyCategoryController::class, 'index']);
 });
 
 Route::prefix('survey-responses')->group(function () {
@@ -129,3 +133,5 @@ Route::prefix('users')->group(function () {
     Route::get('/{id}', [UserController::class, 'show']);
     Route::delete('/{id}', [UserController::class, 'delete']);
 });
+
+Route::get('/', 'ListingOptionsController@getOptions');
