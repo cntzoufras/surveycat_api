@@ -23,7 +23,8 @@ class SurveyCategoryController extends Controller {
      * Display a listing of the resource.
      */
     public function index(Request $request) {
-        return $this->survey_category_service->index($request->validated());
+        $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:50']);
+        return $this->survey_category_service->index($validated);
     }
 
     /**
