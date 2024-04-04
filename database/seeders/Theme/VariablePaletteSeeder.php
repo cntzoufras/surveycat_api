@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Theme;
 
+use App\Models\Theme\ThemeVariable;
 use App\Models\Theme\VariablePalette;
 use Illuminate\Database\Seeder;
 
@@ -20,9 +21,14 @@ class VariablePaletteSeeder extends Seeder {
         // Skip the header row
         fgetcsv($file);
 
+        $theme_variables = ThemeVariable::all();
+        if ($theme_variables->isEmpty()) {
+            throw new \Exception("No ThemeVariables found. Ensure ThemeVariables have been seeded before running this seeder.");
+        }
+
         // Loop through each row in the CSV file
         while (($data = fgetcsv($file)) !== false) {
-            $variable_palette = [$data[0], $data[1], $data[2]];
+            $variable_palette = [$data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6]];
             $this->seedVariablePalette($variable_palette);
         }
 
@@ -35,10 +41,16 @@ class VariablePaletteSeeder extends Seeder {
      *
      * @param array $variable_palette
      */
-    private function seedVariablePalette(array $variable_palette): void {
-        VariablePalette::query()->create(['title'       => $variable_palette[0],
-                                          'description' => $variable_palette[1],
-                                          'footer'      => $variable_palette[2],
+    private function seedVariablePalette(array $variable_palette, $theme_variable_id): void {
+        VariablePalette::query()->create(['answer_color'         => $variable_palette[0],
+                                          'primary_accent'       => $variable_palette[1],
+                                          'primary_background'   => $variable_palette[3],
+                                          'question_color'       => $variable_palette[4],
+                                          'secondary_accent'     => $variable_palette[5],
+                                          'secondary_background' => $variable_palette[6],
+                                          'title_color'          => $variable_palette[7],
+                                          'theme_variable_id'    => $theme_variable_id,
+
         ]);
     }
 }
