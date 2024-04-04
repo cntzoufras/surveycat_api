@@ -11,10 +11,11 @@ return new class extends Migration {
      */
     public function up(): void {
         Schema::create('theme_variables', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->string('primary_background_alpha');
             $table->string('theme_thumb'); // link to theme thumb png
-            $table->foreignUuid('theme_setting_id')->constrained('theme_settings');
+            $table->unsignedBigInteger('theme_setting_id');
+            $table->foreign('theme_setting_id')->references('id')->on('theme_settings');
             $table->timestamps();
         });
     }

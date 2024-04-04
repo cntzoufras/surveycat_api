@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('secondary_accent');
             $table->string('secondary_background');
             $table->string('title_color');
-            $table->foreignUuid('theme_variable_id')->constrained('theme_variables');
+            $table->foreignId('theme_variable_id')->constrained('theme_variables');
             $table->timestamps();
         });
     }
