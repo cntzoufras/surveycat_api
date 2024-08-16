@@ -16,14 +16,16 @@ return new class extends Migration {
                 DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
             }
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
-            $table->string('title')->index();
+            $table->string('title')->nullable()->index();
             $table->string('description')->nullable();
-            $table->foreignId('survey_category_id')->constrained('survey_categories');
-            $table->foreignId('survey_status_id')->constrained('survey_statuses');
+            $table->foreignId('survey_category_id')->nullable()->constrained('survey_categories');
+            $table->foreignId('survey_status_id')->nullable()->constrained('survey_statuses');
             $table->foreignUuid('user_id')->constrained('users');
-            $table->foreignUuid('theme_id')->constrained('themes');
+            $table->foreignUuid('theme_id')->nullable()->constrained('themes');
             $table->string('public_link')->nullable()->default(null);
             $table->integer('views')->default(0);
+            $table->string('priority')->nullable()->default('low');
+            $table->boolean('is_stock')->nullable()->default('false');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -37,6 +39,7 @@ return new class extends Migration {
             $table->dropForeign(['survey_category_id']);
             $table->dropForeign(['survey_status_id']);
             $table->dropForeign(['user_id']);
+            $table->dropForeign(['theme_id']);
         });
         Schema::dropIfExists('surveys');
     }
