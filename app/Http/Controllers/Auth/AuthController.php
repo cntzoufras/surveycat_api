@@ -5,20 +5,23 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\AuthService;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller {
 
-    private $auth;
 
-    public function __construct(AuthService $service) {
-        $this->auth = $service;
+    protected AuthService $auth_service;
+
+    public function __construct(AuthService $auth_service) {
+        $this->auth_service = $auth_service;
     }
 
     /**
-     * Attempt a login using a username/password combination
+     * Attempt a login using a username/password combination *OK
      *
      * @param \Illuminate\Http\Request $request
      *
@@ -32,89 +35,81 @@ class AuthController extends Controller {
             'password'    => 'required|string',
             'remember_me' => 'boolean',
         ]);
-        $user = $this->auth->authenticateByCredentials(
-            $request->input('email'),
-            $request->input('password')
-        );
+
+        $credentials = $request->only('email', 'password'); // Extract credentials from request
+
+        // Attempt to authenticate the user using Laravel's built-in authentication
+        if (!Auth::attempt($credentials)) {
+            throw new AuthenticationException();
+        }
+
+        $user = Auth::user();
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['error' => 'Email not verified. Please check your inbox for the verification link.'], 403); // 403 Forbidden
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'token' => $token,
         ]);
     }
 
-    public function logout(Request $request) {
-        $this->auth->logout($request->bearerToken());
-        response()->json([
-            'message' => 'Logged out successfully.',
-        ]);
+    /**
+     * Display the specified resource.
+     *
+     * @throws \Exception
+     */
+    public function user(Request $request): mixed {
+        try {
+            $user = Auth::user();
+            dd($user);
+
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch user'], 500);
+        }
     }
 
     /**
-     * Refresh the credentials of a party, using their refresh token
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Auth\AuthenticationException
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Throwable
      */
-    public function refresh(Request $request) {
-        $this->validate($request, [
-            'refresh_token' => 'required|string',
-        ]);
-        $party = $this->auth->getUserFromRefreshToken($request->input('refresh_token'));
-        $token = $this->auth->getToken($party, true);
+    public function logout(Request $request): JsonResponse {
 
-        return response()->json([
-            'token'         => $token,
-            'refresh_token' => $this->auth->getRefreshToken($party, $token),
-        ]);
+//        $this->auth_service->logout($request->user()->currentAccessToken());
+//        return response()->json(null, 204); // minimal response for logout
     }
 
-    public function forgotPassword(Request $request) {
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function forgotPassword(Request $request): JsonResponse {
         $this->validate($request, [
-            'username' => 'required',
+            'username' => 'required|string|exists:users,username',
         ]);
-        $this->auth->requestPasswordReset($request->input('username'));
-        return response()->json([
-            'message' => trans('passwords.reset_requested'),
-        ]);
+        $result = $this->auth_service->requestPasswordReset($request->input('username'));
+        if ($result) {
+            return response()->json([
+                'message' => trans('passwords.reset_requested'),
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => trans('passwords.user_not_found'),
+            ], 404);
+        }
     }
 
-    public function resetPassword(Request $request) {
+    public function resetPassword(Request $request): JsonResponse {
         $this->validate($request, [
             'token'                 => 'required',
             'password'              => 'required',
             'password_confirmation' => 'required|same:password',
         ]);
-        $this->auth->resetPassword($request->input('token'), $request->input('password'));
+        $this->auth_service->resetPassword($request->input('token'), $request->input('password'));
         return response()->json([
             'message' => trans('passwords.reset'),
         ]);
     }
-
-    public function register(Request $request): JsonResponse {
-        $validated = $request->validate([
-            'username'  => 'required|string|max:255|unique:users,username',
-            'email'     => 'required|string|unique:users,email',
-            'password'  => 'required|string|min:8',
-            'cPassword' => 'required|same:password',
-        ]);
-        try {
-            $user = $this->auth->register($validated);
-
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->plainTextToken;
-
-            return response()->json([
-                'message'     => 'Successfully created user!',
-                'accessToken' => $token,
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
 
 }
