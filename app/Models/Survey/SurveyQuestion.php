@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SurveyQuestion extends Model {
 
     use HasFactory, Uuids, SoftDeletes;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
+    public       $incrementing = false;
+    public mixed $is_required, $title, $question_type_id, $additional_settings, $survey_page_id;
+
+    protected $keyType = 'string';
 
     protected $guarded  = ['id'];
     protected $fillable = [
@@ -49,10 +52,10 @@ class SurveyQuestion extends Model {
     /**
      * Get all tags associated to this survey question
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function tags(): MorphMany {
-        return $this->morphMany(Tag::class, 'taggable');
+    public function tags(): MorphToMany {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     /**
