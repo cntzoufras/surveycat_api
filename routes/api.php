@@ -21,16 +21,15 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
+Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [RegisteredUserController::class, 'store']);
-Route::post('login', [AuthController::class, 'login'])->name('login');;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    $user = \Illuminate\Support\Facades\Auth::user();
-    return response()->json(['user' => $user]);
-});
-
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    Route::get('/user', function (Request $request) {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        return response()->json(['user' => $user]);
+    });
 
     Route::prefix('survey-templates')->group(function () {
         Route::get('/', [SurveyTemplateController::class, 'index']);
@@ -39,6 +38,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('/{id}', [SurveyTemplateController::class, 'show']);
         Route::delete('/{id}', [SurveyTemplateController::class, 'delete']);
     });
+
+    Route::get('/stock-surveys', [SurveyController::class, 'getStockSurveys']);
+    Route::get('surveys/{surveyId}/pages/{pageId}/survey-questions', [SurveyQuestionController::class,
+        'getSurveyQuestionsByPage',
+    ]);
 
     Route::prefix('survey-questions')->group(function () {
         Route::get('/', [SurveyQuestionController::class, 'index']);
