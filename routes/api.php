@@ -16,6 +16,7 @@ use App\Http\Controllers\Theme\ThemeSettingsController;
 use App\Http\Controllers\Theme\ThemeVariableController;
 use App\Http\Controllers\Theme\VariablePalettesController;
 use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
