@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->integer('sort_index')->default(0);
             $table->foreignUuid('survey_question_id')->constrained('survey_questions');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
