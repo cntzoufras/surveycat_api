@@ -13,9 +13,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+use App\Events\PasswordResetRequested;
+
 class AuthService {
 
-    private UserRepository $users;
+    protected UserRepository $users;
 
     public function __construct(UserRepository $users) {
         $this->users = $users;
@@ -26,55 +28,38 @@ class AuthService {
      */
     public function register($params): User {
         $this->validateUsername($params['username']);
+        $this->validateEmail($params['email']);
         $this->validateRegexPassword($params['password']);
 
         $user = new User();
         $user->username = $params['username'];
         $user->email = $params['email'];
         $user->password = Hash::make($params['password']);
-        $user->role = 'registered_user';
+        $user->role = 'registered';
 
         DB::transaction(function () use ($user) {
-            $user->save();
+            $this->users->save($user);
         });
         return $user;
     }
 
     public function requestPasswordReset($username): bool {
-        $user = $this->members->findByUsername($username);
-        if ($user == null || !$user->can_login || $user->is_archived || $user->user == null) {
-            return false;
-        }
+        $user = $this->users->findByUsername($username);
+        if (!$user) return false;
 
-        $user = $user->user;
         $user->password_reset_token = Str::random(64);
         $user->password_reset_at = Carbon::now();
 
-        DB::transaction(function () use ($user) {
-            $user->save();
-            $user->notify(new UserPasswordReset($this->context->superAdmin(), $user));
+        $token = Str::random(64);
+        $user->password_reset_token = $token;
+        $user->password_reset_at = Carbon::now();
+
+        DB::transaction(function () use ($user, $token) {
+            $this->users->save($user);
+            event(new PasswordResetRequested($user, $token));
         });
 
         return true;
-    }
-
-    public function resetPassword($token, $password): void {
-        DB::transaction(function () use ($token, $password) {
-            $user = $this->members->findByResetToken($token);
-            if ($user == null || !$user->can_login || $user->is_archived || $user->user == null) {
-                throw new ValidationException('password_reset_invalid');
-            }
-            $user = $user->user;
-            if ($user->isPasswordResetExpired()) {
-                throw new ValidationException('password_reset_expired');
-            }
-            $this->validateRegexPassword($password);
-
-            $user->password = Hash::make($password);
-            $user->password_reset_token = null;
-            $user->password_reset_at = null;
-            $user->save();
-        });
     }
 
     /**
@@ -137,7 +122,10 @@ class AuthService {
     private function validateRegexPassword($input): void {
         $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/';
         if (!preg_match($pattern, $input)) {
-            throw new \Illuminate\Validation\ValidationException('Password does not meet the required criteria.');
+            throw ValidationException::withMessages([
+                'password' => ['Password must be at least 8 characters long,include at least one lower & one uppercase letter, one number, and one special character (@, $, !, %, *, ?, &).'],
+                // Use an array for errors
+            ]);
         }
     }
 
