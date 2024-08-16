@@ -20,11 +20,12 @@ return new class extends Migration {
             $table->string('role')->default('registered');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('photo')->nullable();
+            $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
