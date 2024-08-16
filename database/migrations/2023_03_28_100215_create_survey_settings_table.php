@@ -12,7 +12,6 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('survey_settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('page_title')->nullable()->default(null);
             $table->boolean('show_page_title')->default(true);
             $table->boolean('show_page_numbers')->default(true);
             $table->boolean('show_question_numbers')->default(true);
