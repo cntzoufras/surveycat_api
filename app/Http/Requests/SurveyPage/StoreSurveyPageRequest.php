@@ -20,10 +20,10 @@ class StoreSurveyPageRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            'title'             => 'required|string|min:0|max:255',
-            'description'       => 'string|min:0|max:255|nullable',
+            'title'             => 'nullable|string|min:0|max:255',
+            'description'       => 'nullable|string|min:0|max:255',
             'survey_id'         => 'required|uuid|exists:surveys,id',
-            'sort_index'        => 'required|integer',
+            'sort_index'        => 'nullable|integer',
             'layout'            => 'sometimes|in:single,multiple',
             'require_questions' => 'boolean|nullable',
         ];
