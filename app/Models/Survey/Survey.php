@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -20,12 +21,10 @@ class Survey extends Model {
 
     use HasFactory, Notifiable, Uuids, SoftDeletes;
 
-    public $incrementing = false;
+    public    $incrementing = false;
+    protected $keyType      = 'string';
 
-    protected $keyType = 'string';
-    
-    protected $guarded = ['id'];
-
+    protected $guarded  = ['id'];
     protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id', 'user_id', 'theme_id'];
 
     protected $attributes = [
@@ -73,8 +72,8 @@ class Survey extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function tags(): MorphMany {
-        return $this->morphMany(Tag::class, 'taggable');
+    public function tags(): MorphToMany {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     /**
