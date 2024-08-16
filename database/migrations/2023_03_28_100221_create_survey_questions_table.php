@@ -17,10 +17,11 @@ return new class extends Migration {
             }
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('title')->index();
-            $table->foreignUuid('survey_page_id')->constrained('survey_pages');
             $table->boolean('is_required')->default(false);
             $table->foreignId('question_type_id')->constrained('question_types');
+            $table->foreignUuid('survey_page_id')->constrained('survey_pages');
             $table->jsonb('additional_settings')->nullable(); // color , align, font
+            $table->jsonb('question_tags')->nullable(); // { tag1 , tag2, tagX }
             $table->softDeletes();
             $table->timestamps();
         });
