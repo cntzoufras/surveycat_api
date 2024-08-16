@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return ['Laravel' => app()->version()];
+Route::post('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+
+Route::get('/sanctum/csrf-cookie', function () {
+    return response()->json(['csrfToken' => csrf_token()]);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
