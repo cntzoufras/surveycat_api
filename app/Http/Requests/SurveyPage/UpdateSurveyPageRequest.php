@@ -20,7 +20,12 @@ class UpdateSurveyPageRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            //
+            'title'             => 'sometimes|string|max:255',
+            'description'       => 'sometimes|string|max:255',
+            'layout'            => 'string|in:single,multiple',
+            'sort_index'        => 'integer',
+            'require_questions' => 'boolean',
+            'survey_id'         => 'uuid|in:surveys,id',
         ];
     }
 }
