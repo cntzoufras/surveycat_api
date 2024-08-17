@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Survey\Survey;
 use App\Models\Survey\SurveyCategory;
 use App\Models\Survey\SurveyQuestion;
-use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Tag extends Model {
 
-    use HasFactory, Uuids;
+    use HasFactory;
 
     protected $guarded = ['id'];
 
