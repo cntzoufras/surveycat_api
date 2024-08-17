@@ -20,12 +20,13 @@ class StoreSurveyRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            'title'              => 'required|string|min:0|max:255',
+            'title'              => 'required|string|nullable|max:255',
             'description'        => 'string|nullable|max:255',
-            'survey_category_id' => 'required|integer|exists:survey_categories,id',
+            'survey_category_id' => 'nullable|integer|exists:survey_categories,id',
             'survey_status_id'   => 'nullable|integer|exists:survey_statuses,id',
             'user_id'            => 'required|uuid|exists:users,id',
-            'theme_id'           => 'required|uuid|exists:themes,id',
+            'theme_id'           => 'nullable |uuid|exists:themes,id',
+            'priority'           => 'nullable|in:low,medium,high',
         ];
     }
 }
