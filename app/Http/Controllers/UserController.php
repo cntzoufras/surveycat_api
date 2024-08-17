@@ -16,27 +16,15 @@ class UserController extends Controller {
 
     protected UserService $user_service;
 
-//    private               $user_id = User::class('getCurrentUserId');
-
     public function __construct(UserService $user_service) {
         $this->user_service = $user_service;
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @throws \Exception
-     */
-    public function index(Request $request) {
-        $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
-//        return $this->user_service->getUserRegisteredUsers($user_id);
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveyQuestionRequest $request): SurveyQuestion {
-        return $this->user_service->store($request->all());
+    public function store(StoreUserRequest $request): User {
+        return $this->user_service->store($request->validated);
     }
 
     /**
@@ -48,7 +36,7 @@ class UserController extends Controller {
         try {
             if (isset($request['id'])) {
                 Validator::validate(['id' => $request['id']], [
-                    'id' => 'uuid|required|exists:survey_questions,id',
+                    'id' => 'uuid|required|exists:users,id',
                 ]);
                 return $this->user_service->show($request['id']);
             }
@@ -63,14 +51,14 @@ class UserController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSurveyQuestionRequest $request, SurveyQuestion $survey_question) {
-        return $this->user_service->update($survey_question, $request->validated());
+    public function update(UpdateUserRequest $request, $id) {
+        return $this->user_service->update($id, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SurveyQuestion $survey_question) {
-        return $this->user_service->delete($survey_question);
+    public function destroy(User $user) {
+        return $this->user_service->destroy($user);
     }
 }
