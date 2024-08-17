@@ -70,4 +70,8 @@ class SurveyQuestionController extends Controller {
     public function destroy(SurveyQuestion $survey_question) {
         return $this->survey_question_service->delete($survey_question);
     }
+
+    public function getSurveyQuestionsByPage() {
+        //
+    }
 }
