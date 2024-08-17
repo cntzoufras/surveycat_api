@@ -2,6 +2,7 @@
 
 namespace App\Services\Survey;
 
+use App\Exceptions\SurveyNotEditableException;
 use App\Models\Survey\Survey;
 use App\Repositories\Survey\SurveyRepository;
 use Illuminate\Support\Str;
@@ -21,58 +22,60 @@ class SurveyService {
         return $this->survey_repository->index($params);
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function getAllTemplates($params) {
-        return $this->survey_repository->getAllTemplates($params);
-    }
-
     public function store(array $params): Survey {
-        $params['public_link'] = $this->createPublicLink($params['title']);
         return $this->survey_repository->store($params);
     }
 
-    public function saveAsTemplate(array $params): Survey {
-        return $this->survey_repository->saveAsTemplate($params);
+    /**
+     * @throws \Exception
+     */
+    public function update($survey, array $params) {
+        $survey = $this->survey_repository->resolveModel($survey);
+        return $this->survey_repository->update($survey, $params);
     }
 
-    public function update($question_id, array $params) {
-        $question = $this->survey_repository->resolveModel($question_id);
-        return $this->survey_repository->update($question, $params);
-    }
 
-    public function updateTemplate($question_id, array $params) {
-        $question = $this->survey_repository->resolveModel($question_id);
-        return $this->survey_repository->update($question, $params);
-    }
-
-    public function delete($question_id) {
-        $question = $this->survey_repository->resolveModel($question_id);
-        return $this->survey_repository->delete($question);
-    }
-
-    public function deleteTemplate($question_id) {
-        $question = $this->survey_repository->resolveModel($question_id);
-        return $this->survey_repository->delete($question);
+    public function destroy($survey_id) {
+        $survey = $this->survey_repository->resolveModel($survey_id);
+        return $this->survey_repository->destroy($survey);
     }
 
     public function show($params) {
         return $this->survey_repository->getIfExist($params);
     }
 
-    public function getTemplate($params) {
-        return $this->survey_repository->getTemplate($params);
+    public function getStockSurveys() {
+        return $this->survey_repository->getStockSurveys();
+    }
+
+    public function publish($survey_id, array $params) {
+        $survey = $this->survey_repository->resolveModel($survey_id);
+
+        if (!empty($params['title'])) {
+            $params['public_link'] = $this->updatePublicLink($params['title'], $survey_id);
+        } else {
+            // Handle the case where title is not set or is empty
+            throw new \InvalidArgumentException('Title is required to create a public link.');
+        }
+
+        // Set the survey as published
+        $params['is_published'] = true;
+
+        return $this->survey_repository->update($survey, $params);
     }
 
 
-    protected function createPublicLink($title): string {
+    protected function updatePublicLink($title): string {
         $slug = Str::slug($title);
-        $milliseconds = round(microtime(true) * 1000);
-        $timePortion = substr($milliseconds, 2, 4);
-        $randomString = Str::random(4);
-        return "{$slug}-{$timePortion}-{$randomString}";
+        return "{$slug}-" . uniqid();
     }
 
-
+    /**
+     * @throws \App\Exceptions\SurveyNotEditableException
+     */
+    protected function disableUpdatesOnPublishedSurvey($survey, $data): void {
+        if ($survey->status === 'published' && isset($data['status']) && $data['status'] !== 'draft') {
+            throw new SurveyNotEditableException('Survey is published and cannot be edited unless reverted to draft.');
+        }
+    }
 }
