@@ -2,6 +2,7 @@
 
 namespace App\Services\Survey;
 
+use App\Models\Survey\SurveyCategory;
 use App\Repositories\Survey\SurveyCategoryRepository;
 
 class SurveyCategoryService {
@@ -20,7 +21,7 @@ class SurveyCategoryService {
         return $this->survey_category_repository->store($params);
     }
 
-    public function update($survey_category, array $params) {
+    public function update(SurveyCategory $survey_category, array $params) {
         $survey_category = $this->survey_category_repository->resolveModel($survey_category);
         return $this->survey_category_repository->update($survey_category, $params);
     }
