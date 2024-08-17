@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Survey;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Survey\StoreSurveyRequest;
+use App\Http\Requests\Survey\UpdateSurveyRequest;
+use App\Http\Requests\SurveyQuestion\UpdateSurveyQuestionRequest;
 use App\Models\Survey\Survey;
+use App\Models\Survey\SurveyQuestion;
 use App\Services\Survey\SurveyService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -55,4 +60,29 @@ class SurveyController extends Controller {
         }
         return null;
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @throws \Exception
+     */
+    public function update(UpdateSurveyRequest $request, $id) {
+        return $this->survey_service->update($id, $request->validated());
+    }
+
+
+    public function publish(UpdateSurveyRequest $request, Survey $survey) {
+        return $this->survey_service->publish($survey, $request->validated());
+    }
+
+    public function destroy($id) {
+        return $this->survey_service->destroy($id);
+    }
+
+    /* TODO - Add some method to only allow delete from the user_id that created this survey */
+
+    public function getStockSurveys() {
+        return $this->survey_service->getStockSurveys();
+    }
+
 }
