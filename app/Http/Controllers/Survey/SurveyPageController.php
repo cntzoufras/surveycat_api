@@ -6,15 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyPage\StoreSurveyPageRequest;
 use App\Http\Requests\SurveyPage\UpdateSurveyPageRequest;
 use App\Models\Survey\SurveyPage;
-use App\Services\Survey\SurveyQuestionService;
+use App\Services\Survey\SurveyPageService;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class SurveyPageController extends Controller {
 
-    protected SurveyQuestionService $survey_question_service;
+    protected SurveyPageService $survey_page_service;
 
-    public function __construct(SurveyQuestionService $survey_question_service) {
-        $this->survey_question_service = $survey_question_service;
+    public function __construct(SurveyPageService $survey_page_service) {
+
+        $this->survey_page_service = $survey_page_service;
     }
 
     /**
@@ -28,44 +32,42 @@ class SurveyPageController extends Controller {
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveyPageRequest $request) {
-        //
+    public function store(StoreSurveyPageRequest $request): SurveyPage {
+        return $this->survey_page_service->store($request->validated());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(SurveyPage $surveyPage) {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SurveyPage $surveyPage) {
-        //
+    public function show(Request $request): mixed {
+        try {
+            if (isset($request['id'])) {
+                Validator::validate(['id' => $request['id']], [
+                    'id' => 'uuid|required|exists:survey_pages,id',
+                ]);
+                return $this->survey_page_service->show($request['id']);
+            }
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), 500);
+        }
+        return null;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSurveyPageRequest $request, SurveyPage $surveyPage) {
-        //
+    public function update(UpdateSurveyPageRequest $request, $id) {
+        return $this->survey_page_service->update($id, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SurveyPage $surveyPage) {
-        //
+    public function delete(SurveyPage $survey_page) {
+        return $this->survey_page_service->delete($survey_page);
     }
 }
