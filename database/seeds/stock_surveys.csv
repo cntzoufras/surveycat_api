@@ -1,0 +1,27 @@
+survey_title,survey_description,survey_category_id,survey_status_id,priority,page_title,page_description,require_questions,question_title,is_required,question_type_id,color,align,font
+Customer Feedback,Survey to gather customer feedback,1,1,High,General Info,Collect basic customer information,true,What is your age?,true,1,#FF5733,left,Arial
+Customer Feedback,Survey to gather customer feedback,1,1,High,General Info,Collect basic customer information,true,What is your gender?,true,2,#33FF57,center,Verdana
+Customer Feedback,Survey to gather customer feedback,1,1,High,General Info,Collect basic customer information,true,How satisfied are you with our service?,true,3,#5733FF,right,Consolas
+Customer Feedback,Survey to gather customer feedback,1,1,High,Service Experience,Feedback on recent service,false,How would you rate our customer service?,true,3,#FF33AA,left,Arial
+Customer Feedback,Survey to gather customer feedback,1,1,High,Service Experience,Feedback on recent service,false,Did our staff meet your expectations?,false,2,#33AAFF,center,Verdana
+Customer Feedback,Survey to gather customer feedback,1,1,High,Service Experience,Feedback on recent service,false,Would you recommend our service to others?,true,3,#FF5733,left,Arial
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,Medium,Job Satisfaction,Understand job satisfaction,true,How satisfied are you with your job?,true,1,#FF5733,left,Arial
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,Medium,Job Satisfaction,Understand job satisfaction,true,Do you feel valued at work?,true,2,#33FF57,center,Verdana
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,Medium,Work Environment,Feedback on work environment,false,How would you rate the work environment?,true,3,#5733FF,right,Consolas
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,Medium,Work Environment,Feedback on work environment,false,Do you feel safe at work?,false,2,#FF33AA,left,Arial
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,Medium,Work Environment,Feedback on work environment,false,What improvements would you suggest?,false,3,#33AAFF,center,Verdana
+Product Feedback,Survey to collect feedback on our products,3,1,Low,Product Usage,Understand product usage,true,How often do you use our product?,true,1,#FF5733,left,Arial
+Product Feedback,Survey to collect feedback on our products,3,1,Low,Product Usage,Understand product usage,true,What features do you use the most?,true,2,#33FF57,center,Verdana
+Product Feedback,Survey to collect feedback on our products,3,1,Low,Product Features,Feedback on product features,false,How satisfied are you with the product features?,true,3,#5733FF,right,Consolas
+Product Feedback,Survey to collect feedback on our products,3,1,Low,Product Features,Feedback on product features,false,Which feature would you like to see improved?,false,2,#FF33AA,left,Arial
+Product Feedback,Survey to collect feedback on our products,3,1,Low,Product Features,Feedback on product features,false,Any other comments about our product?,false,3,#33AAFF,center,Verdana
+Market Research,Survey to understand market trends,4,1,High,Demographics,Collect demographic information,true,What is your age group?,true,1,#FF5733,left,Arial
+Market Research,Survey to understand market trends,4,1,High,Demographics,Collect demographic information,true,What is your gender?,true,2,#33FF57,center,Verdana
+Market Research,Survey to understand market trends,4,1,High,Buying Habits,Understand buying habits,false,How often do you purchase similar products?,true,3,#5733FF,right,Consolas
+Market Research,Survey to understand market trends,4,1,High,Buying Habits,Understand buying habits,false,Where do you usually buy these products?,false,2,#FF33AA,left,Arial
+Market Research,Survey to understand market trends,4,1,High,Buying Habits,Understand buying habits,false,What influences your buying decisions?,false,3,#33AAFF,center,Verdana
+Website Feedback,Survey to gather feedback on website usability,5,1,Medium,User Experience,Feedback on website user experience,true,How easy is it to navigate our website?,true,1,#FF5733,left,Arial
+Website Feedback,Survey to gather feedback on website usability,5,1,Medium,User Experience,Feedback on website user experience,true,Do you find what you're looking for easily?,true,2,#33FF57,center,Verdana
+Website Feedback,Survey to gather feedback on website usability,5,1,Medium,Technical Aspects,Feedback on website technical performance,false,How fast does the website load?,true,3,#5733FF,right,Consolas
+Website Feedback,Survey to gather feedback on website usability,5,1,Medium,Technical Aspects,Feedback on website technical performance,false,Have you encountered any errors?,false,2,#FF33AA,left,Arial
+Website Feedback,Survey to gather feedback on website usability,5,1,Medium,Technical Aspects,Feedback on website technical performance,false,How would you rate the website reliability?,false,3,#33AAFF,center,Verdana
