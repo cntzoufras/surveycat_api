@@ -10,9 +10,6 @@ class ThemeVariable extends Model {
 
     use HasFactory;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
-
     protected $guarded  = ['id'];
     protected $fillable = ['primary_background_alpha', 'theme_thumb', 'theme_setting_id'];
 
@@ -21,7 +18,11 @@ class ThemeVariable extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function theme_setting(): BelongsTo {
+    public function themeSetting(): BelongsTo {
         return $this->belongsTo(ThemeSetting::class, 'theme_setting_id', 'id');
+    }
+
+    public function variablePalette(): BelongsTo {
+        return $this->belongsTo(VariablePalette::class);
     }
 }
