@@ -28,7 +28,7 @@ class SurveyPageController extends Controller {
      */
     public function index(Request $request) {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
-        return $this->survey_question_service->index($validated);
+        return $this->survey_page_service->index($validated);
     }
 
     /**
