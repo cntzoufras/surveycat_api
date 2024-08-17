@@ -7,14 +7,26 @@ use App\Models\Survey\SurveyTemplate;
 use App\Models\Theme\Theme;
 use App\Models\Theme\ThemeSetting;
 use App\Traits\Uuids;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable {
+/**
+ * Class User
+ * ...
+ *
+ * @property string $username
+ * @property string $password
+ * @property string $email
+ * @property string $role
+ * @property \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ */
+class User extends Authenticatable implements MustVerifyEmail {
 
-    use HasFactory, Notifiable, Uuids;
+    use HasFactory, Notifiable, Uuids, HasApiTokens;
 
     public    $incrementing = false;
     protected $keyType      = 'string';
@@ -27,7 +39,7 @@ class User extends Authenticatable {
      *
      * @var array
      */
-    protected $fillable = ['username', 'email', 'role', 'first_name', 'last_name', 'photo', 'password',];
+    protected $fillable = ['username', 'email', 'role', 'first_name', 'last_name', 'avatar', 'password',];
 
     /**
      * The attributes that should be hidden for arrays.
