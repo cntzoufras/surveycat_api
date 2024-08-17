@@ -6,6 +6,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class VariablePalette extends Model {
 
@@ -22,9 +23,10 @@ class VariablePalette extends Model {
     /**
      * Get the theme variable associated with this palette.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function theme_variable(): BelongsTo {
-        return $this->belongsTo(ThemeVariable::class, 'theme_variable_id');
+    public function theme_variables(): HasMany {
+        return $this->hasMany(ThemeVariable::class);
     }
+    
 }

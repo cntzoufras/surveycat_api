@@ -2,8 +2,11 @@
 
 namespace Database\Seeders\Theme;
 
+use App\Models\Theme\Theme;
+use App\Models\Theme\ThemeSetting;
 use App\Models\Theme\ThemeVariable;
 use App\Models\Theme\VariablePalette;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class VariablePaletteSeeder extends Seeder {
@@ -12,6 +15,7 @@ class VariablePaletteSeeder extends Seeder {
      * Run the database seeds.
      */
     public function run(): void {
+
         // Get the path to the CSV file
         $csvPath = base_path('database/seeds/variable_palettes.csv');
 
@@ -41,16 +45,16 @@ class VariablePaletteSeeder extends Seeder {
      *
      * @param array $variable_palette
      */
-    private function seedVariablePalette(array $variable_palette, $theme_variable_id): void {
+    private function seedVariablePalette(array $variable_palette): void {
+        $theme_variable = ThemeVariable::first();
         VariablePalette::query()->create(['answer_color'         => $variable_palette[0],
                                           'primary_accent'       => $variable_palette[1],
-                                          'primary_background'   => $variable_palette[3],
-                                          'question_color'       => $variable_palette[4],
-                                          'secondary_accent'     => $variable_palette[5],
-                                          'secondary_background' => $variable_palette[6],
-                                          'title_color'          => $variable_palette[7],
-                                          'theme_variable_id'    => $theme_variable_id,
-
+                                          'primary_background'   => $variable_palette[2],
+                                          'question_color'       => $variable_palette[3],
+                                          'secondary_accent'     => $variable_palette[4],
+                                          'secondary_background' => $variable_palette[5],
+                                          'title_color'          => $variable_palette[6],
+                                          'theme_variable_id'    => $theme_variable->id,
         ]);
     }
 }

@@ -13,6 +13,7 @@ class VariablePaletteFactory extends Factory {
      */
     public function definition(): array {
         return [
+            'id'                   => fake()->numberBetween(1, 1),
             'answer_color'         => fake()->hexColor(),
             'primary_accent'       => fake()->randomElement(['', 'bold', 'italic', 'underline']),
             'primary_background'   => fake()->url(),
