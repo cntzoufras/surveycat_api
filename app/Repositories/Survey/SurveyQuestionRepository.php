@@ -2,8 +2,6 @@
 
 namespace App\Repositories\Survey;
 
-use App\Contracts\ListingRepositoryInterface;
-use App\Models\QuestionType;
 use App\Models\Survey\SurveyQuestion;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +34,6 @@ class SurveyQuestionRepository {
 
     public function update(SurveyQuestion $survey_question, array $params) {
         return DB::transaction(function () use ($params, $survey_question) {
-//            dd($params);
             $survey_question->fill($params);
             $survey_question->save();
             return $survey_question;
