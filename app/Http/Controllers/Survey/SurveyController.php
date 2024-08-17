@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Survey;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Survey\StoreSurveyRequest;
 use App\Http\Requests\Survey\UpdateSurveyRequest;
-use App\Http\Requests\SurveyQuestion\UpdateSurveyQuestionRequest;
 use App\Models\Survey\Survey;
-use App\Models\Survey\SurveyQuestion;
 use App\Services\Survey\SurveyService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -76,10 +74,21 @@ class SurveyController extends Controller {
     }
 
     public function destroy($id) {
-        return $this->survey_service->destroy($id);
-    }
 
-    /* TODO - Add some method to only allow delete from the user_id that created this survey */
+        try {
+            $survey = Survey::findOrFail($id);
+
+            if ($survey->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            }
+
+            return $this->survey_service->destroy($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Survey not found'], Response::HTTP_NOT_FOUND);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     public function getStockSurveys() {
         return $this->survey_service->getStockSurveys();
