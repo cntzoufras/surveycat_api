@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Theme;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\VariablePalette\StoreVariablePaletteRequest;
 use App\Http\Requests\VariablePalette\UpdateVariablePaletteRequest;
 use App\Models\Theme\VariablePalette;
 use App\Services\Theme\VariablePaletteService;
