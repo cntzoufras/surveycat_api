@@ -73,7 +73,7 @@ class AuthController extends Controller {
     /**
      * @throws \Illuminate\Auth\AuthenticationException
      */
-    public function logout(Request $request): JsonResponse {
+    public function logout(Request $request) {
 //        $this->auth_service->logout($request->user()->currentAccessToken());
 //        return response()->json(null, 204); // minimal response for logout
         return;
