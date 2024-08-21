@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->foreignUuid('user_id')->constrained('users');
             $table->foreignUuid('theme_id')->nullable()->constrained('themes');
             $table->string('public_link')->nullable()->default(null);
-            $table->bigIncrements('views')->default(0);
+            $table->bigInteger('views')->default('0');
             $table->integer('priority')->nullable()->default(null);
             $table->boolean('is_stock')->nullable()->default('false');
             $table->timestamps();
