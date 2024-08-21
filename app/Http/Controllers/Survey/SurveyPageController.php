@@ -70,4 +70,24 @@ class SurveyPageController extends Controller {
     public function delete(SurveyPage $survey_page) {
         return $this->survey_page_service->delete($survey_page);
     }
+
+    public function getSurveyPagesBySurvey($surveyId) {
+        try {
+            // Validate the incoming request
+            Validator::validate(['survey_id' => $surveyId], [
+                'survey_id' => 'uuid|required|exists:surveys,id',
+            ]);
+
+            // Call the service to fetch survey pages
+            return $this->survey_page_service->getSurveyPagesBySurvey($surveyId);
+        } catch (ValidationException $e) {
+            // Handle validation errors
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
 }

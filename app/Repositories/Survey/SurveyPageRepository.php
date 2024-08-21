@@ -54,4 +54,14 @@ class SurveyPageRepository {
         });
     }
 
+    public function getSurveyPagesBySurvey($surveyId) {
+        try {
+            return DB::transaction(function () use ($surveyId) {
+                return SurveyPage::query()->where('survey_id', '=', $surveyId)->get();
+            });
+        } catch (\Exception $e) {
+            throw new \Exception($e, 500);
+        }
+    }
+
 }

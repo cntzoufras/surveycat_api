@@ -35,4 +35,8 @@ class SurveyPageService {
         return $this->survey_page_repository->resolveModel($params);
     }
 
+    public function getSurveyPagesBySurvey($surveyId) {
+        return $this->survey_page_repository->getSurveyPagesBySurvey($surveyId);
+    }
+
 }
