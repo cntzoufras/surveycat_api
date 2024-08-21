@@ -2,6 +2,7 @@
 
 namespace App\Services\Theme;
 
+use App\Models\Theme\ThemeSetting;
 use App\Repositories\Theme\ThemeSettingRepository;
 
 class ThemeSettingService {
@@ -21,8 +22,7 @@ class ThemeSettingService {
         return $this->theme_setting_repository->store($params);
     }
 
-    public function update($theme_setting, array $params) {
-
+    public function update(ThemeSetting $theme_setting, array $params) {
         $theme_setting = $this->theme_setting_repository->resolveModel($theme_setting);
         return $this->theme_setting_repository->update($theme_setting, $params);
     }

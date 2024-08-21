@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('theme_settings', function (Blueprint $table) {
             $table->id();
-            $table->jsonb('settings'); // logo, fonts
-            $table->foreignUuid('theme_id')->constrained('themes');
+            $table->jsonb('settings'); // logo, fonts, survey primary_background_alpha , theme_thumb
+            $table->foreignUuid('theme_id')->nullable()->constrained('themes');
             $table->timestamps();
         });
     }

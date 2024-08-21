@@ -18,7 +18,7 @@ class ThemeSettingFactory extends Factory {
      */
     public function definition(): array {
         return [
-            'id'       => fake()->uuid(),
+            'id'       => fake()->numberBetween(1, 3),
 //            'title'    => fake()->title,
 //            'footer'   => json_encode(fake()->words(4)),
             'settings' => json_encode(fake()->words(8)),

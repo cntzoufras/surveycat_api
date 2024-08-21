@@ -17,30 +17,17 @@ class ThemeSettingsController extends Controller {
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreThemeSettingRequest $request) {
-        //
+        $themeSetting = ThemeSetting::create($request->validated());
+        return response()->json($themeSetting, 201);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(ThemeSetting $theme_setting) {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ThemeSetting $theme_setting) {
         //
     }
 

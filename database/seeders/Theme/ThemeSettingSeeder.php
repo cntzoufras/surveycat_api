@@ -23,30 +23,33 @@ class ThemeSettingSeeder extends Seeder {
 
         $file = fopen($csvPath, 'r');
 
-        fgetcsv($file);
+        fgetcsv($file); // Skip header row
         while (($data = fgetcsv($file)) !== false) {
-            if (!empty($data[0])) {
-                $theme_id = $themes[$theme_index % $theme_count];
-                $this->seedThemeSetting($data[0], $theme_id);
-                $theme_index++;
-            }
+            // If theme_id is not provided, cycle through available themes
+            $theme_id = $data[0] ?: $themes[$theme_index++ % $theme_count];
+
+            // Construct the full URL for the thumb
+            $appUrl = env('APP_URL', 'http://surveycat.test'); // Fallback to localhost if APP_URL is not set
+            $thumbUrl = $appUrl . $data[7];
+
+            // Create the theme setting using the CSV data
+            ThemeSetting::query()->create([
+                'theme_id' => $theme_id,
+                'settings' => [
+                    'typography'               => [
+                        'fontFamily'   => $data[1],
+                        'fontSize'     => $data[2],
+                        'headingStyle' => [
+                            'H1' => $data[3],
+                            'H2' => $data[4],
+                        ],
+                    ],
+                    'primary_background_alpha' => $data[5],
+                    'layout'                   => $data[6],
+                    'thumb'                    => $thumbUrl,
+                ],
+            ]);
         }
         fclose($file);
     }
-
-    private function seedThemeSetting(string $theme_setting, $theme_id): void {
-
-        $decoded = json_decode($theme_setting, true);
-
-        if (!is_array($decoded)) {
-            \Log::warning("JSON decoding failed or didn't produce an array", ['json' => $theme_setting]);
-            return;
-        }
-
-        ThemeSetting::query()->create([
-            'settings' => $decoded,
-            'theme_id' => $theme_id,
-        ]);
-    }
-
 }
