@@ -64,8 +64,6 @@ class AuthController extends Controller {
     public function user(Request $request): mixed {
         try {
             $user = Auth::user();
-            dd($user);
-
             return response()->json($user);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch user'], 500);
@@ -76,7 +74,6 @@ class AuthController extends Controller {
      * @throws \Illuminate\Auth\AuthenticationException
      */
     public function logout(Request $request): JsonResponse {
-
 //        $this->auth_service->logout($request->user()->currentAccessToken());
 //        return response()->json(null, 204); // minimal response for logout
     }
