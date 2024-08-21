@@ -6,6 +6,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class VariablePalette extends Model {
@@ -16,17 +17,20 @@ class VariablePalette extends Model {
     protected $keyType      = 'string';
 
     protected $guarded  = ['id'];
-    protected $fillable = ['answer_color', 'primary_accent', 'primary_background', 'question_color', 'secondary_accent',
-        'secondary_background', 'title_color', 'theme_variable_id',
+    protected $fillable = [
+        'title_color', 'question_color', 'answer_color',
+        'primary_accent', 'primary_background',
+        'secondary_accent', 'secondary_background',
+        'theme_setting_id',
     ];
 
     /**
      * Get the theme variable associated with this palette.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function theme_variables(): HasMany {
-        return $this->hasMany(ThemeVariable::class);
+    public function theme_settings(): BelongsToMany {
+        return $this->belongsToMany(ThemeSetting::class);
     }
-    
+
 }

@@ -1,11 +1,10 @@
-answer_color, primary_accent, primary_background, question_color, secondary_accent,secondary_background, title_color, theme_variable_id
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545",
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
-"000000", "bold", "link/to/path.jpg", "ffffff", "252525", "italic", "link/to/other.jpg", "454545","2"
+title_color,question_color,answer_color,primary_accent,primary_background,secondary_accent,secondary_background,theme_setting_id
+"#FF5733","#000000","#4CAF50","#FF6F61","#1E1E1E","#FFC300","#101010","1"
+"#33C1FF","#111111","#FFC107","#FF4081","#F0F0F0","#8E44AD","#EFEFEF","2"
+"#9B59B6","#222222","#8BC34A","#D500F9","#2C3E50","#E91E63","#34495E","3"
+"#2ECC71","#333333","#FF5722","#00C853","#ECF0F1","#1E88E5","#BDC3C7","4"
+"#E67E22","#444444","#2196F3","#FF7043","#F5F5F5","#D32F2F","#AAB7B8","5"
+"#3498DB","#555555","#9C27B0","#42A5F5","#F7F9F9","#F57C00","#D5D8DC","6"
+"#1ABC9C","#666666","#673AB7","#00BFA5","#273746","#00796B","#2C3E50","7"
+"#F1C40F","#777777","#FFEB3B","#FFD600","#F2F4F4","#F4511E","#CACFD2","8"
+"#E74C3C","#888888","#795548","#F44336","#D0D3D4","#FF1744","#B3B6B7","9"
