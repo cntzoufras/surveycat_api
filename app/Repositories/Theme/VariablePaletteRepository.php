@@ -10,7 +10,7 @@ class VariablePaletteRepository {
     public function index(array $params) {
 
         try {
-            $limit = $params['limit'] ?? 10;
+            $limit = $params['limit'] ?? 20;
             return DB::transaction(function () use ($limit) {
                 return VariablePalette::query()->paginate($limit);
             });
@@ -37,21 +37,4 @@ class VariablePaletteRepository {
             return $variable_palette;
         });
     }
-
-    public function store(array $params): VariablePalette {
-        return DB::transaction(function () use ($params) {
-            $variable_palette = new VariablePalette();
-            $variable_palette->fill($params);
-            $variable_palette->save();
-            return $variable_palette;
-        });
-    }
-
-    public function delete(VariablePalette $variable_palette) {
-        return DB::transaction(function () use ($variable_palette) {
-            $variable_palette->delete();
-            return $variable_palette;
-        });
-    }
-
 }

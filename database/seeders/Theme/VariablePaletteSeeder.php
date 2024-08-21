@@ -2,11 +2,8 @@
 
 namespace Database\Seeders\Theme;
 
-use App\Models\Theme\Theme;
 use App\Models\Theme\ThemeSetting;
-use App\Models\Theme\ThemeVariable;
 use App\Models\Theme\VariablePalette;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class VariablePaletteSeeder extends Seeder {
@@ -25,9 +22,9 @@ class VariablePaletteSeeder extends Seeder {
         // Skip the header row
         fgetcsv($file);
 
-        $theme_variables = ThemeVariable::all();
-        if ($theme_variables->isEmpty()) {
-            throw new \Exception("No ThemeVariables found. Ensure ThemeVariables have been seeded before running this seeder.");
+        $theme_settings = ThemeSetting::all();
+        if ($theme_settings->isEmpty()) {
+            throw new \Exception("No ThemeSettings found. Ensure ThemeSettings have been seeded before running this seeder.");
         }
 
         // Loop through each row in the CSV file
@@ -46,15 +43,16 @@ class VariablePaletteSeeder extends Seeder {
      * @param array $variable_palette
      */
     private function seedVariablePalette(array $variable_palette): void {
-        $theme_variable = ThemeVariable::first();
-        VariablePalette::query()->create(['answer_color'         => $variable_palette[0],
-                                          'primary_accent'       => $variable_palette[1],
-                                          'primary_background'   => $variable_palette[2],
-                                          'question_color'       => $variable_palette[3],
-                                          'secondary_accent'     => $variable_palette[4],
-                                          'secondary_background' => $variable_palette[5],
-                                          'title_color'          => $variable_palette[6],
-                                          'theme_variable_id'    => $theme_variable->id,
+        $theme_setting = ThemeSetting::first();
+        VariablePalette::query()->create([
+            'title_color'          => $variable_palette[0],
+            'question_color'       => $variable_palette[1],
+            'answer_color'         => $variable_palette[2],
+            'primary_accent'       => $variable_palette[3],
+            'primary_background'   => $variable_palette[4],
+            'secondary_accent'     => $variable_palette[5],
+            'secondary_background' => $variable_palette[6],
+            'theme_setting_id'     => $theme_setting->id,
         ]);
     }
 }
