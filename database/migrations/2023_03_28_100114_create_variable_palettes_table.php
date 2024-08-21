@@ -12,14 +12,14 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('variable_palettes', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('title_color');
+            $table->string('question_color');
             $table->string('answer_color');
             $table->string('primary_accent');
             $table->string('primary_background');
-            $table->string('question_color');
             $table->string('secondary_accent');
             $table->string('secondary_background');
-            $table->string('title_color');
-            $table->foreignId('theme_variable_id')->constrained('theme_variables');
+            $table->foreignId('theme_setting_id')->constrained('theme_settings');
             $table->timestamps();
         });
     }
@@ -29,7 +29,7 @@ return new class extends Migration {
      */
     public function down(): void {
         Schema::table('variable_palettes', function (Blueprint $table) {
-            $table->dropForeign(['theme_variable_id']);
+            $table->dropForeign(['theme_setting_id']);
         });
         Schema::dropIfExists('variable_palettes');
     }

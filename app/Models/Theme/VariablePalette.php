@@ -25,7 +25,7 @@ class VariablePalette extends Model {
     ];
 
     /**
-     * Get the theme variable associated with this palette.
+     * Get the theme settings associated with this palette.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
