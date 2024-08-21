@@ -88,14 +88,6 @@ class SurveyRepository {
         });
     }
 
-    public function saveAsTemplate(array $params): Survey {
-        return DB::transaction(function () use ($params) {
-            $survey = new Survey();
-            $survey->fill($params);
-            $survey->save();
-            return $survey;
-        });
-    }
 
     public function destroy(Survey $survey) {
         return DB::transaction(function () use ($survey) {
@@ -104,19 +96,12 @@ class SurveyRepository {
         });
     }
 
-    private function storeSurveyQuestions(Survey $survey, array $questions): void {
-        foreach ($questions as $questionData) {
-
-            $question = new SurveyQuestion();
-
-            $question->title = $questionData['title'];
-            $question->is_required = $questionData['is_required'];
-            $question->question_type_id = $questionData['question_type_id'];
-            $question->survey_page_id = $questionData['survey_page_id'];
-            $question->additional_settings = $questionData['additional_settings'];
-
-            $question->save();
-        }
+    public function saveAsTemplate(array $params): Survey {
+        return DB::transaction(function () use ($params) {
+            $survey = new Survey();
+            $survey->fill($params);
+            $survey->save();
+            return $survey;
+        });
     }
-
 }
