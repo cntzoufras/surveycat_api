@@ -43,15 +43,6 @@ class Theme extends Model {
     }
 
     /**
-     * Get the theme settings
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function theme_variable(): HasOne {
-        return $this->hasOne(ThemeVariable::class, 'theme_variable_id', 'id');
-    }
-
-    /**
      * Get the surveys using this theme
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
