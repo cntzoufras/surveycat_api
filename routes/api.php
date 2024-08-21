@@ -13,7 +13,7 @@ use App\Http\Controllers\Survey\SurveySubmissionController;
 use App\Http\Controllers\Survey\SurveyTemplateController;
 use App\Http\Controllers\Theme\ThemeController;
 use App\Http\Controllers\Theme\ThemeSettingsController;
-use App\Http\Controllers\Theme\ThemeVariableController;
+
 use App\Http\Controllers\Theme\VariablePalettesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -25,6 +25,7 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [RegisteredUserController::class, 'store']);
 
+Route::get('/surveys/{surveyId}/survey-pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::get('/logout', [AuthenticatedSessionController::class, 'destroy']);
     Route::get('/user', function (Request $request) {
@@ -41,7 +42,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     });
 
     Route::get('/stock-surveys', [SurveyController::class, 'getStockSurveys']);
-    Route::get('surveys/{surveyId}/pages/{pageId}/survey-questions', [SurveyQuestionController::class,
+    Route::get('/surveys/{surveyId}/survey-pages/{pageId}/survey-questions', [SurveyQuestionController::class,
         'getSurveyQuestionsByPage',
     ]);
 
@@ -99,14 +100,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::put('/', [ThemeSettingsController::class, 'update']);
         Route::get('/{id}', [ThemeSettingsController::class, 'show']);
         Route::delete('/{id}', [ThemeSettingsController::class, 'delete']);
-    });
-
-    Route::prefix('theme-variables')->group(function () {
-        Route::get('/', [ThemeVariableController::class, 'index']);
-        Route::post('/', [ThemeVariableController::class, 'store']);
-        Route::put('/', [ThemeVariableController::class, 'update']);
-        Route::get('/{id}', [ThemeVariableController::class, 'show']);
-        Route::delete('/{id}', [ThemeVariableController::class, 'delete']);
     });
 
     Route::prefix('variable-palettes')->group(function () {
