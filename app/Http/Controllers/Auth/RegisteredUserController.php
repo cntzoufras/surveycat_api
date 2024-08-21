@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use App\Services\AuthService;
+use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller {
 
@@ -29,18 +30,22 @@ class RegisteredUserController extends Controller {
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): JsonResponse {
-        $validated = $request->validate([
+
+        $requestData = $request->all();
+        $requestData['password_confirmation'] = $request->input('passwordConfirmation');
+
+        $validated = Validator::make($requestData, [
             'username' => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ])->validate();
 
         try {
             $user = $this->auth_service->register($validated);
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
-            
+
             event(new Registered($user));
             event(new UserRegistered($user));
 

@@ -100,9 +100,9 @@ class AuthController extends Controller {
 
     public function resetPassword(Request $request): JsonResponse {
         $this->validate($request, [
-            'token'                => 'required',
-            'password'             => 'required',
-            'passwordConfirmation' => 'required|same:password',
+            'token'                 => 'required',
+            'password'              => 'required',
+            'password_confirmation' => 'required|same:password',
         ]);
         $this->auth_service->resetPassword($request->input('token'), $request->input('password'));
         return response()->json([
