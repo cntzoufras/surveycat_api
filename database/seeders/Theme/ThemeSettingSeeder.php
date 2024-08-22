@@ -30,7 +30,7 @@ class ThemeSettingSeeder extends Seeder {
 
             // Construct the full URL for the thumb
             $appUrl = env('APP_URL', 'http://surveycat.test'); // Fallback to localhost if APP_URL is not set
-            $thumbUrl = $appUrl . $data[7];
+            $thumbUrl = !empty($data[7]) ? $appUrl . $data[7] : '';
 
             // Create the theme setting using the CSV data
             ThemeSetting::query()->create([
