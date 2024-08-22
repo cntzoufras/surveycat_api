@@ -18,6 +18,12 @@ class AuthenticatedSessionController extends Controller {
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        $user = Auth::user();
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email not verified. Please check your inbox for the verification link.'], 403);
+        }
+
         // Assuming you want to return the authenticated user's data:
         return response()->json([
             'user'    => Auth::user(),
