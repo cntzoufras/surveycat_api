@@ -47,7 +47,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     ]);
 
     Route::prefix('survey-questions')->group(function () {
-        Route::get('/types', [SurveyQuestionsController::class, 'getQuestionTypes']);
+        Route::get('/types', [SurveyQuestionController::class, 'getQuestionTypes']);
         Route::get('/', [SurveyQuestionController::class, 'index']);
         Route::post('/', [SurveyQuestionController::class, 'store']);
         Route::put('/{id}', [SurveyQuestionController::class, 'update']);
