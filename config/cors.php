@@ -9,6 +9,7 @@ return [
         'http://localhost:3000',
         'http://surveycat.test',
         'http://surveycat.test:3000',
+        'https://snf-893977.vm.okeanos.grnet.gr',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers'          => ['*'],
