@@ -49,10 +49,9 @@ class AuthController extends Controller {
             return response()->json(['error' => 'Email not verified. Please check your inbox for the verification link.'], 403); // 403 Forbidden
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
-            'token' => $token,
+            'message' => 'Login successful',
+            'user'    => $user,
         ]);
     }
 
