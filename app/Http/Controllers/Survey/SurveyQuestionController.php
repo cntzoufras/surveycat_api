@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Survey;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyQuestion\StoreSurveyQuestionRequest;
 use App\Http\Requests\SurveyQuestion\UpdateSurveyQuestionRequest;
+use App\Models\QuestionType;
 use App\Models\Survey\SurveyQuestion;
 use App\Services\Survey\SurveyQuestionService;
 use Illuminate\Http\Request;
@@ -74,4 +75,11 @@ class SurveyQuestionController extends Controller {
     public function getSurveyQuestionsByPage() {
         //
     }
+
+    public function getQuestionTypes() {
+        $questionTypes = QuestionType::get();
+        return response()->json($questionTypes);
+    }
+
+
 }
