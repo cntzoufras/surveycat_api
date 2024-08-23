@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Survey\Survey;
-use App\Models\Survey\SurveyTemplate;
 use App\Models\Theme\Theme;
 use App\Models\Theme\ThemeSetting;
 use App\Traits\Uuids;
@@ -79,10 +78,5 @@ class User extends Authenticatable implements MustVerifyEmail {
     public function comments(): \Illuminate\Database\Eloquent\Relations\MorphTo {
         return $this->morphTo(Comment::class, 'commentable');
     }
-
-    public function survey_templates(): HasMany {
-        return $this->hasMany(SurveyTemplate::class);
-    }
-
 
 }

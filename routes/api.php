@@ -10,7 +10,6 @@ use App\Http\Controllers\RespondentController;
 use App\Http\Controllers\Survey\SurveyPageController;
 use App\Http\Controllers\Survey\SurveyResponseController;
 use App\Http\Controllers\Survey\SurveySubmissionController;
-use App\Http\Controllers\Survey\SurveyTemplateController;
 use App\Http\Controllers\Theme\ThemeController;
 use App\Http\Controllers\Theme\ThemeSettingsController;
 
@@ -31,14 +30,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     Route::get('/user', function (Request $request) {
         $user = \Illuminate\Support\Facades\Auth::user();
         return response()->json(['user' => $user]);
-    });
-
-    Route::prefix('survey-templates')->group(function () {
-        Route::get('/', [SurveyTemplateController::class, 'index']);
-        Route::post('/', [SurveyTemplateController::class, 'store']);
-        Route::put('/{id}', [SurveyTemplateController::class, 'update']);
-        Route::get('/{id}', [SurveyTemplateController::class, 'show']);
-        Route::delete('/{id}', [SurveyTemplateController::class, 'delete']);
     });
 
     Route::get('/stock-surveys', [SurveyController::class, 'getStockSurveys']);
