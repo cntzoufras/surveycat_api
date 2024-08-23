@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.2"
+      IMAGE_VERSION: "2.3"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -50,7 +50,7 @@ jobs:
           echo "APP_ENV=production" > .env
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
           echo "APP_DEBUG=false" >> .env
-          echo "APP_URL=https://snf-893977.vm.okeanos.grnet.gr/api" >> .env
+          echo "APP_URL=https://snf-893977.vm.okeanos.grnet.gr" >> .env
           echo "SESSION_SECURE_COOKIE=true" >> .env
           echo "SANCTUM_STATEFUL_DOMAINS=snf-893977.vm.okeanos.grnet.gr" >> .env
           echo "SESSION_DOMAIN=snf-893977.vm.okeanos.grnet.gr" >> .env
