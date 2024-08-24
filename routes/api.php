@@ -24,18 +24,14 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [RegisteredUserController::class, 'store']);
 
-Route::get('/surveys/{surveyId}/survey-pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
-    Route::get('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('/user', function (Request $request) {
         $user = \Illuminate\Support\Facades\Auth::user();
         return response()->json(['user' => $user]);
     });
 
-    Route::get('/stock-surveys', [SurveyController::class, 'getStockSurveys']);
-    Route::get('/surveys/{surveyId}/survey-pages/{pageId}/survey-questions', [SurveyQuestionController::class,
-        'getSurveyQuestionsByPage',
-    ]);
+    Route::get('/surveys/{surveyId}/survey-pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
 
     Route::prefix('survey-questions')->group(function () {
         Route::get('/types', [SurveyQuestionController::class, 'getQuestionTypes']);
@@ -60,6 +56,16 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::put('/{id}', [SurveyController::class, 'update']);
         Route::get('/{id}', [SurveyController::class, 'show']);
         Route::delete('/{id}', [SurveyController::class, 'destroy']);
+
+        Route::get('/{surveyId}/pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
+        Route::get('/stock', [SurveyController::class, 'getStockSurveys']);
+        Route::get('/{surveyId}/pages/{pageId}/questions', [
+            SurveyQuestionController::class, 'getSurveyQuestionsByPage',
+        ]);
+        Route::get('/user', function () {
+            $user = \Illuminate\Support\Facades\Auth::user();
+            dd($user);
+        });
     });
 
     Route::prefix('survey-categories')->group(function () {

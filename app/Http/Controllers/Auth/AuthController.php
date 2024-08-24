@@ -31,7 +31,7 @@ class AuthController extends Controller {
      */
     public function login(Request $request): JsonResponse {
         $this->validate($request, [
-            'email'       => 'required|string|email',
+            'email'       => 'required|string|email|exists:users,email',
             'password'    => 'required|string',
             'remember_me' => 'boolean',
         ]);
@@ -41,18 +41,22 @@ class AuthController extends Controller {
         // Attempt to authenticate the user using Laravel's built-in authentication
         if (!Auth::attempt($credentials)) {
             throw new AuthenticationException();
+        } else {
+
+            $user = Auth::user();
+            $token = $user->createToken('API Token')->plainTextToken;
+
+            if (!$user->hasVerifiedEmail()) {
+                return response()->json(['error' => 'Email not verified. Please check your inbox for the verification link.'], 403); // 403 Forbidden
+            }
+
+            return response()->json([
+                'message' => 'Login successful',
+                'user'    => $user,
+                'token'   => $token,
+            ]);
         }
-
-        $user = Auth::user();
-
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json(['error' => 'Email not verified. Please check your inbox for the verification link.'], 403); // 403 Forbidden
-        }
-
-        return response()->json([
-            'message' => 'Login successful',
-            'user'    => $user,
-        ]);
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     /**
@@ -73,9 +77,16 @@ class AuthController extends Controller {
      * @throws \Illuminate\Auth\AuthenticationException
      */
     public function logout(Request $request) {
-//        $this->auth_service->logout($request->user()->currentAccessToken());
-//        return response()->json(null, 204); // minimal response for logout
-        return;
+        if ($request->user()) {
+            try {
+                $this->auth_service->logout($request->user()->currentAccessToken());
+                return response()->json(['message' => 'Token Revoked'], 204); // No content response
+            } catch (AuthenticationException $e) {
+                return response()->json(['message' => $e->getMessage()], 401);
+            }
+        }
+
+        return response()->json(['message' => 'Not Authenticated'], 401);
     }
 
     /**
