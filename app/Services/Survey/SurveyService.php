@@ -42,8 +42,8 @@ class SurveyService implements SurveyServiceInterface {
         return $this->survey_repository->destroy($survey);
     }
 
-    public function show($params) {
-        return $this->survey_repository->getIfExist($params);
+    public function show(string $id): ?Survey {
+        return $this->survey_repository->getIfExist($id);
     }
 
     public function getStockSurveys() {
