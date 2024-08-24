@@ -56,7 +56,6 @@ class AuthController extends Controller {
                 'token'   => $token,
             ]);
         }
-        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     /**

@@ -107,7 +107,6 @@ class SurveyController extends Controller {
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        dd($user);
         $surveys = $this->survey_service->getSurveysForUser($user->id);
         return response()->json($surveys);
     }
