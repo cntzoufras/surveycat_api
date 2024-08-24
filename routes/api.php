@@ -31,8 +31,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         return response()->json(['user' => $user]);
     });
 
-    Route::get('/surveys/{surveyId}/survey-pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
-
     Route::prefix('survey-questions')->group(function () {
         Route::get('/types', [SurveyQuestionController::class, 'getQuestionTypes']);
         Route::get('/', [SurveyQuestionController::class, 'index']);
@@ -51,6 +49,9 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     });
 
     Route::prefix('surveys')->group(function () {
+        Route::get('/user', [SurveyController::class, 'getSurveysForUser']);
+        Route::get('/stock', [SurveyController::class, 'getStockSurveys']);
+
         Route::get('/', [SurveyController::class, 'index']);
         Route::post('/', [SurveyController::class, 'store']);
         Route::put('/{id}', [SurveyController::class, 'update']);
@@ -58,14 +59,9 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('/{id}', [SurveyController::class, 'destroy']);
 
         Route::get('/{surveyId}/pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
-        Route::get('/stock', [SurveyController::class, 'getStockSurveys']);
         Route::get('/{surveyId}/pages/{pageId}/questions', [
             SurveyQuestionController::class, 'getSurveyQuestionsByPage',
         ]);
-        Route::get('/user', function () {
-            $user = \Illuminate\Support\Facades\Auth::user();
-            dd($user);
-        });
     });
 
     Route::prefix('survey-categories')->group(function () {
