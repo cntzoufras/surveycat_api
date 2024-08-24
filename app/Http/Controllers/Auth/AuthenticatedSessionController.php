@@ -35,35 +35,20 @@ class AuthenticatedSessionController extends Controller {
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): JsonResponse {
-
-        // Determine the current guard being used
-        $currentGuard = null;
-
-        // Loop through all defined guards and check which one the user is authenticated with
-        foreach (config('auth.guards') as $guard => $guardConfig) {
-            if (Auth::guard($guard)->check()) {
-                $currentGuard = $guard;
-                break;
-            }
-        }
-
-        // Return the current guard for debugging purposes
-        if ($currentGuard) {
-            return response()->json(['guard' => $currentGuard, 'message' => 'Testing guard'], 200);
-        } else {
-            return response()->json(['message' => 'No authenticated guard found'], 400);
-        }
-
-        // Check that the guard being used is 'web'
+        // Logout the user using the 'web' guard
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
 
             $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            $request->session()->flush(); // Clear all session data
 
-            return response()->json(['message' => 'Logged Out'], 200);
+            // Remove the session cookie manually without regenerating the session
+            $cookieDomain = '.' . $request->getHost();
+
+            return response()->json(['message' => 'Logged Out'], 200)
+                             ->withCookie(cookie('surveycat_session', '', -1, '/', $cookieDomain, false, true));
         }
 
-        return response()->json(['message' => 'Logout failed, user not authenticated with web guard'], 400);
+        return response()->json(['message' => 'No authenticated guard found'], 400);
     }
 }

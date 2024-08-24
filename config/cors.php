@@ -2,13 +2,14 @@
 
 return [
 
-    'paths'                    => ['api/*', 'sanctum/csrf-cookie', 'login'],
+    'paths'                    => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout'],
     'allowed_methods'          => ['*'],
 //    'allowed_origins' => ['*'],
     'allowed_origins'          => [
         'http://localhost:3000',
-        'http://surveycat.test',
         'http://surveycat.test:3000',
+        'http://surveycat.test',
+        'http://localhost',
         'https://snf-893977.vm.okeanos.grnet.gr',
     ],
     'allowed_origins_patterns' => [],
