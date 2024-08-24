@@ -68,7 +68,7 @@ interface SurveyServiceInterface {
      *
      * @return Survey
      */
-    public function publish($survey_id, array $params);
+    public function publish(string $survey_id, array $params);
 
     /**
      * Update the public link for a survey.

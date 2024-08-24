@@ -50,7 +50,7 @@ class SurveyService implements SurveyServiceInterface {
         return $this->survey_repository->getStockSurveys();
     }
 
-    public function publish($survey_id, array $params) {
+    public function publish(string $survey_id, array $params) {
         $survey = $this->survey_repository->resolveModel($survey_id);
 
         if (!empty($params['title'])) {

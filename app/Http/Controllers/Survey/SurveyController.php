@@ -103,6 +103,7 @@ class SurveyController extends Controller {
      */
     public function getSurveysForUser(): JsonResponse {
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
