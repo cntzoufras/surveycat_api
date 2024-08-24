@@ -4,14 +4,16 @@ namespace App\Services\Survey;
 
 use App\Exceptions\SurveyNotEditableException;
 use App\Models\Survey\Survey;
-use App\Repositories\Survey\SurveyRepository;
+use App\Repositories\Survey\SurveyRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Collection;
 
-class SurveyService {
+class SurveyService implements SurveyServiceInterface {
 
-    protected SurveyRepository $survey_repository;
+    protected SurveyRepositoryInterface $survey_repository;
 
-    public function __construct(SurveyRepository $survey_repository) {
+    public function __construct(SurveyRepositoryInterface $survey_repository) {
         $this->survey_repository = $survey_repository;
     }
 
@@ -65,7 +67,7 @@ class SurveyService {
     }
 
 
-    protected function updatePublicLink($title): string {
+    public function updatePublicLink($title): string {
         $slug = Str::slug($title);
         return "{$slug}-" . uniqid();
     }
@@ -78,4 +80,14 @@ class SurveyService {
             throw new SurveyNotEditableException('Survey is published and cannot be edited unless reverted to draft.');
         }
     }
+
+    /**
+     * Get surveys for the authenticated user.
+     *
+     * @return Collection
+     */
+    public function getSurveysForUser(string $user_id): Collection {
+        return $this->survey_repository->getSurveysForUser($user_id);
+    }
+
 }

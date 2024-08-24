@@ -8,6 +8,7 @@ use App\Http\Requests\Survey\UpdateSurveyRequest;
 use App\Models\Survey\Survey;
 use App\Services\Survey\SurveyService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -93,6 +94,22 @@ class SurveyController extends Controller {
 
     public function getStockSurveys() {
         return $this->survey_service->getStockSurveys();
+    }
+
+    /**
+     * Get the surveys of the authenticated user.
+     *
+     * @return JsonResponse
+     */
+    public function getSurveysForUser(): JsonResponse {
+
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        dd($user);
+        $surveys = $this->survey_service->getSurveysForUser($user->id);
+        return response()->json($surveys);
     }
 
 }

@@ -5,27 +5,15 @@ namespace App\Repositories\Survey;
 use App\Models\Survey\Survey;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Collection;
 
-class SurveyRepository {
+class SurveyRepository implements SurveyRepositoryInterface {
 
     public function index(array $params) {
         try {
             $limit = $params['limit'] ?? 50;
             return DB::transaction(function () use ($limit) {
                 return Survey::query()->paginate($limit);
-            });
-        } catch (\Exception $e) {
-            throw new \Exception($e, 500);
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function getStockSurveys() {
-        try {
-            return DB::transaction(function () {
-                return Survey::query()->where('is_stock', '=', true)->paginate();
             });
         } catch (\Exception $e) {
             throw new \Exception($e, 500);
@@ -67,5 +55,22 @@ class SurveyRepository {
             return $survey;
         });
     }
-    
+
+    /**
+     * @throws \Exception
+     */
+    public function getStockSurveys() {
+        try {
+            return DB::transaction(function () {
+                return Survey::query()->where('is_stock', '=', true)->paginate();
+            });
+        } catch (\Exception $e) {
+            throw new \Exception($e, 500);
+        }
+    }
+
+    public function getSurveysForUser(string $user_id): Collection {
+        return Survey::query()->where('user_id', $user_id)->get();
+    }
+
 }
