@@ -47,11 +47,11 @@ interface SurveyServiceInterface {
     /**
      * Show a survey based on parameters.
      *
-     * @param array $params
+     * @param string $id
      *
      * @return Survey|null
      */
-    public function show($params);
+    public function show(string $id): ?Survey;
 
     /**
      * Get a list of stock surveys.
