@@ -55,4 +55,19 @@ class SurveyQuestionRepository {
             return $survey_question;
         });
     }
+
+    public function getQuestionsByPage($survey_id, $survey_page_id) {
+        try {
+            return DB::transaction(function () use ($survey_id, $survey_page_id) {
+                return SurveyQuestion::where('survey_page_id', $survey_page_id)
+                                     ->whereHas('survey_page', function ($query) use ($survey_id) {
+                                         $query->where('survey_id', $survey_id);
+                                     })
+                                     ->get();
+            });
+        } catch (\Exception $e) {
+            throw new \Exception($e, 500);
+        }
+    }
+
 }

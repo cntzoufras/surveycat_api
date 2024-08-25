@@ -72,8 +72,8 @@ class SurveyQuestionController extends Controller {
         return $this->survey_question_service->delete($survey_question);
     }
 
-    public function getSurveyQuestionsByPage() {
-        //
+    public function getSurveyQuestionsByPage($survey_id, $survey_page_id) {
+        return $this->survey_question_service->getSurveyQuestionsByPage($survey_id, $survey_page_id);
     }
 
     public function getQuestionTypes() {

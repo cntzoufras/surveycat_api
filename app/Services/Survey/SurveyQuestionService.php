@@ -38,4 +38,9 @@ class SurveyQuestionService {
         return $this->survey_question_repository->getIfExist($params);
     }
 
+    public function getSurveyQuestionsByPage($survey_id, $page_id) {
+        return $this->survey_question_repository->getQuestionsByPage($survey_id, $page_id);
+    }
+
+
 }
