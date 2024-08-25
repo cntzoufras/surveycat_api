@@ -3,6 +3,7 @@
 namespace App\Repositories\Survey;
 
 use App\Models\Survey\Survey;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
@@ -73,4 +74,10 @@ class SurveyRepository implements SurveyRepositoryInterface {
         return Survey::query()->where('user_id', $user_id)->get();
     }
 
+    public function getSurveysWithThemesAndPages(): Collection {
+        return Survey::with(['theme:id,title', 'survey_pages'])
+                     ->where('user_id', Auth::id())  // Filter by the logged-in user
+                     ->where('is_stock', false)       // Exclude stock surveys
+                     ->get();
+    }
 }

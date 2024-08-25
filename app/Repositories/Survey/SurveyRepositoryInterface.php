@@ -3,6 +3,7 @@
 namespace App\Repositories\Survey;
 
 use App\Models\Survey\Survey;
+use Illuminate\Database\Eloquent\Collection;
 
 interface SurveyRepositoryInterface {
 
@@ -76,6 +77,14 @@ interface SurveyRepositoryInterface {
      * @return \Illuminate\Database\Eloquent\Collection|Survey[]
      */
     public function getSurveysForUser(string $user_id);
+
+    /**
+     * Get all surveys with their associated themes and pages.
+     *
+     * @return Collection
+     */
+
+    public function getSurveysWithThemesAndPages(): Collection;
 
 
 }

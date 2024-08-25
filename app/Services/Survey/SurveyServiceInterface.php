@@ -86,4 +86,12 @@ interface SurveyServiceInterface {
      */
     public function getSurveysForUser(string $user_id): Collection;
 
+    /**
+     * Get all surveys with their associated themes and pages.
+     *
+     * @return Collection
+     */
+
+    public function getSurveysWithThemesAndPages(): Collection;
+
 }

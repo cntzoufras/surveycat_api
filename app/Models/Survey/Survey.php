@@ -45,8 +45,8 @@ class Survey extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function theme(): hasOne {
-        return $this->hasOne(Theme::class, 'theme_id', 'id');
+    public function theme(): BelongsTo {
+        return $this->belongsTo(Theme::class, 'theme_id', 'id');
     }
 
     /**
@@ -93,4 +93,10 @@ class Survey extends Model {
     public function survey_submissions(): HasMany {
         return $this->hasMany(SurveySubmission::class);
     }
+
+    // Each survey has many pages
+    public function survey_pages(): HasMany {
+        return $this->hasMany(SurveyPage::class);
+    }
+
 }

@@ -90,4 +90,14 @@ class SurveyService implements SurveyServiceInterface {
         return $this->survey_repository->getSurveysForUser($user_id);
     }
 
+    /**
+     * Get all surveys with their associated themes and pages.
+     *
+     * @return Collection
+     */
+    public function getSurveysWithDetails(): Collection {
+        return $this->survey_repository->getSurveysWithThemesAndPages();
+    }
+
+
 }

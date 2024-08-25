@@ -112,4 +112,9 @@ class SurveyController extends Controller {
         return response()->json($surveys);
     }
 
+    public function getSurveysWithDetails(): JsonResponse {
+        $surveys = $this->survey_service->getSurveysWithDetails();
+        return response()->json($surveys);
+    }
+
 }

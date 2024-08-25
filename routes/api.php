@@ -51,6 +51,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     Route::prefix('surveys')->group(function () {
         Route::get('/user', [SurveyController::class, 'getSurveysForUser']);
         Route::get('/stock', [SurveyController::class, 'getStockSurveys']);
+        Route::get('/all', [SurveyController::class, 'getSurveysWithDetails']);
 
         Route::get('/', [SurveyController::class, 'index']);
         Route::post('/', [SurveyController::class, 'store']);
@@ -59,7 +60,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('/{id}', [SurveyController::class, 'destroy']);
 
         Route::get('/{surveyId}/pages', [SurveyPageController::class, 'getSurveyPagesBySurvey']);
-        Route::get('/{surveyId}/pages/{pageId}/questions', [
+        Route::get('/{surveyId}/pages/{surveyPageId}/questions', [
             SurveyQuestionController::class, 'getSurveyQuestionsByPage',
         ]);
     });
