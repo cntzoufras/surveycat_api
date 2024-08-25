@@ -91,7 +91,6 @@ interface SurveyServiceInterface {
      *
      * @return Collection
      */
-
     public function getSurveysWithThemesAndPages(): Collection;
 
 }

@@ -95,7 +95,7 @@ class SurveyService implements SurveyServiceInterface {
      *
      * @return Collection
      */
-    public function getSurveysWithDetails(): Collection {
+    public function getSurveysWithThemesAndPages(): Collection {
         return $this->survey_repository->getSurveysWithThemesAndPages();
     }
 

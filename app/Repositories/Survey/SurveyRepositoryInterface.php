@@ -83,7 +83,6 @@ interface SurveyRepositoryInterface {
      *
      * @return Collection
      */
-
     public function getSurveysWithThemesAndPages(): Collection;
 
 
