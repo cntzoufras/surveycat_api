@@ -17,7 +17,7 @@ return new class extends Migration {
             }
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('title')->nullable()->index();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->foreignId('survey_category_id')->nullable()->constrained('survey_categories');
             $table->foreignId('survey_status_id')->nullable()->constrained('survey_statuses');
             $table->foreignUuid('user_id')->constrained('users');
