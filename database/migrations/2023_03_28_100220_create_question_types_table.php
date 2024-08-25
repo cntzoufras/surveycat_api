@@ -13,7 +13,8 @@ return new class extends Migration {
         Schema::create('question_types', function (Blueprint $table) {
             $table->id();
             $table->string('title')->index();
-            $table->string('description')->nullable();
+            $table->string('description');
+            $table->string('label');
         });
     }
 

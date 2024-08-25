@@ -22,7 +22,7 @@ class QuestionTypeSeeder extends Seeder {
 
         // Loop through each row in the CSV file
         while (($data = fgetcsv($file)) !== false) {
-            $question_type = [$data[0], $data[1]];
+            $question_type = [$data[0], $data[1], $data[2]];
             $this->seedQuestionType($question_type);
         }
 
@@ -36,6 +36,10 @@ class QuestionTypeSeeder extends Seeder {
      * @param array $question_type
      */
     private function seedQuestionType(array $question_type): void {
-        QuestionType::query()->create(['title' => $question_type[0], 'description' => $question_type[1]]);
+        QuestionType::query()->create([
+            'title'       => $question_type[0],
+            'description' => $question_type[1],
+            'label'       => $question_type[2],
+        ]);
     }
 }
