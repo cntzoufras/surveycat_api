@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('title')->index();
             $table->boolean('is_required')->default(false);
             $table->foreignId('question_type_id')->constrained('question_types');
-            $table->foreignUuid('survey_page_id')->constrained('survey_pages');
+            $table->foreignUuid('survey_page_id')->constrained('survey_pages')->onDelete('cascade');
             $table->jsonb('additional_settings')->nullable(); // color , align, font
             $table->jsonb('question_tags')->nullable(); // { tag1 , tag2, tagX }
             $table->softDeletes();
