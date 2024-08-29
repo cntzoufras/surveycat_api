@@ -25,7 +25,9 @@ class Survey extends Model {
     protected $keyType      = 'string';
 
     protected $guarded  = ['id'];
-    protected $fillable = ['title', 'description', 'survey_category_id', 'survey_status_id', 'user_id', 'theme_id'];
+    protected $fillable = [
+        'title', 'description', 'survey_category_id', 'survey_status_id', 'user_id', 'theme_id', 'public_link',
+    ];
 
     protected $attributes = [
         'survey_status_id' => 1,
@@ -40,31 +42,30 @@ class Survey extends Model {
         return $this->belongsTo(User::class);
     }
 
+
     /**
-     * Get the theme associated to this survey
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function theme(): BelongsTo {
-        return $this->belongsTo(Theme::class, 'theme_id', 'id');
+        return $this->belongsTo(Theme::class);
     }
 
     /**
      * Get the survey category
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey_category(): HasOne {
-        return $this->hasOne(SurveyCategory::class);
+    public function survey_category(): BelongsTo {
+        return $this->belongsTo(SurveyCategory::class);
     }
 
     /**
      * Get the survey status
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey_status(): HasOne {
-        return $this->hasOne(SurveyStatus::class);
+    public function survey_status() {
+        return $this->belongsTo(SurveyStatus::class);
     }
 
     /**

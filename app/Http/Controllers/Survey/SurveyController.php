@@ -72,7 +72,7 @@ class SurveyController extends Controller {
 
 
     public function publish(UpdateSurveyRequest $request, Survey $survey) {
-        return $this->survey_service->publish($survey, $request->validated());
+        return $this->survey_service->publish($survey->id, $request->validated());
     }
 
     public function destroy($id) {
@@ -116,5 +116,22 @@ class SurveyController extends Controller {
         $surveys = $this->survey_service->getSurveysWithThemesAndPages();
         return response()->json($surveys);
     }
+
+    public function getSurveyWithDetails(Request $request) {
+        try {
+            if (isset($request['id'])) {
+                Validator::validate(['id' => $request['id']], [
+                    'id' => 'uuid|required|exists:surveys,id',
+                ]);
+                return $this->survey_service->getSurveyWithDetails($request['id']);
+            }
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), 500);
+        }
+        return null;
+    }
+
 
 }
