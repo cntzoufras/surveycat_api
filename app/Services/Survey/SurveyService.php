@@ -5,6 +5,7 @@ namespace App\Services\Survey;
 use App\Exceptions\SurveyNotEditableException;
 use App\Models\Survey\Survey;
 use App\Repositories\Survey\SurveyRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
@@ -50,18 +51,15 @@ class SurveyService implements SurveyServiceInterface {
         return $this->survey_repository->getStockSurveys();
     }
 
-    public function publish(string $survey_id, array $params) {
+    public function publish($survey_id, array $params) {
         $survey = $this->survey_repository->resolveModel($survey_id);
 
-        if (!empty($params['title'])) {
-            $params['public_link'] = $this->updatePublicLink($params['title'], $survey_id);
+        if (!empty($survey->title)) {
+            $params['public_link'] = $this->updatePublicLink($survey->title);
+            $params['survey_status_id'] = '2';
         } else {
-            // Handle the case where title is not set or is empty
-            throw new \InvalidArgumentException('Title is required to create a public link.');
+            throw new \InvalidArgumentException('Survey title is required to create a public link.');
         }
-
-        // Set the survey as published
-        $params['is_published'] = true;
 
         return $this->survey_repository->update($survey, $params);
     }
@@ -69,7 +67,8 @@ class SurveyService implements SurveyServiceInterface {
 
     public function updatePublicLink($title): string {
         $slug = Str::slug($title);
-        return "{$slug}-" . uniqid();
+        $url = "{$slug}-" . uniqid();
+        return url("/surveys/p/$url");
     }
 
     /**
@@ -97,6 +96,10 @@ class SurveyService implements SurveyServiceInterface {
      */
     public function getSurveysWithThemesAndPages(): Collection {
         return $this->survey_repository->getSurveysWithThemesAndPages();
+    }
+
+    public function getSurveyWithDetails($survey_id): Survey {
+        return $this->survey_repository->getSurveyWithDetails($survey_id);
     }
 
 

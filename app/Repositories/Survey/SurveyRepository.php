@@ -71,7 +71,10 @@ class SurveyRepository implements SurveyRepositoryInterface {
     }
 
     public function getSurveysForUser(string $user_id): Collection {
-        return Survey::query()->where('user_id', $user_id)->get();
+        return Survey::with(['theme:id,title', 'survey_pages'])
+                     ->where('user_id', Auth::id())  // Filter by the logged-in user
+                     ->where('is_stock', false)       // Exclude stock surveys
+                     ->get();
     }
 
     public function getSurveysWithThemesAndPages(): Collection {
@@ -79,5 +82,17 @@ class SurveyRepository implements SurveyRepositoryInterface {
                      ->where('user_id', Auth::id())  // Filter by the logged-in user
                      ->where('is_stock', false)       // Exclude stock surveys
                      ->get();
+    }
+
+    public function getSurveyWithDetails($survey_id): Survey {
+        return Survey::with([
+            'theme:id,title',
+            'survey_pages' => function ($query) {
+                $query->orderBy('sort_index');
+            },
+            'survey_category:id,title',
+        ])
+                     ->where('user_id', Auth::id())
+                     ->findOrFail($survey_id);
     }
 }

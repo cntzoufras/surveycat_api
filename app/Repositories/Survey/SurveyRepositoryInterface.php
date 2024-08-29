@@ -85,5 +85,11 @@ interface SurveyRepositoryInterface {
      */
     public function getSurveysWithThemesAndPages(): Collection;
 
+    /**
+     * Get Survey with themes, pages, categories
+     *
+     * @return Collection
+     */
+    public function getSurveyWithDetails($survey_id): Survey;
 
 }

@@ -21,7 +21,7 @@ class UpdateSurveyRequest extends FormRequest {
     public function rules(): array {
         return [
             'title'            => 'sometimes|string|max:255',
-            'description'      => 'sometimes|string|max:255',
+            'description'      => 'sometimes|string|max:1000',
             'survey_status_id' => 'sometimes|integer|in:1,2,3,4',
             'theme_id'         => 'sometimes|uuid|exists:themes,id',
             'priority'         => 'sometimes|in:low,medium,high',
