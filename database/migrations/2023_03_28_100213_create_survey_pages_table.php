@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->boolean('require_questions')->default(false);
             $table->softDeletes();
             $table->timestamps();
-            $table->foreignUuid('survey_id')->references('id')->on('surveys');
+            $table->foreignUuid('survey_id')->references('id')->on('surveys')->onDelete('cascade');
         });
     }
 
