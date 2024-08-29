@@ -20,7 +20,9 @@ class UpdateSurveyQuestionChoiceRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            //
+            'content'            => 'sometimes|string|max:255',
+            'sort_index'         => 'sometimes|integer|min:0',
+            'survey_question_id' => 'required|uuid|exists:survey_questions,id',
         ];
     }
 }
