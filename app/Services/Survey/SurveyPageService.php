@@ -26,7 +26,7 @@ class SurveyPageService {
         return $this->survey_page_repository->update($survey_page, $params);
     }
 
-    public function delete($survey_page) {
+    public function delete(SurveyPage $survey_page) {
         $survey_page = $this->survey_page_repository->resolveModel($survey_page);
         return $this->survey_page_repository->delete($survey_page);
     }

@@ -39,6 +39,9 @@ class SurveyPageRepository {
     }
 
     public function store(array $params): SurveyPage {
+        $max_sort_index = SurveyPage::where('survey_id', $params['survey_id'])->max('sort_index');
+
+        $params['sort_index'] = $max_sort_index !== null ? $max_sort_index + 1 : 0;
         return DB::transaction(function () use ($params) {
             $survey_page = new SurveyPage();
             $survey_page->fill($params);
@@ -49,7 +52,9 @@ class SurveyPageRepository {
 
     public function delete(SurveyPage $survey_page) {
         return DB::transaction(function () use ($survey_page) {
+            $survey_id = $survey_page->survey_id;
             $survey_page->delete();
+            $this->updateSortIndexes($survey_id);
             return $survey_page;
         });
     }
@@ -63,5 +68,16 @@ class SurveyPageRepository {
             throw new \Exception($e, 500);
         }
     }
+
+    protected function updateSortIndexes($surveyId) {
+
+        $survey_pages = SurveyPage::where('survey_id', $surveyId)->orderBy('sort_index')->get();
+
+        foreach ($survey_pages as $index => $page) {
+            $page->sort_index = $index;
+            $page->save();
+        }
+    }
+
 
 }
