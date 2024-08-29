@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Survey\SurveyCategoryController;
 use App\Http\Controllers\Survey\SurveyController;
+use App\Http\Controllers\Survey\SurveyQuestionChoiceController;
 use App\Http\Controllers\Survey\SurveyQuestionController;
 use App\Http\Controllers\RespondentController;
 use App\Http\Controllers\Survey\SurveyPageController;
@@ -37,7 +38,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::post('/', [SurveyQuestionController::class, 'store']);
         Route::put('/{id}', [SurveyQuestionController::class, 'update']);
         Route::get('/{id}', [SurveyQuestionController::class, 'show']);
-        Route::delete('/{id}', [SurveyQuestionController::class, 'delete']);
+        Route::delete('{survey_question}', [SurveyQuestionController::class, 'destroy']);
     });
 
     Route::prefix('survey-pages')->group(function () {
@@ -45,17 +46,19 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::post('/', [SurveyPageController::class, 'store']);
         Route::put('/{id}', [SurveyPageController::class, 'update']);
         Route::get('/{id}', [SurveyPageController::class, 'show']);
-        Route::delete('/{id}', [SurveyPageController::class, 'delete']);
+        Route::delete('/{survey_page}', [SurveyPageController::class, 'delete']);
     });
 
     Route::prefix('surveys')->group(function () {
         Route::get('/user', [SurveyController::class, 'getSurveysForUser']);
         Route::get('/stock', [SurveyController::class, 'getStockSurveys']);
         Route::get('/all', [SurveyController::class, 'getSurveysWithThemesAndPages']);
+        Route::get('/{id}/details', [SurveyController::class, 'getSurveyWithDetails']);
 
         Route::get('/', [SurveyController::class, 'index']);
         Route::post('/', [SurveyController::class, 'store']);
         Route::put('/{id}', [SurveyController::class, 'update']);
+        Route::put('{survey}/publish', [SurveyController::class, 'publish']);
         Route::get('/{id}', [SurveyController::class, 'show']);
         Route::delete('/{id}', [SurveyController::class, 'destroy']);
 
@@ -63,10 +66,24 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::get('/{surveyId}/pages/{surveyPageId}/questions', [
             SurveyQuestionController::class, 'getSurveyQuestionsByPage',
         ]);
+        Route::get('/{survey_id}/questions-with-choices', [SurveyQuestionController::class,
+            'getSurveyQuestionsWithChoices',
+        ]);
     });
 
     Route::prefix('survey-categories')->group(function () {
         Route::get('/', [SurveyCategoryController::class, 'index']);
+    });
+
+    Route::prefix('survey-question-choices')->group(function () {
+        Route::get('/', [SurveyQuestionChoiceController::class, 'index']);
+        Route::post('/', [SurveyQuestionChoiceController::class, 'store']);
+        Route::put('/{id}', [SurveyQuestionChoiceController::class, 'update']);
+        Route::get('/{id}', [SurveyQuestionChoiceController::class, 'show']);
+        Route::delete('/{id}', [SurveyQuestionChoiceController::class, 'destroy']);
+        Route::get('/question/{questionId}', [SurveyQuestionChoiceController::class,
+            'getSurveyQuestionChoicesByQuestion',
+        ]);
     });
 
     Route::prefix('survey-responses')->group(function () {
@@ -119,5 +136,4 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::put('/', [UserController::class, 'update']);
         Route::delete('/{id}', [UserController::class, 'delete']);
     });
-//    Route::get('/', 'ListingOptionsController@getOptions');
 });
