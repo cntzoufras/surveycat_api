@@ -9,6 +9,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -47,6 +48,10 @@ class SurveyQuestion extends Model {
      */
     public function question_type(): BelongsTo {
         return $this->belongsTo(QuestionType::class);
+    }
+
+    public function survey_question_choices(): HasMany {
+        return $this->hasMany(SurveyQuestionChoice::class);
     }
 
     /**

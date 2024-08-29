@@ -6,10 +6,11 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SurveyQuestionChoice extends Model {
 
-    use HasFactory, Uuids;
+    use HasFactory, Uuids, SoftDeletes;
 
     public $incrementing = false;
 

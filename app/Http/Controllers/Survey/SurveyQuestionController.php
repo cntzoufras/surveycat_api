@@ -81,5 +81,14 @@ class SurveyQuestionController extends Controller {
         return response()->json($questionTypes);
     }
 
+    public function getSurveyQuestionsWithChoices(Request $request, $survey_id) {
+        try {
+            $survey_questions_with_choices = $this->survey_question_service->getSurveyQuestionsWithChoices($survey_id);
+            return response()->json($survey_questions_with_choices, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
 
 }

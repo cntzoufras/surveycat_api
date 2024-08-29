@@ -29,9 +29,9 @@ class SurveyQuestionService {
         return $this->survey_question_repository->update($survey_question, $params);
     }
 
-    public function delete($survey_category) {
-        $survey_category = $this->survey_question_repository->resolveModel($survey_category);
-        return $this->survey_question_repository->delete($survey_category);
+    public function delete($survey_question) {
+        $survey_question = $this->survey_question_repository->resolveModel($survey_question);
+        return $this->survey_question_repository->delete($survey_question);
     }
 
     public function show($params): mixed {
@@ -40,6 +40,10 @@ class SurveyQuestionService {
 
     public function getSurveyQuestionsByPage($survey_id, $page_id) {
         return $this->survey_question_repository->getQuestionsByPage($survey_id, $page_id);
+    }
+
+    public function getSurveyQuestionsWithChoices($survey_id) {
+        return $this->survey_question_repository->getSurveyQuestionsWithChoices($survey_id);
     }
 
 

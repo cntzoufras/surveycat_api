@@ -3,6 +3,7 @@
 namespace App\Repositories\Survey;
 
 use App\Models\Survey\SurveyQuestion;
+use App\Models\Survey\SurveyQuestionChoice;
 use Illuminate\Support\Facades\DB;
 
 class SurveyQuestionRepository {
@@ -49,7 +50,7 @@ class SurveyQuestionRepository {
         });
     }
 
-    public function delete(SurveyQuestion $survey_question) {
+    public function delete($survey_question) {
         return DB::transaction(function () use ($survey_question) {
             $survey_question->delete();
             return $survey_question;
@@ -69,5 +70,20 @@ class SurveyQuestionRepository {
             throw new \Exception($e, 500);
         }
     }
+
+    public function getSurveyQuestionsWithChoices($survey_id) {
+        try {
+            return DB::transaction(function () use ($survey_id) {
+                return SurveyQuestion::with('survey_question_choices')
+                                     ->whereHas('survey_page', function ($query) use ($survey_id) {
+                                         $query->where('survey_id', $survey_id);
+                                     })
+                                     ->get();
+            });
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), 500);
+        }
+    }
+
 
 }

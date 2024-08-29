@@ -20,7 +20,9 @@ class StoreSurveyQuestionChoiceRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            //
+            '*.content'            => 'required|string|max:255',
+            '*.sort_index'         => 'required|integer|min:0',
+            '*.survey_question_id' => 'required|uuid|exists:survey_questions,id',
         ];
     }
 }
