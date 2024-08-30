@@ -105,7 +105,10 @@ class SurveyRepository implements SurveyRepositoryInterface {
                          'survey_pages' => function ($query) {
                              $query->orderBy('sort_index')
                                    ->with(['survey_questions' => function ($query) {
-                                       $query->select(['id', 'title', 'survey_page_id'])
+                                       $query->select([
+                                           'id', 'title', 'survey_page_id', 'is_required',
+                                           'question_type_id', 'additional_settings', 'question_tags',
+                                       ])
                                              ->with('survey_question_choices');
                                    },
                                    ]);
