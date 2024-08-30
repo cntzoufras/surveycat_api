@@ -18,8 +18,7 @@ class SurveyQuestion extends Model {
 
     use HasFactory, Uuids, SoftDeletes;
 
-    public       $incrementing = false;
-    public mixed $is_required, $title, $question_type_id, $additional_settings, $survey_page_id;
+    public $incrementing = false;
 
     protected $keyType = 'string';
 
