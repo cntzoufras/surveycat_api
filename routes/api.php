@@ -25,6 +25,7 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [RegisteredUserController::class, 'store']);
 Route::get('/surveys/ps/{slug}', [SurveyController::class, 'getPublicSurveyBySlug']);
+Route::post('/survey-submissions', [SurveySubmissionController::class, 'store']);
 
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
@@ -95,7 +96,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
 
     Route::prefix('survey-submissions')->group(function () {
         Route::get('/', [SurveySubmissionController::class, 'index']);
-        Route::post('/', [SurveySubmissionController::class, 'store']);
         Route::get('/{id}', [SurveySubmissionController::class, 'show']);
     });
 
