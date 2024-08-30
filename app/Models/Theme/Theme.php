@@ -39,7 +39,7 @@ class Theme extends Model {
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function theme_setting(): HasOne {
-        return $this->hasOne(ThemeSetting::class, 'theme_setting_id', 'id');
+        return $this->hasOne(ThemeSetting::class);
     }
 
     /**
