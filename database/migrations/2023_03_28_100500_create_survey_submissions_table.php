@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->jsonb('submission_data');
             $table->foreignUuid('survey_id')->references('id')->on('surveys');
             $table->foreignUuid('survey_response_id')->references('id')->on('survey_responses');
-            $table->foreignUuid('respondent_id')->references('id')->on('respondents');
             $table->timestamps();
             $table->index(['survey_id', 'survey_response_id', 'respondent_id']);
         });
