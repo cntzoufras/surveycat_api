@@ -68,7 +68,7 @@ class SurveyService implements SurveyServiceInterface {
     public function updatePublicLink($title): string {
         $slug = Str::slug($title);
         $url = "{$slug}-" . uniqid();
-        return url("/surveys/p/$url");
+        return $url;
     }
 
     /**
@@ -102,5 +102,8 @@ class SurveyService implements SurveyServiceInterface {
         return $this->survey_repository->getSurveyWithDetails($survey_id);
     }
 
+    public function getPublicSurveyBySlug($slug): Survey {
+        return $this->survey_repository->getPublicSurveyBySlug($slug);
+    }
 
 }

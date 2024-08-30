@@ -87,12 +87,32 @@ class SurveyRepository implements SurveyRepositoryInterface {
     public function getSurveyWithDetails($survey_id): Survey {
         return Survey::with([
             'theme:id,title',
+            'survey_category:id,title',
             'survey_pages' => function ($query) {
                 $query->orderBy('sort_index');
             },
-            'survey_category:id,title',
         ])
                      ->where('user_id', Auth::id())
                      ->findOrFail($survey_id);
     }
+
+    public function getPublicSurveyBySlug(string $slug): Survey {
+        return Survey::withoutGlobalScopes()->where('public_link', $slug)
+                     ->with([
+                         'theme:id,title,description,footer',
+                         'theme.theme_setting',
+                         'survey_category:id,title,description',
+                         'survey_pages' => function ($query) {
+                             $query->orderBy('sort_index')
+                                   ->with(['survey_questions' => function ($query) {
+                                       $query->select(['id', 'title', 'survey_page_id'])
+                                             ->with('survey_question_choices');
+                                   },
+                                   ]);
+                         },
+                         'survey_settings',
+                     ])
+                     ->firstOrFail();
+    }
+
 }

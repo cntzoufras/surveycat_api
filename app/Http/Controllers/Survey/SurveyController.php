@@ -133,5 +133,21 @@ class SurveyController extends Controller {
         return null;
     }
 
+    public function getPublicSurveyBySlug($slug) {
+        try {
+            $validator = Validator::make(['slug' => $slug], [
+                'slug' => 'string|required|exists:surveys,public_link',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return $this->survey_service->getPublicSurveyBySlug($slug);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
 
 }

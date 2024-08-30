@@ -92,4 +92,11 @@ interface SurveyRepositoryInterface {
      */
     public function getSurveyWithDetails($survey_id): Survey;
 
+    /**
+     * Get Survey with themes, pages, categories
+     *
+     * @return Survey
+     */
+    public function getPublicSurveyBySlug(string $slug): Survey;
+
 }

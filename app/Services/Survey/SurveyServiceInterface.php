@@ -93,4 +93,11 @@ interface SurveyServiceInterface {
      */
     public function getSurveysWithThemesAndPages(): Collection;
 
+    /**
+     * Get the public survey with all data, themes, pages, questions.
+     *
+     * @return Survey
+     */
+    public function getPublicSurveyBySlug($slug): Survey;
+
 }
