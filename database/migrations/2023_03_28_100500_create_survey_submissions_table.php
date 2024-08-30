@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignUuid('survey_id')->references('id')->on('surveys');
             $table->foreignUuid('survey_response_id')->references('id')->on('survey_responses');
             $table->timestamps();
-            $table->index(['survey_id', 'survey_response_id', 'respondent_id']);
+            $table->index(['survey_id', 'survey_response_id']);
         });
     }
 
@@ -25,7 +25,6 @@ return new class extends Migration {
      */
     public function down(): void {
         Schema::table('survey_submissions', function (Blueprint $table) {
-            $table->dropForeign(['respondent_id']);
             $table->dropForeign(['survey_response_id']);
         });
         Schema::dropIfExists('survey_submissions');
