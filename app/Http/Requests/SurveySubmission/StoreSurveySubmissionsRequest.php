@@ -20,9 +20,8 @@ class StoreSurveySubmissionsRequest extends BaseRequest {
      */
     public function rules(): array {
         return [
-            'submission_data'    => 'required|json',
-            'survey_response_id' => 'required|uuid|exists:survey_responses,id',
-            'respondent_id'      => 'required|uuid|exists:respondents,id',
+            'submission_data' => 'required|json',
+            'survey_id'       => 'required|uuid|exists:surveys,id',
         ];
     }
 }
