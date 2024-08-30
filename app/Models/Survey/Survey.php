@@ -100,4 +100,8 @@ class Survey extends Model {
         return $this->hasMany(SurveyPage::class);
     }
 
+    public function survey_settings(): HasOne {
+        return $this->hasOne(SurveySettings::class);
+    }
+
 }
