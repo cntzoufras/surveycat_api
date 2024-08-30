@@ -29,15 +29,18 @@ class SurveySubmissionController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveySubmissionsRequest $request, $survey_submission_service): mixed {
-        if (isset($request->survey_response_id) && isset($request->respondent_id)) {
-            if (!$survey_submission_service->isUniqueSubmission($request->survey_response_id, $request->respondent_id)) {
-                return response()->json(['error' => 'A submission for this survey and respondent already exists.'], 422);
-            } else {
-                return $this->survey_submission_service->store($request->validated());
-            }
-        }
-        return null;
+//    public function store(StoreSurveySubmissionsRequest $request, $survey_submission_service): mixed {
+//        if (isset($request->survey_response_id) && isset($request->respondent_id)) {
+//            if (!$survey_submission_service->isUniqueSubmission($request->survey_response_id, $request->respondent_id)) {
+//                return response()->json(['error' => 'A submission for this survey and respondent already exists.'], 422);
+//            } else {
+//                return $this->survey_submission_service->store($request->validated());
+//            }
+//        }
+//        return null;
+//    }
+    public function store(StoreSurveySubmissionsRequest $request): SurveySubmission {
+        return $this->survey_submission_service->store($request->validated());
     }
 
     /**
