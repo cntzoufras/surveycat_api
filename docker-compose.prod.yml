@@ -1,6 +1,6 @@
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:2.10
+    image: cntzoufras/surveycat-api-apache:2.11
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -56,8 +56,8 @@ services:
       POSTGRES_HOST_AUTH_METHOD: md5
       POSTGRES_PASSWORD_ENCRYPTION: scram-sha-256
     #      PGDATA: '/var/lib/postgresql/data/pgdata'
-    #    volumes:
-    #      - './pg_data:/var/lib/postgresql/data'
+    volumes:
+      - './pg_data:/var/lib/postgresql/data'
     networks:
       - webnet
     ports:
