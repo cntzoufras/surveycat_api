@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.18"
+      IMAGE_VERSION: "2.19"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -101,13 +101,13 @@ jobs:
           scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d'
 
-      - name: Wait for containers to be fully up
+      - name: Wait for containers to be fully up by checking logs
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache sh -c "retry=0; while ! nc -z localhost 40000 && [ $retry -lt 60 ]; do sleep 5; retry=$((retry+1)); done"'
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml logs surveycat-api-apache | grep "ready for connections" || (echo "Container not ready" && exit 1)'
 
       - name: Check database connection and run migrations and seed
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan migrate:fresh || echo "Database connection failed or migrations did not run successfully."'
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan migrate:fresh --force --seed || echo "Database connection failed or migrations did not run successfully."'
 
       - name: Set directories permissions
         run: |
