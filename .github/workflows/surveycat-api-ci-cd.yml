@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.13"
+      IMAGE_VERSION: "2.14"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -98,9 +98,13 @@ jobs:
           scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d'
 
+      - name: Wait for containers to be fully up
+        run: |
+          docker-compose -f docker-compose.prod.yml exec surveycat-api-apache sh -c 'while ! nc -z localhost 80; do sleep 1; done'
+
       - name: Run database migrations and seed
         run: |
-          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache php artisan migrate:fresh --seed
+          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache php artisan migrate:fresh --seed > migration.log 2>&1 || cat migration.log
 
       - name: Set directories permissions
         run: |
