@@ -18,7 +18,7 @@ class UserSeeder extends Seeder {
             User::updateOrCreate(
                 ['email' => env('DEFAULT_ADMIN_EMAIL')],
                 [
-                    'name'     => env('DEFAULT_ADMIN_USERNAME'),
+                    'username' => env('DEFAULT_ADMIN_USERNAME'),
                     'email'    => env('DEFAULT_ADMIN_EMAIL'),
                     'password' => Hash::make(env('DEFAULT_ADMIN_PASSWORD')),
                     'role'     => 'admin',
