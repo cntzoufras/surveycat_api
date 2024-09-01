@@ -26,7 +26,7 @@ class Survey extends Model {
 
     protected $guarded  = ['id'];
     protected $fillable = [
-        'title', 'description', 'survey_category_id', 'survey_status_id', 'user_id', 'theme_id', 'public_link',
+        'title', 'description', 'survey_category_id', 'survey_status_id', 'user_id', 'theme_id', 'public_link', 'layout',
     ];
 
     protected $attributes = [

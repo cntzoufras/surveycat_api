@@ -18,14 +18,14 @@ class SurveyPage extends Model {
     protected $keyType      = 'string';
 
     protected $guarded  = ['id'];
-    protected $fillable = ['title', 'description', 'layout', 'sort_index', 'require_questions', 'survey_id'];
+    protected $fillable = ['title', 'description', 'sort_index', 'require_questions', 'survey_id'];
 
 
     // Each survey page belongs to a single survey
     public function survey(): BelongsTo {
         return $this->belongsTo(Survey::class);
     }
-    
+
     /**
      * Get the survey questions associated with the survey page.
      *

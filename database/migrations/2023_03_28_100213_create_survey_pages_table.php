@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('title')->nullable();
             $table->text('description')->nullable();
-            $table->enum('layout', ['single', 'multiple'])->default('multiple');
             $table->unsignedInteger('sort_index')->nullable()->default(0)->index();
             $table->boolean('require_questions')->default(false);
             $table->softDeletes();

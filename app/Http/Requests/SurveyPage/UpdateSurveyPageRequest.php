@@ -22,7 +22,6 @@ class UpdateSurveyPageRequest extends BaseRequest {
         return [
             'title'             => 'sometimes|string|max:255',
             'description'       => 'sometimes|string|max:1000',
-            'layout'            => 'sometimes|string|in:single,multiple',
             'sort_index'        => 'sometimes|integer',
             'require_questions' => 'sometimes|boolean',
             'survey_id'         => 'uuid|in:surveys,id',

@@ -66,8 +66,8 @@ class SurveyController extends Controller {
      *
      * @throws \Exception
      */
-    public function update(UpdateSurveyRequest $request, $id) {
-        return $this->survey_service->update($id, $request->validated());
+    public function update(UpdateSurveyRequest $request, Survey $survey) {
+        return $this->survey_service->update($survey, $request->validated());
     }
 
 

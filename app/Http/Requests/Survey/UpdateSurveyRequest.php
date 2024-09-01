@@ -24,6 +24,7 @@ class UpdateSurveyRequest extends FormRequest {
             'description'      => 'sometimes|string|max:1000',
             'survey_status_id' => 'sometimes|integer|in:1,2,3,4',
             'theme_id'         => 'sometimes|uuid|exists:themes,id',
+            'layout'           => 'sometimes|string|in:single,multiple',
             'priority'         => 'sometimes|in:low,medium,high',
             'user_id'          => 'sometimes|uuid|exists:users,id',
         ];
