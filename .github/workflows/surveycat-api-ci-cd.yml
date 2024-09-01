@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.14"
+      IMAGE_VERSION: "2.15"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -100,7 +100,7 @@ jobs:
 
       - name: Wait for containers to be fully up
         run: |
-          docker-compose -f docker-compose.prod.yml exec surveycat-api-apache sh -c 'while ! nc -z localhost 80; do sleep 1; done'
+          docker-compose -f docker-compose.prod.yml exec surveycat-api-apache sh -c 'while ! nc -z localhost 40000; do sleep 1; done'
 
       - name: Run database migrations and seed
         run: |
