@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run(): void {
-        $this->call(UserSeeder::class);
+        if (config('app.env') === 'local') {
+            $this->call(UserSeeder::class);
+        }
         $this->call(ThemeSeeder::class);
         $this->call(ThemeSettingSeeder::class);
         $this->call(VariablePaletteSeeder::class);
