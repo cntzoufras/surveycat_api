@@ -12,22 +12,23 @@ use Illuminate\Http\Request;
 
 class VerifyEmailController extends Controller {
 
-    public function __invoke(Request $request): JsonResponse {
+    public function __invoke(Request $request) {
         $user = User::findOrFail($request->route('id'));
+        $frontendUrl = config('app.frontend_url');
 
         if (!hash_equals((string)$request->route('hash'), sha1($user->getEmailForVerification()))) {
-            return response()->json(['message' => 'Invalid verification link.'], 403);
+            return redirect($frontendUrl . '/verification-error');
         }
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.'], 200);
+            return redirect($frontendUrl . '/verification-already');
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return response()->json(['message' => 'Email verified successfully! You can close this tab.'], 200);
+        return redirect($frontendUrl . '/verification-success');
     }
 
 }
