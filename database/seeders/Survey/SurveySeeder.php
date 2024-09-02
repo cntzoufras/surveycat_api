@@ -153,14 +153,17 @@ class SurveySeeder extends Seeder {
         $faker = Faker::create();
 
         // Get all survey questions for the given survey
-        $surveyQuestions = SurveyQuestion::whereHas('survey_page', function ($query) use ($survey) {
+        $surveyQuestions = SurveyQuestion::whereHas('surveyPage', function ($query) use ($survey) {
             $query->where('survey_id', $survey->id);
         })->get();
 
         for ($i = 0; $i < 100; $i++) {
+            // Determine if this respondent leaves their email
+            $hasEmail = $faker->boolean(30); // 30% chance to have an email
+
             // Create a respondent
             $respondent = Respondent::create([
-                'email'   => $faker->unique()->safeEmail,
+                'email'   => $hasEmail ? $faker->unique()->safeEmail : null,
                 'details' => json_encode([
                     'age'      => $faker->numberBetween(18, 65),
                     'gender'   => $faker->randomElement(['male', 'female']),
@@ -168,13 +171,16 @@ class SurveySeeder extends Seeder {
                 ]),
             ]);
 
+            // Create a session for the respondent
+            $sessionId = $this->createSessionForRespondent($respondent, $faker);
+
             // Create a survey response
             $surveyResponse = SurveyResponse::create([
                 'ip_address'    => $faker->ipv4,
                 'device'        => $faker->randomElement(['desktop', 'mobile', 'tablet']),
                 'started_at'    => $faker->dateTimeBetween('-1 week', '-1 day'),
                 'completed_at'  => $faker->boolean(80) ? $faker->dateTimeBetween('-1 day', 'now') : null,
-                'session_id'    => $faker->uuid,
+                'session_id'    => $sessionId,
                 'survey_id'     => $survey->id,
                 'respondent_id' => $respondent->id,
                 'country'       => $faker->country,
@@ -200,5 +206,32 @@ class SurveySeeder extends Seeder {
                 'survey_response_id' => $surveyResponse->id,
             ]);
         }
+    }
+
+    /**
+     * Create a session for a respondent and return the session ID.
+     *
+     * @param Respondent $respondent
+     * @param \Faker\Generator $faker
+     *
+     * @return string
+     */
+    private function createSessionForRespondent(Respondent $respondent, $faker): string {
+        // Generate session data
+        $sessionId = $faker->uuid;
+        $userAgent = $faker->userAgent;
+        $ipAddress = $faker->ipv4;
+
+        // Insert session into the sessions table
+        DB::table('sessions')->insert([
+            'id'            => $sessionId,
+            'user_id'       => null, // Assuming these are anonymous sessions
+            'ip_address'    => $ipAddress,
+            'user_agent'    => $userAgent,
+            'payload'       => base64_encode(json_encode([])), // Simple empty payload for example
+            'last_activity' => now()->timestamp,
+        ]);
+
+        return $sessionId;
     }
 }
