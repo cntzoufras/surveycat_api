@@ -3,12 +3,17 @@
 namespace Database\Seeders\Survey;
 
 use App\Models\Survey\Survey;
-use Illuminate\Database\Seeder;
 use App\Models\Survey\SurveyPage;
 use App\Models\Survey\SurveyQuestion;
+use App\Models\Survey\SurveyResponse;
+use App\Models\Survey\SurveySubmission;
+use App\Models\Respondent;
+use App\Models\Survey\SurveyQuestionChoice;
 use App\Models\User;
 use App\Models\Theme\Theme;
 use App\Models\Tag;
+use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class SurveySeeder extends Seeder {
 
@@ -38,6 +43,11 @@ class SurveySeeder extends Seeder {
 
         // Close the file
         fclose($file);
+
+        // Create responses for the generated survey
+        if ($currentSurvey) {
+            $this->createSurveyResponses($currentSurvey);
+        }
     }
 
     /**
@@ -133,5 +143,62 @@ class SurveySeeder extends Seeder {
             $surveyQuestion->tags()->attach($tag);
         }
     }
-}
 
+    /**
+     * Create survey responses and submissions for the given survey.
+     *
+     * @param Survey $survey
+     */
+    private function createSurveyResponses(Survey $survey): void {
+        $faker = Faker::create();
+
+        // Get all survey questions for the given survey
+        $surveyQuestions = SurveyQuestion::whereHas('survey_page', function ($query) use ($survey) {
+            $query->where('survey_id', $survey->id);
+        })->get();
+
+        for ($i = 0; $i < 100; $i++) {
+            // Create a respondent
+            $respondent = Respondent::create([
+                'email'   => $faker->unique()->safeEmail,
+                'details' => json_encode([
+                    'age'      => $faker->numberBetween(18, 65),
+                    'gender'   => $faker->randomElement(['male', 'female']),
+                    'location' => $faker->city,
+                ]),
+            ]);
+
+            // Create a survey response
+            $surveyResponse = SurveyResponse::create([
+                'ip_address'    => $faker->ipv4,
+                'device'        => $faker->randomElement(['desktop', 'mobile', 'tablet']),
+                'started_at'    => $faker->dateTimeBetween('-1 week', '-1 day'),
+                'completed_at'  => $faker->boolean(80) ? $faker->dateTimeBetween('-1 day', 'now') : null,
+                'session_id'    => $faker->uuid,
+                'survey_id'     => $survey->id,
+                'respondent_id' => $respondent->id,
+                'country'       => $faker->country,
+                'timezone'      => $faker->timezone,
+            ]);
+
+            // Prepare submission data
+            $submissionData = [];
+
+            foreach ($surveyQuestions as $question) {
+                if ($question->question_type_id == 1) { // Assuming 1 is for multiple-choice
+                    $choice = SurveyQuestionChoice::where('survey_question_id', $question->id)->inRandomOrder()->first();
+                    $submissionData[$question->id] = $choice ? $choice->id : null;
+                } else {
+                    $submissionData[$question->id] = $faker->sentence;
+                }
+            }
+
+            // Create a survey submission
+            SurveySubmission::create([
+                'submission_data'    => json_encode($submissionData),
+                'survey_id'          => $survey->id,
+                'survey_response_id' => $surveyResponse->id,
+            ]);
+        }
+    }
+}
