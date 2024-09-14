@@ -72,8 +72,7 @@ class SurveyRepository implements SurveyRepositoryInterface {
 
     public function getSurveysForUser(string $user_id): Collection {
         return Survey::with(['theme:id,title', 'survey_pages'])
-                     ->where('user_id', Auth::id())  // Filter by the logged-in user
-                     ->where('is_stock', false)       // Exclude stock surveys
+                     ->where('user_id', Auth::id())
                      ->get();
     }
 
