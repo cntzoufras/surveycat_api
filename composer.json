@@ -15,11 +15,11 @@
     "laravel/sanctum": "^4.0",
     "laravel/tinker": "^2.9",
     "league/csv": "^9.16.0",
-    "ramsey/uuid": "^4.7.6"
+    "ramsey/uuid": "^4.7.6",
+    "fakerphp/faker": "^1.23.1"
   },
   "require-dev": {
     "andyabih/laravel-to-uml": "^1.0.3",
-    "fakerphp/faker": "^1.23.1",
     "laravel/sail": "^1.31",
     "laravel/telescope": "^5.1",
     "mockery/mockery": "^1.6.12",
@@ -35,7 +35,6 @@
   "extra": {
     "laravel": {
       "dont-discover": [
-
       ]
     }
   },
