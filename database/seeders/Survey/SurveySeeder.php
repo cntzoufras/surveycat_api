@@ -5,15 +5,17 @@ namespace Database\Seeders\Survey;
 use App\Models\Survey\Survey;
 use App\Models\Survey\SurveyPage;
 use App\Models\Survey\SurveyQuestion;
+use App\Models\Survey\SurveyQuestionChoice;
 use App\Models\Survey\SurveyResponse;
 use App\Models\Survey\SurveySubmission;
 use App\Models\Respondent;
-use App\Models\Survey\SurveyQuestionChoice;
 use App\Models\User;
 use App\Models\Theme\Theme;
 use App\Models\Tag;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SurveySeeder extends Seeder {
 
@@ -70,8 +72,8 @@ class SurveySeeder extends Seeder {
             $currentPage = $this->createSurveyPage($data, $currentSurvey);
         }
 
-        // Create the question
-        $this->createSurveyQuestion($data, $currentPage);
+        // Create the question with choices if necessary
+        $this->createSurveyQuestionWithChoices($data, $currentPage);
     }
 
     /**
@@ -119,21 +121,29 @@ class SurveySeeder extends Seeder {
      * @param array $data
      * @param SurveyPage $page
      */
-    private function createSurveyQuestion(array $data, SurveyPage $page): void {
+    private function createSurveyQuestionWithChoices(array $data, SurveyPage $page): void {
         $additionalSettings = json_encode([
             'color' => $data[11],
             'align' => $data[12],
             'font'  => $data[13],
         ]);
 
+        // Determine the question type
+        $questionTypeId = $data[10];
+
         // Create the survey question
         $surveyQuestion = SurveyQuestion::query()->create([
             'title'               => $data[8],
             'is_required'         => filter_var($data[9], FILTER_VALIDATE_BOOLEAN),
-            'question_type_id'    => $data[10],
+            'question_type_id'    => $questionTypeId,
             'survey_page_id'      => $page->id,
             'additional_settings' => $additionalSettings,
         ]);
+
+        // Add choices if the question type is multiple choice or checkboxes
+        if (in_array($questionTypeId, [1, 2, 7])) {  // Multiple Choice, Checkboxes, Dropdown
+            $this->createSurveyQuestionChoices($surveyQuestion);
+        }
 
         // Assign random tags to the survey question
         $tags = Tag::inRandomOrder()->take(rand(1, 5))->get();
@@ -141,6 +151,28 @@ class SurveySeeder extends Seeder {
         // Attach each tag to the survey question using the morphToMany relationship
         foreach ($tags as $tag) {
             $surveyQuestion->tags()->attach($tag);
+        }
+    }
+
+    /**
+     * Create survey question choices for a multiple-choice, checkboxes, or dropdown question.
+     *
+     * @param SurveyQuestion $surveyQuestion
+     */
+    private function createSurveyQuestionChoices(SurveyQuestion $surveyQuestion): void {
+        $choices = [
+            'Option 1',
+            'Option 2',
+            'Option 3',
+            'Option 4',
+        ];
+
+        foreach ($choices as $index => $content) {
+            SurveyQuestionChoice::query()->create([
+                'content'            => $content,
+                'sort_index'         => $index,
+                'survey_question_id' => $surveyQuestion->id,
+            ]);
         }
     }
 
@@ -153,7 +185,7 @@ class SurveySeeder extends Seeder {
         $faker = Faker::create();
 
         // Get all survey questions for the given survey
-        $surveyQuestions = SurveyQuestion::whereHas('surveyPage', function ($query) use ($survey) {
+        $surveyQuestions = SurveyQuestion::whereHas('survey_page', function ($query) use ($survey) {
             $query->where('survey_id', $survey->id);
         })->get();
 
@@ -191,9 +223,17 @@ class SurveySeeder extends Seeder {
             $submissionData = [];
 
             foreach ($surveyQuestions as $question) {
-                if ($question->question_type_id == 1) { // Assuming 1 is for multiple-choice
+                $questionTypeId = $question->question_type_id;
+
+                if (in_array($questionTypeId, [1, 2, 7])) { // Multiple Choice, Checkboxes, Dropdown
                     $choice = SurveyQuestionChoice::where('survey_question_id', $question->id)->inRandomOrder()->first();
                     $submissionData[$question->id] = $choice ? $choice->id : null;
+                } elseif ($questionTypeId == 3) { // Star Rating
+                    $submissionData[$question->id] = $faker->numberBetween(1, 5); // Rating from 1 to 5 stars
+                } elseif ($questionTypeId == 9) { // Slider
+                    $submissionData[$question->id] = $faker->numberBetween(1, 100); // Slider value from 1 to 100
+                } elseif ($questionTypeId == 10) { // Date / Time
+                    $submissionData[$question->id] = $faker->dateTimeThisYear()->format('Y-m-d H:i:s');
                 } else {
                     $submissionData[$question->id] = $faker->sentence;
                 }
@@ -217,8 +257,8 @@ class SurveySeeder extends Seeder {
      * @return string
      */
     private function createSessionForRespondent(Respondent $respondent, $faker): string {
-        // Generate session data
-        $sessionId = $faker->uuid;
+        // Generate a more realistic session ID
+        $sessionId = Str::random(40);  // Generates a 40-character random string
         $userAgent = $faker->userAgent;
         $ipAddress = $faker->ipv4;
 
