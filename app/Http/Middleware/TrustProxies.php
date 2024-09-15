@@ -12,7 +12,7 @@ class TrustProxies extends Middleware {
      *
      * @var array|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.
@@ -25,10 +25,11 @@ class TrustProxies extends Middleware {
     Request::HEADER_X_FORWARDED_PROTO |
     Request::HEADER_X_FORWARDED_AWS_ELB;
 
+
     /**
      * Constructor method to assign proxy values dynamically.
      */
-    public function __construct() {
-        $this->proxies = env('TRUSTED_PROXIES', null);
-    }
+//    public function __construct() {
+//        $this->proxies = env('TRUSTED_PROXIES', null);
+//    }
 }
