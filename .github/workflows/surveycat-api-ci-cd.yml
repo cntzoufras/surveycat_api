@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.38"
+      IMAGE_VERSION: "2.39"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -73,6 +73,7 @@ jobs:
           echo 'DEFAULT_ADMIN_PASSWORD=${{ secrets.DEFAULT_ADMIN_PASSWORD }}' >> .env
           echo "DEFAULT_ADMIN_EMAIL=${{ secrets.DEFAULT_ADMIN_EMAIL }}" >> .env
           echo "TRUSTED_PROXIES=${{ secrets.TRUSTED_PROXIES }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
 
       #      - name: Pull latest Docker images
       #        run: |
