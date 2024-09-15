@@ -24,4 +24,11 @@ class TrustProxies extends Middleware {
     Request::HEADER_X_FORWARDED_PORT |
     Request::HEADER_X_FORWARDED_PROTO |
     Request::HEADER_X_FORWARDED_AWS_ELB;
+
+    /**
+     * Constructor method to assign proxy values dynamically.
+     */
+    public function __construct() {
+        $this->proxies = env('TRUSTED_PROXIES', null);
+    }
 }
