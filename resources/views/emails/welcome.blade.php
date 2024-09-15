@@ -5,7 +5,7 @@ Thank you for joining SurveyCat. We're excited to have you on board.
 
 Get started creating your first survey today!
 
-@component('mail::button', ['url' => 'http://surveycat.test:3000'])
+@component('mail::button', ['url' => config('app.frontend_url')])
     Start Now
 @endcomponent
 
