@@ -26,6 +26,7 @@ class UpdateUserRequest extends BaseRequest {
             'username'   => [
                 'sometimes',
                 'string',
+                'regex:/^[a-zA-Z]+$/u',
                 'max:255',
                 'unique:users,username,' . $this->user->id, // Allows the current user to keep their username
             ],

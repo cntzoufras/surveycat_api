@@ -93,7 +93,7 @@ class AuthController extends Controller {
      */
     public function forgotPassword(Request $request): JsonResponse {
         $this->validate($request, [
-            'username' => 'required|string|exists:users,username',
+            'username' => 'required|string|exists:users,username', 'regex:/^[a-zA-Z]+$/u',
         ]);
         $result = $this->auth_service->requestPasswordReset($request->input('username'));
         if ($result) {
