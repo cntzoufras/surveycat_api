@@ -8,10 +8,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\Validator;
@@ -35,7 +31,7 @@ class RegisteredUserController extends Controller {
         $requestData['password_confirmation'] = $request->input('passwordConfirmation');
 
         $validated = Validator::make($requestData, [
-            'username' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ])->validate();
