@@ -48,6 +48,7 @@ services:
   #    entrypoint: ./entrypoint.sh
   pgsql:
     image: 'postgres:15'
+    restart: always
     environment:
       POSTGRES_HOST: '${DB_HOST}'
       POSTGRES_DB: '${DB_DATABASE}'
@@ -64,11 +65,13 @@ services:
 
   memcached:
     image: 'memcached:alpine'
+    restart: always
     networks:
       - webnet
 
   redis:
     image: 'redis:alpine'
+    restart: always
     volumes:
       - 'prod-redis:/data'
     networks:
