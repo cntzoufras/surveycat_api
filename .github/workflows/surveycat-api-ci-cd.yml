@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.45"
+      IMAGE_VERSION: "2.46"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -83,15 +83,15 @@ jobs:
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version      
+          docker-compose --version
 
       - name: Build and push Docker images to Dockerhub
         run: |
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          
+
           # Build, tag push image to Dockerhub
           docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION=$IMAGE_VERSION
-          
+
           # Add version tag in built image
           docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$IMAGE_VERSION
 
