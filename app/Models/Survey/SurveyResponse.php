@@ -11,16 +11,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property mixed $ip_address
  */
-class SurveyResponse extends Model {
+class SurveyResponse extends Model
+{
 
 
     use HasFactory, Uuids;
 
-    public       $incrementing = false;
-    public mixed $respondent_id;
-    protected    $keyType      = 'string';
+    public $incrementing = false;
+//    public mixed $respondent_id;
+    protected $keyType = 'string';
 
-    protected $guarded  = ['id'];
+    protected $guarded = ['id'];
     protected $fillable = [
         'ip_address', 'device', 'session_id', 'survey_id', 'survey_submission_id', 'respondent_id',
         'country', 'timezone',
@@ -31,7 +32,8 @@ class SurveyResponse extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey(): BelongsTo {
+    public function survey(): BelongsTo
+    {
         return $this->belongsTo(Survey::class);
     }
 
@@ -40,7 +42,8 @@ class SurveyResponse extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey_submission(): BelongsTo {
+    public function survey_submission(): BelongsTo
+    {
         return $this->belongsTo(SurveySubmission::class);
     }
 
@@ -50,7 +53,8 @@ class SurveyResponse extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function respondent(): BelongsTo {
+    public function respondent(): BelongsTo
+    {
         return $this->belongsTo(Respondent::class);
     }
 }

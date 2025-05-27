@@ -23,12 +23,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $role
  * @property \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  */
-class User extends Authenticatable implements MustVerifyEmail {
+class User extends Authenticatable implements MustVerifyEmail
+{
 
     use HasFactory, Notifiable, Uuids, HasApiTokens;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $guarded = ['id'];
 
@@ -59,24 +60,29 @@ class User extends Authenticatable implements MustVerifyEmail {
         'email_verified_at' => 'datetime',
     ];
 
-    public function surveys(): HasMany {
+    public function surveys(): HasMany
+    {
         return $this->hasMany(Survey::class);
     }
 
-    public function themes(): HasMany {
+    public function themes(): HasMany
+    {
         return $this->hasMany(Theme::class);
     }
 
-    public function theme_settings(): HasMany {
+    public function theme_settings(): HasMany
+    {
         return $this->hasMany(ThemeSetting::class);
     }
 
-    public function tags(): \Illuminate\Database\Eloquent\Relations\MorphTo {
-        return $this->morphTo(Tag::class, 'taggable');
+    public function tags(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    {
+        return $this->morphTo();
     }
 
-    public function comments(): \Illuminate\Database\Eloquent\Relations\MorphTo {
-        return $this->morphTo(Comment::class, 'commentable');
+    public function comments(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    {
+        return $this->morphTo();
     }
 
 }

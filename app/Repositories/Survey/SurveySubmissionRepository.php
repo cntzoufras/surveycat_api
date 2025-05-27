@@ -5,31 +5,40 @@ namespace App\Repositories\Survey;
 use App\Models\Survey\SurveySubmission;
 use Illuminate\Support\Facades\DB;
 
-class SurveySubmissionRepository {
+class SurveySubmissionRepository
+{
 
-    public function index(array $params) {
+    public function index(array $params)
+    {
         try {
             $limit = $params['limit'] ?? 50;
+
             return DB::transaction(function () use ($limit) {
-                return SurveySubmission::query()->paginate($limit);
+                return SurveySubmission::with([
+                    'survey_response.survey',
+                    'survey_response.respondent',
+                ])->paginate($limit);
             });
         } catch (\Exception $e) {
-            throw new \Exception($e, 500);
+            throw new \Exception($e->getMessage(), 500); // fix message extraction
         }
     }
 
-    public function resolveModel($survey_submission): mixed {
+    public function resolveModel($survey_submission): mixed
+    {
         if ($survey_submission instanceof SurveySubmission) {
             return $survey_submission;
         }
         return SurveySubmission::query()->findOrFail($survey_submission);
     }
 
-    public function getIfExist($survey_submission): mixed {
+    public function getIfExist($survey_submission): mixed
+    {
         return SurveySubmission::query()->find($survey_submission);
     }
 
-    public function update(SurveySubmission $survey_submission, array $params) {
+    public function update(SurveySubmission $survey_submission, array $params)
+    {
         return DB::transaction(function () use ($params, $survey_submission) {
             $survey_submission->fill($params);
             $survey_submission->save();
@@ -37,7 +46,8 @@ class SurveySubmissionRepository {
         });
     }
 
-    public function store(array $params): SurveySubmission {
+    public function store(array $params): SurveySubmission
+    {
         return DB::transaction(function () use ($params) {
             $survey_submission = new SurveySubmission();
             $survey_submission->fill($params);
@@ -46,11 +56,12 @@ class SurveySubmissionRepository {
         });
     }
 
-    public function isUniqueSubmission($respondent_id, $survey_response_id): bool {
+    public function isUniqueSubmission($respondent_id, $survey_response_id): bool
+    {
         return !SurveySubmission::query()
-                                ->where('respondent_id', $respondent_id)
-                                ->where('survey_response_id', $survey_response_id)
-                                ->exists();
+            ->where('respondent_id', $respondent_id)
+            ->where('survey_response_id', $survey_response_id)
+            ->exists();
     }
 
 }

@@ -20,6 +20,7 @@
   },
   "require-dev": {
     "andyabih/laravel-to-uml": "^1.0.3",
+    "beyondcode/laravel-er-diagram-generator": "^4.0",
     "laravel/sail": "^1.31",
     "laravel/telescope": "^5.1",
     "mockery/mockery": "^1.6.12",
