@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.48"
+      IMAGE_VERSION: "2.49"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -33,11 +33,6 @@ jobs:
       - name: Stop running & remove volumes
         run: |
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml down --volumes'
-
-      #      - name: Pull latest Docker images
-      #        run: |
-      #          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml pull'
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -75,10 +70,6 @@ jobs:
           echo "TRUSTED_PROXIES=${{ secrets.TRUSTED_PROXIES }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
 
-      #      - name: Pull latest Docker images
-      #        run: |
-      #          docker pull cntzoufras/surveycat-api-apache:$IMAGE_VERSION
-
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -102,10 +93,6 @@ jobs:
         run: |
           scp -P 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key .env cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr:/var/www/surveycat_api
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && git pull && docker-compose -f docker-compose.prod.yml up -d'
-
-      #      - name: Wait for containers to be fully up by checking logs
-      #        run: |
-      #          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml logs surveycat-api-apache | grep "ready for connections" || (echo "Container not ready" && exit 1)'
 
       - name: Check database connection and run migrations and seed
         run: |
