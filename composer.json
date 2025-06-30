@@ -9,6 +9,7 @@
   "require": {
     "php": "^8.2.0",
     "ext-curl": "*",
+    "fakerphp/faker": "^1.23.1",
     "guzzlehttp/guzzle": "^7.9.2",
     "illuminate/support": "*",
     "laravel/framework": "^11.19",
@@ -16,7 +17,7 @@
     "laravel/tinker": "^2.9",
     "league/csv": "^9.16.0",
     "ramsey/uuid": "^4.7.6",
-    "fakerphp/faker": "^1.23.1"
+    "torann/geoip": "^3.0"
   },
   "require-dev": {
     "andyabih/laravel-to-uml": "^1.0.3",

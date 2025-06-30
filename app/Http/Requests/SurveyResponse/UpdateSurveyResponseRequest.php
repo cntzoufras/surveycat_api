@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\SurveyResponse;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSurveyResponseRequest extends BaseRequest
+class UpdateSurveyResponseRequest extends FormRequest
 {
 
     /**
@@ -18,14 +18,12 @@ class StoreSurveyResponseRequest extends BaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'started_at' => 'required|date',
             'completed_at' => 'sometimes|date',
-            'survey_id' => 'uuid|exists:surveys,id',
         ];
     }
 }

@@ -19,12 +19,18 @@ class SurveyResponse extends Model
 
     public $incrementing = false;
 //    public mixed $respondent_id;
+
     protected $keyType = 'string';
 
     protected $guarded = ['id'];
     protected $fillable = [
         'ip_address', 'device', 'session_id', 'survey_id', 'survey_submission_id', 'respondent_id',
-        'country', 'timezone',
+        'country', 'started_at', 'completed_at',
+    ];
+
+    protected $casts = [
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     /**

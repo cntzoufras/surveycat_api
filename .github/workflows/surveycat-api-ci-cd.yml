@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.49"
+      IMAGE_VERSION: "2.50"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -69,6 +69,8 @@ jobs:
           echo "DEFAULT_ADMIN_EMAIL=${{ secrets.DEFAULT_ADMIN_EMAIL }}" >> .env
           echo "TRUSTED_PROXIES=${{ secrets.TRUSTED_PROXIES }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "GEOIP_DRIVER=ipapi" >> .env
 
       - name: Install Docker Compose
         run: |

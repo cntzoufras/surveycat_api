@@ -17,9 +17,11 @@ use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class SurveySeeder extends Seeder {
+class SurveySeeder extends Seeder
+{
 
-    public function run(): void {
+    public function run(): void
+    {
         // Get the superadmin user (first user from UserSeeder)
         $superadmin = User::query()->first();
 
@@ -61,7 +63,8 @@ class SurveySeeder extends Seeder {
      * @param string $userId
      * @param string $themeId
      */
-    private function processRow(array $data, &$currentSurvey, &$currentPage, string $userId, string $themeId): void {
+    private function processRow(array $data, &$currentSurvey, &$currentPage, string $userId, string $themeId): void
+    {
         // Check if we need to create a new survey
         if (!$currentSurvey || $currentSurvey->title !== $data[0]) {
             $currentSurvey = $this->createSurvey($data, $userId, $themeId);
@@ -85,16 +88,17 @@ class SurveySeeder extends Seeder {
      *
      * @return Survey
      */
-    private function createSurvey(array $data, string $userId, string $themeId): Survey {
+    private function createSurvey(array $data, string $userId, string $themeId): Survey
+    {
         return Survey::query()->create([
-            'title'              => $data[0],
-            'description'        => $data[1],
+            'title' => $data[0],
+            'description' => $data[1],
             'survey_category_id' => $data[2],  // Use survey_category_id from the CSV
-            'survey_status_id'   => $data[3],  // Use status_id from the CSV
-            'priority'           => $data[4],  // Adding priority from the CSV
-            'is_stock'           => true,      // This is a stock survey
-            'user_id'            => $userId,   // Associating with the superadmin user
-            'theme_id'           => $themeId,  // Associating with the first theme
+            'survey_status_id' => $data[3],  // Use status_id from the CSV
+            'priority' => $data[4],  // Adding priority from the CSV
+            'is_stock' => true,      // This is a stock survey
+            'user_id' => $userId,   // Associating with the superadmin user
+            'theme_id' => $themeId,  // Associating with the first theme
         ]);
     }
 
@@ -106,11 +110,12 @@ class SurveySeeder extends Seeder {
      *
      * @return SurveyPage
      */
-    private function createSurveyPage(array $data, Survey $survey): SurveyPage {
+    private function createSurveyPage(array $data, Survey $survey): SurveyPage
+    {
         return SurveyPage::query()->create([
-            'title'             => $data[5],
-            'description'       => $data[6],
-            'survey_id'         => $survey->id,
+            'title' => $data[5],
+            'description' => $data[6],
+            'survey_id' => $survey->id,
             'require_questions' => filter_var($data[7], FILTER_VALIDATE_BOOLEAN), // Handling require_questions
         ]);
     }
@@ -121,11 +126,12 @@ class SurveySeeder extends Seeder {
      * @param array $data
      * @param SurveyPage $page
      */
-    private function createSurveyQuestionWithChoices(array $data, SurveyPage $page): void {
+    private function createSurveyQuestionWithChoices(array $data, SurveyPage $page): void
+    {
         $additionalSettings = json_encode([
             'color' => $data[11],
             'align' => $data[12],
-            'font'  => $data[13],
+            'font' => $data[13],
         ]);
 
         // Determine the question type
@@ -133,10 +139,10 @@ class SurveySeeder extends Seeder {
 
         // Create the survey question
         $surveyQuestion = SurveyQuestion::query()->create([
-            'title'               => $data[8],
-            'is_required'         => filter_var($data[9], FILTER_VALIDATE_BOOLEAN),
-            'question_type_id'    => $questionTypeId,
-            'survey_page_id'      => $page->id,
+            'title' => $data[8],
+            'is_required' => filter_var($data[9], FILTER_VALIDATE_BOOLEAN),
+            'question_type_id' => $questionTypeId,
+            'survey_page_id' => $page->id,
             'additional_settings' => $additionalSettings,
         ]);
 
@@ -159,7 +165,8 @@ class SurveySeeder extends Seeder {
      *
      * @param SurveyQuestion $surveyQuestion
      */
-    private function createSurveyQuestionChoices(SurveyQuestion $surveyQuestion): void {
+    private function createSurveyQuestionChoices(SurveyQuestion $surveyQuestion): void
+    {
         $choices = [
             'Option 1',
             'Option 2',
@@ -169,8 +176,8 @@ class SurveySeeder extends Seeder {
 
         foreach ($choices as $index => $content) {
             SurveyQuestionChoice::query()->create([
-                'content'            => $content,
-                'sort_index'         => $index,
+                'content' => $content,
+                'sort_index' => $index,
                 'survey_question_id' => $surveyQuestion->id,
             ]);
         }
@@ -181,7 +188,8 @@ class SurveySeeder extends Seeder {
      *
      * @param Survey $survey
      */
-    private function createSurveyResponses(Survey $survey): void {
+    private function createSurveyResponses(Survey $survey): void
+    {
         $faker = Faker::create();
 
         // Get all survey questions for the given survey
@@ -195,10 +203,10 @@ class SurveySeeder extends Seeder {
 
             // Create a respondent
             $respondent = Respondent::create([
-                'email'   => $hasEmail ? $faker->unique()->safeEmail : null,
+                'email' => $hasEmail ? $faker->unique()->safeEmail : null,
                 'details' => json_encode([
-                    'age'      => $faker->numberBetween(18, 65),
-                    'gender'   => $faker->randomElement(['male', 'female']),
+                    'age' => $faker->numberBetween(18, 65),
+                    'gender' => $faker->randomElement(['male', 'female']),
                     'location' => $faker->city,
                 ]),
             ]);
@@ -208,15 +216,14 @@ class SurveySeeder extends Seeder {
 
             // Create a survey response
             $surveyResponse = SurveyResponse::create([
-                'ip_address'    => $faker->ipv4,
-                'device'        => $faker->randomElement(['desktop', 'mobile', 'tablet']),
-                'started_at'    => $faker->dateTimeBetween('-1 week', '-1 day'),
-                'completed_at'  => $faker->boolean(80) ? $faker->dateTimeBetween('-1 day', 'now') : null,
-                'session_id'    => $sessionId,
-                'survey_id'     => $survey->id,
+                'ip_address' => $faker->ipv4,
+                'device' => $faker->randomElement(['desktop', 'mobile', 'tablet']),
+                'started_at' => $faker->dateTimeBetween('-1 week', '-1 day'),
+                'completed_at' => $faker->boolean(80) ? $faker->dateTimeBetween('-1 day', 'now') : null,
+                'session_id' => $sessionId,
+                'survey_id' => $survey->id,
                 'respondent_id' => $respondent->id,
-                'country'       => $faker->country,
-                'timezone'      => $faker->timezone,
+                'country' => $faker->country,
             ]);
 
             // Prepare submission data
@@ -241,8 +248,8 @@ class SurveySeeder extends Seeder {
 
             // Create a survey submission
             SurveySubmission::create([
-                'submission_data'    => json_encode($submissionData),
-                'survey_id'          => $survey->id,
+                'submission_data' => json_encode($submissionData),
+                'survey_id' => $survey->id,
                 'survey_response_id' => $surveyResponse->id,
             ]);
         }
@@ -256,7 +263,8 @@ class SurveySeeder extends Seeder {
      *
      * @return string
      */
-    private function createSessionForRespondent(Respondent $respondent, $faker): string {
+    private function createSessionForRespondent(Respondent $respondent, $faker): string
+    {
         // Generate a more realistic session ID
         $sessionId = Str::random(40);  // Generates a 40-character random string
         $userAgent = $faker->userAgent;
@@ -264,11 +272,11 @@ class SurveySeeder extends Seeder {
 
         // Insert session into the sessions table
         DB::table('sessions')->insert([
-            'id'            => $sessionId,
-            'user_id'       => null, // Assuming these are anonymous sessions
-            'ip_address'    => $ipAddress,
-            'user_agent'    => $userAgent,
-            'payload'       => base64_encode(json_encode([])), // Simple empty payload for example
+            'id' => $sessionId,
+            'user_id' => null, // Assuming these are anonymous sessions
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'payload' => base64_encode(json_encode([])), // Simple empty payload for example
             'last_activity' => now()->timestamp,
         ]);
 

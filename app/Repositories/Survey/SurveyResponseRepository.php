@@ -5,9 +5,11 @@ namespace App\Repositories\Survey;
 use App\Models\Survey\SurveyResponse;
 use Illuminate\Support\Facades\DB;
 
-class SurveyResponseRepository {
+class SurveyResponseRepository
+{
 
-    public function index(array $params) {
+    public function index(array $params)
+    {
         try {
             $limit = $params['limit'] ?? 50;
             return DB::transaction(function () use ($limit) {
@@ -18,26 +20,35 @@ class SurveyResponseRepository {
         }
     }
 
-    public function resolveModel($survey_response): mixed {
+    public function resolveModel($survey_response): mixed
+    {
         if ($survey_response instanceof SurveyResponse) {
             return $survey_response;
         }
         return SurveyResponse::query()->findOrFail($survey_response);
     }
 
-    public function getIfExist($survey_response): mixed {
+    public function getIfExist($survey_response): mixed
+    {
         return SurveyResponse::query()->find($survey_response);
     }
 
-    public function update(SurveyResponse $survey_response, array $params) {
-        return DB::transaction(function () use ($params, $survey_response) {
+    public function update(SurveyResponse $survey_response, array $params): SurveyResponse
+    {
+        if (!$survey_response->exists) {
+            $survey_response = SurveyResponse::query()
+                ->findOrFail($survey_response->id);
+        }
+
+        return DB::transaction(function () use ($survey_response, $params) {
             $survey_response->fill($params);
             $survey_response->save();
             return $survey_response;
         });
     }
 
-    public function store(array $params): SurveyResponse {
+    public function store(array $params): SurveyResponse
+    {
         return DB::transaction(function () use ($params) {
             $survey_response = new SurveyResponse();
             $survey_response->fill($params);

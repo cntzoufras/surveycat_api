@@ -11,6 +11,7 @@ use App\Http\Controllers\RespondentController;
 use App\Http\Controllers\Survey\SurveyPageController;
 use App\Http\Controllers\Survey\SurveyResponseController;
 use App\Http\Controllers\Survey\SurveySubmissionController;
+use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\Theme\ThemeController;
 use App\Http\Controllers\Theme\ThemeSettingsController;
 
@@ -27,6 +28,7 @@ Route::post('register', [RegisteredUserController::class, 'store']);
 Route::get('/surveys/ps/{slug}', [SurveyController::class, 'getPublicSurveyBySlug']);
 Route::post('/survey-submissions', [SurveySubmissionController::class, 'store']);
 
+Route::get('/question-types', [QuestionTypeController::class, 'index']);;
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('/user', function (Request $request) {
@@ -91,7 +93,9 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     Route::prefix('survey-responses')->group(function () {
         Route::get('/', [SurveyResponseController::class, 'index']);
         Route::post('/', [SurveyResponseController::class, 'store']);
-        Route::get('/{id}', [SurveyResponseController::class, 'show']);
+        Route::put('/{survey_response}', [SurveyResponseController::class, 'update']);
+        Route::get('/{survey_response}', [SurveyResponseController::class, 'show']);
+        Route::patch('/{survey_response}', [SurveyResponseController::class, 'update']);
     });
 
     Route::prefix('survey-submissions')->group(function () {

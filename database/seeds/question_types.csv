@@ -1,11 +1,8 @@
 title,description,label
 Multiple Choice,Choose one option from a list,radio
 Checkboxes,Select multiple options from a list,checkboxes
+Single Textbox,Provide a short text response,single-textbox
 Star Rating,Rate using a star-based system,start-rating
 Best worst scale,Rank items from best to worst,best-worst
-Single Textbox,Provide a short text response,single-textbox
 Comment Box,Enter a longer text comment,comment-box
 Dropdown,Select an option from a dropdown menu,dropdown
-Ranking,Order items according to preference,ranking
-Slider,Select a value on a sliding scale,slider
-Date / Time,Enter a date or time,date
