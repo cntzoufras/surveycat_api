@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.53"
+      IMAGE_VERSION: "2.54"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -105,4 +105,4 @@ jobs:
 
       - name: Set directories permissions
         run: |
-          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache chmod -R 777 storage bootstrap/cache
+          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache chmod -R 775 storage bootstrap/cache
