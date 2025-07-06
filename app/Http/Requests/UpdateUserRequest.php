@@ -2,17 +2,23 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends BaseRequest {
+// It should extend FormRequest directly
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
+
+class UpdateUserRequest extends FormRequest
+{
 
     /**
      * Determine if the user is authorized to make this request.
+     * The route middleware handles authentication, so this is safe.
      *
      * @return bool
      */
-    public function authorize(): bool {
-        // You can add your authorization logic here
+    public function authorize(): bool
+    {
         return true;
     }
 
@@ -21,45 +27,36 @@ class UpdateUserRequest extends BaseRequest {
      *
      * @return array
      */
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
-            'username'   => [
-                'sometimes',
-                'string',
-                'regex:/^[a-zA-Z]+$/u',
-                'max:255',
-                'unique:users,username,' . $this->user->id, // Allows the current user to keep their username
-            ],
-            'email'      => [
-                'sometimes',
-                'email',
-                'max:255',
-                'unique:users,email,' . $this->user->id, // Allows the current user to keep their email
-            ],
-            'role'       => [
-                'sometimes',
-                'string',
-                'in:registered,admin,superadmin', // Example roles, adjust as needed
-            ],
+            // Using 'sometimes' so validation only runs if the field is present
             'first_name' => [
+                'sometimes', // Keep this to allow partial updates
+                'nullable',  // Allows the user to clear their first name
+                'string',
+                'max:255',
+            ],
+            'last_name' => [
+                'sometimes',
                 'nullable',
                 'string',
                 'max:255',
             ],
-            'last_name'  => [
-                'nullable',
-                'string',
-                'max:255',
+            'email' => [
+                'sometimes',
+                'required', // Email is required if present
+                'email:rfc,dns', // This rule is still great for checking format and domain existence.
+                'regex:/.+@.+\..+/', // ✅ ADDED: This ensures the email has a dot in the domain part.
+                Rule::unique('users')->ignore($this->user()->id), 'max:255',
             ],
-            'avatar'     => [
-                'nullable',
-                'string', // Assuming avatar is stored as a URL or path, adjust if it's an upload
-            ],
-            'password'   => [
-                'nullable',
+            'password' => [
+                'sometimes',
+                'nullable', // Allows the password field to be submitted empty
                 'string',
-                'min:8', // Minimum length requirement, adjust as needed
-                'confirmed', // Ensures password confirmation
+                'confirmed',
+                // Use the modern Password rule object for strong password requirements
+                Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
             ],
         ];
     }
@@ -69,11 +66,11 @@ class UpdateUserRequest extends BaseRequest {
      *
      * @return array
      */
-    public function messages() {
+    public function messages(): array
+    {
         return [
-            'username.unique'    => 'The username has already been taken.',
-            'email.unique'       => 'The email address has already been taken.',
-            'role.in'            => 'The selected role is invalid.',
+            'email.unique' => 'The email address has already been taken.',
+            'email.regex' => 'Please enter a valid email address.',
             'password.confirmed' => 'The password confirmation does not match.',
         ];
     }

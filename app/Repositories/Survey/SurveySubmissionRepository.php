@@ -2,7 +2,10 @@
 
 namespace App\Repositories\Survey;
 
+use App\Models\Survey\Survey;
 use App\Models\Survey\SurveySubmission;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SurveySubmissionRepository
@@ -11,7 +14,7 @@ class SurveySubmissionRepository
     public function index(array $params)
     {
         try {
-            $limit = $params['limit'] ?? 50;
+            $limit = $params['limit'] ?? 200;
 
             return DB::transaction(function () use ($limit) {
                 return SurveySubmission::with([
@@ -62,6 +65,15 @@ class SurveySubmissionRepository
             ->where('respondent_id', $respondent_id)
             ->where('survey_response_id', $survey_response_id)
             ->exists();
+    }
+
+    public function getSurveySubmissionsCountForUser(string $user_id): int
+    {
+        // This efficiently counts submissions by checking if their parent 'survey'
+        // has a 'user_id' that matches the one provided.
+        return SurveySubmission::whereHas('survey', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        })->count();
     }
 
 }

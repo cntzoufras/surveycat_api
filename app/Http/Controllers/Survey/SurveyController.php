@@ -15,11 +15,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class SurveyController extends Controller {
+class SurveyController extends Controller
+{
 
     protected SurveyService $survey_service;
 
-    public function __construct(SurveyService $survey_service) {
+    public function __construct(SurveyService $survey_service)
+    {
         $this->survey_service = $survey_service;
     }
 
@@ -28,7 +30,8 @@ class SurveyController extends Controller {
      *
      * @throws \Exception
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_service->index($validated);
     }
@@ -36,7 +39,8 @@ class SurveyController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveyRequest $request): Survey {
+    public function store(StoreSurveyRequest $request): Survey
+    {
         return $this->survey_service->store($request->validated());
     }
 
@@ -45,7 +49,8 @@ class SurveyController extends Controller {
      *
      * @throws \Exception
      */
-    public function show(Request $request): mixed {
+    public function show(Request $request): mixed
+    {
         try {
             if (isset($request['id'])) {
                 Validator::validate(['id' => $request['id']], [
@@ -66,16 +71,19 @@ class SurveyController extends Controller {
      *
      * @throws \Exception
      */
-    public function update(UpdateSurveyRequest $request, Survey $survey) {
+    public function update(UpdateSurveyRequest $request, Survey $survey)
+    {
         return $this->survey_service->update($survey, $request->validated());
     }
 
 
-    public function publish(UpdateSurveyRequest $request, Survey $survey) {
+    public function publish(UpdateSurveyRequest $request, Survey $survey)
+    {
         return $this->survey_service->publish($survey->id, $request->validated());
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
         try {
             $survey = Survey::findOrFail($id);
@@ -92,7 +100,8 @@ class SurveyController extends Controller {
         }
     }
 
-    public function getStockSurveys() {
+    public function getStockSurveys()
+    {
         return $this->survey_service->getStockSurveys();
     }
 
@@ -101,7 +110,8 @@ class SurveyController extends Controller {
      *
      * @return JsonResponse
      */
-    public function getSurveysForUser(): JsonResponse {
+    public function getSurveysForUser(): JsonResponse
+    {
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -112,12 +122,14 @@ class SurveyController extends Controller {
         return response()->json($surveys);
     }
 
-    public function getSurveysWithThemesAndPages(): JsonResponse {
+    public function getSurveysWithThemesAndPages(): JsonResponse
+    {
         $surveys = $this->survey_service->getSurveysWithThemesAndPages();
         return response()->json($surveys);
     }
 
-    public function getSurveyWithDetails(Request $request) {
+    public function getSurveyWithDetails(Request $request)
+    {
         try {
             if (isset($request['id'])) {
                 Validator::validate(['id' => $request['id']], [
@@ -133,7 +145,8 @@ class SurveyController extends Controller {
         return null;
     }
 
-    public function getPublicSurveyBySlug($slug) {
+    public function getPublicSurveyBySlug($slug)
+    {
         try {
             $validator = Validator::make(['slug' => $slug], [
                 'slug' => 'string|required|exists:surveys,public_link',
@@ -147,6 +160,18 @@ class SurveyController extends Controller {
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
+    }
+
+    public function getProfileSurveyCountsForUser(): JsonResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $surveys_count = $this->survey_service->getProfileSurveyCountsForUser($user->id);
+        return response()->json($surveys_count);
     }
 
 

@@ -7,44 +7,77 @@ use App\Models\Theme\Theme;
 use App\Models\Theme\ThemeSetting;
 use App\Traits\Uuids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 
 /**
- * Class User
- * ...
+ * App\Models\User
  *
+ * @property string $id
  * @property string $username
- * @property string $password
+ * @property string|null $first_name
+ * @property string|null $last_name
  * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $avatar
  * @property string $role
- * @property \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
+ * @property-read Collection<int, Survey> $surveys
+ * @property-read Collection<int, Theme> $themes
+ * @property-read Collection<int, ThemeSetting> $theme_settings
+ * @property-read DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read Collection<int, PersonalAccessToken> $tokens
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-
     use HasFactory, Notifiable, Uuids, HasApiTokens;
 
+    /**
+     * The "type" of the primary key ID.
+     * Indicates that the IDs are not auto-incrementing.
+     *
+     * @var bool
+     */
     public $incrementing = false;
+
+    /**
+     * The data type of the primary key.
+     *
+     * @var string
+     */
     protected $keyType = 'string';
-
-    protected $guarded = ['id'];
-
 
     /**
      * The attributes that are mass assignable.
+     * Using $fillable is more secure than $guarded.
      *
-     * @var array
+     * @var array<int, string>
      */
-    protected $fillable = ['username', 'email', 'role', 'first_name', 'last_name', 'avatar', 'password',];
+    protected $fillable = [
+        'username',
+        'first_name',
+        'last_name',
+        'email',
+        'role',
+        'avatar',
+        'password',
+    ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -54,10 +87,12 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // ✅ This automatically hashes the password when it's set.
+        'password' => 'hashed',
     ];
 
     public function surveys(): HasMany
@@ -75,6 +110,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ThemeSetting::class);
     }
 
+    // These polymorphic relationships are less common on a User model.
+    // You may want to review if they should be morphMany or another type.
     public function tags(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
@@ -84,5 +121,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->morphTo();
     }
-
 }

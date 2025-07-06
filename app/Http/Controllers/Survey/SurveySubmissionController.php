@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveySubmission\StoreSurveySubmissionsRequest;
 use App\Models\Survey\SurveySubmission;
 use App\Services\Survey\SurveySubmissionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -55,4 +57,23 @@ class SurveySubmissionController extends Controller
         }
         return null;
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @throws \Exception
+     */
+    public function getSurveySubmissionsCountForUser(): JsonResponse
+    {
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        $survey_submissions_count_user = $this->survey_submission_service->getSurveySubmissionsCountForUser($user->id);
+        return response()->json($survey_submissions_count_user);
+    }
+
+
 }

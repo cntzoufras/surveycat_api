@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateAvatarRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use UpdateUserRequest;
 
-class UserController extends Controller {
+
+class UserController extends Controller
+{
 
     protected UserService $user_service;
 
-    public function __construct(UserService $user_service) {
+    public function __construct(UserService $user_service)
+    {
         $this->user_service = $user_service;
     }
 
@@ -22,7 +27,8 @@ class UserController extends Controller {
      *
      * @throws \Exception
      */
-    public function show(Request $request): mixed {
+    public function show(Request $request): mixed
+    {
         try {
             if (isset($request['id'])) {
                 Validator::validate(['id' => $request['id']], [
@@ -41,7 +47,23 @@ class UserController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, $id) {
-        return $this->user_service->update($id, $request->validated());
+    public function update(UpdateUserRequest $request): \Illuminate\Http\JsonResponse
+    {
+        $user = $request->user();
+        $updatedUser = $this->user_service->update($user, $request->validated());
+        return response()->json(['user' => $updatedUser]);
+    }
+
+    public function updateAvatar(UpdateAvatarRequest $request): \Illuminate\Http\JsonResponse
+    {
+//        $user = $request->user();
+        // Delete the old avatar if it exists
+        $updatedUser = $this->user_service->updateAvatar(
+            $request->user(),
+            $request->file('avatar')
+        );
+
+        return response()->json(['user' => $updatedUser]);
+
     }
 }

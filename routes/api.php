@@ -35,6 +35,8 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         $user = \Illuminate\Support\Facades\Auth::user();
         return response()->json(['user' => $user]);
     });
+    Route::put('/user', [UserController::class, 'update']);
+    Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
 
     Route::prefix('survey-questions')->group(function () {
         Route::get('/types', [SurveyQuestionController::class, 'getQuestionTypes']);
@@ -54,8 +56,9 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     });
 
     Route::prefix('surveys')->group(function () {
+        Route::get('/count', [SurveyController::class, 'getProfileSurveyCountsForUser']);
         Route::get('/user', [SurveyController::class, 'getSurveysForUser']);
-        Route::get('/stock', [SurveyController::class, 'getStockSurveys']);
+
         Route::get('/all', [SurveyController::class, 'getSurveysWithThemesAndPages']);
         Route::get('/{id}/details', [SurveyController::class, 'getSurveyWithDetails']);
 
@@ -111,7 +114,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('/{id}', [ThemeController::class, 'delete']);
     });
 
-    Route::prefix('theme-styles')->group(function () {
+    Route::prefix('theme-settings')->group(function () {
         Route::get('/', [ThemeSettingsController::class, 'index']);
         Route::post('/', [ThemeSettingsController::class, 'store']);
         Route::put('/', [ThemeSettingsController::class, 'update']);
