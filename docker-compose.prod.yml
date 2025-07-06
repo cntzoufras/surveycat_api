@@ -1,6 +1,6 @@
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:2.54
+    image: cntzoufras/surveycat-api-apache:2.55
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -17,6 +17,8 @@ services:
       APACHE_SERVER_NAME: "snf-893977.vm.okeanos.grnet.gr"
       WWWUSER: 1000
       WWWGROUP: 1000
+    volumes:
+      - shared_uploads:/var/www/html/storage/app/public
     networks:
       - webnet
     ports:
@@ -62,4 +64,7 @@ volumes:
     driver: local
 
   prod-redis:
+    driver: local
+
+  shared_uploads:
     driver: local
