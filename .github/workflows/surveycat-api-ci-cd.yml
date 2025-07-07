@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.58"
+      IMAGE_VERSION: "2.59"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -19,20 +19,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ls -l ~/.ssh/deploy_key
-          cat ~/.ssh/deploy_key
-
           ssh-keyscan -p 54222 snf-893977.vm.okeanos.grnet.gr >> ~/.ssh/known_hosts
-          cat ~/.ssh/known_hosts
 
-      - name: Set Docker Host
-        env:
-          DOCKER_HOST: tcp://snf-893977.vm.okeanos.grnet.gr:2375
-        run: echo "Docker Host set successfully."
-
-      - name: Stop running & remove volumes
+      - name: Stop running containers
         run: |
           ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'cd /var/www/surveycat_api && docker-compose -f docker-compose.prod.yml down'
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -80,14 +72,7 @@ jobs:
       - name: Build and push Docker images to Dockerhub
         run: |
           echo "${{ secrets.SURVEYCAT_API_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-          # Build, tag push image to Dockerhub
           docker-compose -f docker-compose.prod.yml build --build-arg IMAGE_VERSION=$IMAGE_VERSION
-
-          # Add version tag in built image
-          docker tag cntzoufras/surveycat-api-apache:$IMAGE_VERSION cntzoufras/surveycat-api-apache:$IMAGE_VERSION
-
-          # Push to Dockerhub
           docker-compose -f docker-compose.prod.yml push
 
       - name: Deploy to Production Server
@@ -101,8 +86,4 @@ jobs:
 
       - name: Create or Update Storage Link
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan storage:link --force || echo "Storage link command failed, but continuing deployment."'
-
-      - name: Set directories permissions
-        run: |
-          docker-compose -f docker-compose.prod.yml exec --no-TTY surveycat-api-apache chmod -R 775 storage bootstrap/cache
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan storage:link --force || echo "Storage link command failed
