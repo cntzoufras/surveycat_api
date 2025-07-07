@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\Survey\SurveyCategoryController;
 use App\Http\Controllers\Survey\SurveyController;
 use App\Http\Controllers\Survey\SurveyQuestionChoiceController;
@@ -37,7 +38,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     });
     Route::put('/user', [UserController::class, 'update']);
     Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
-
+    Route::get('/global-search', [GlobalSearchController::class, 'search']);
     Route::prefix('survey-questions')->group(function () {
         Route::get('/types', [SurveyQuestionController::class, 'getQuestionTypes']);
         Route::get('/', [SurveyQuestionController::class, 'index']);
