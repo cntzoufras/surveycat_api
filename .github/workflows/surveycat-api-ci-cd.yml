@@ -82,8 +82,13 @@ jobs:
 
       - name: Check database connection and run migrations and seed
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan migrate:fresh --force --seed || echo "Database connection failed or migrations did not run successfully."'
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr << 'EOF'
+            docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan migrate:fresh --force --seed || echo "Database connection failed or migrations did not run successfully."
+          EOF
 
       - name: Create or Update Storage Link
         run: |
-          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr 'docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan storage:link --force || echo "Storage link command failed
+          ssh -p 54222 -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key cntzoufras_deploy@snf-893977.vm.okeanos.grnet.gr << 'EOF'
+            docker-compose -f /var/www/surveycat_api/docker-compose.prod.yml exec -T surveycat-api-apache php artisan storage:link --force || echo "Storage link command failed, but continuing deployment."
+          EOF
+
