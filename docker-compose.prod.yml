@@ -1,6 +1,6 @@
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:2.55
+    image: cntzoufras/surveycat-api-apache:2.56
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -67,4 +67,5 @@ volumes:
     driver: local
 
   shared_uploads:
+    name: shared_uploads
     driver: local
