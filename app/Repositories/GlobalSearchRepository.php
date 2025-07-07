@@ -32,8 +32,8 @@ class GlobalSearchRepository
         $surveys = Survey::query()
             ->where('user_id', $userId) // only logged in user surveys
             ->where(function ($query) use ($searchTerm) {
-                $query->where('title', 'LIKE', $searchTerm)
-                    ->orWhere('description', 'LIKE', $searchTerm);
+                $query->where('title', 'ILIKE', $searchTerm)
+                    ->orWhere('description', 'ILIKE', $searchTerm);
             })
             ->select('id', 'title', 'description')
             ->selectSub($firstPageIdSubquery, 'first_page_id')
