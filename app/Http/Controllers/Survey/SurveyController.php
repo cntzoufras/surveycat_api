@@ -82,6 +82,11 @@ class SurveyController extends Controller
         return $this->survey_service->publish($survey->id, $request->validated());
     }
 
+    public function preview(UpdateSurveyRequest $request, Survey $survey)
+    {
+        return $this->survey_service->preview($survey->id, $request->validated());
+    }
+
     public function destroy($id)
     {
 

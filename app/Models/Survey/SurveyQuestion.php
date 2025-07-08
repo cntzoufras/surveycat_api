@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SurveyQuestion extends Model {
+class SurveyQuestion extends Model
+{
 
     use HasFactory, Uuids, SoftDeletes;
 
@@ -22,9 +23,9 @@ class SurveyQuestion extends Model {
 
     protected $keyType = 'string';
 
-    protected $guarded  = ['id'];
+    protected $guarded = ['id'];
     protected $fillable = [
-        'title', 'is_required', 'question_tags', 'question_type_id', 'survey_page_id', 'views', 'additional_settings',
+        'title', 'is_required', 'question_tags', 'question_type_id', 'survey_page_id', 'sort_index', 'views', 'additional_settings',
     ];
 
     protected $casts = [
@@ -36,7 +37,8 @@ class SurveyQuestion extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey_page(): BelongsTo {
+    public function survey_page(): BelongsTo
+    {
         return $this->belongsTo(SurveyPage::class);
     }
 
@@ -45,11 +47,13 @@ class SurveyQuestion extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function question_type(): BelongsTo {
+    public function question_type(): BelongsTo
+    {
         return $this->belongsTo(QuestionType::class);
     }
 
-    public function survey_question_choices(): HasMany {
+    public function survey_question_choices(): HasMany
+    {
         return $this->hasMany(SurveyQuestionChoice::class);
     }
 
@@ -58,14 +62,16 @@ class SurveyQuestion extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function tags(): MorphToMany {
+    public function tags(): MorphToMany
+    {
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
     /**
      * Get all comments associated to this survey question
      */
-    public function comments(): MorphMany {
+    public function comments(): MorphMany
+    {
         return $this->morphMany(Comment::class, 'commentable');
     }
 

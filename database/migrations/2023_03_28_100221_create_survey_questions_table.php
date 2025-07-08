@@ -10,7 +10,8 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('survey_questions', function (Blueprint $table) {
             if (DB::connection()->getDriverName() === 'pgsql') {
                 DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
@@ -20,6 +21,7 @@ return new class extends Migration {
             $table->boolean('is_required')->default(false);
             $table->foreignId('question_type_id')->constrained('question_types');
             $table->foreignUuid('survey_page_id')->constrained('survey_pages')->onDelete('cascade');
+            $table->unsignedInteger('sort_index')->nullable()->default(0)->index();
             $table->jsonb('additional_settings')->nullable(); // color , align, font
             $table->jsonb('question_tags')->nullable(); // { tag1 , tag2, tagX }
             $table->softDeletes();
@@ -30,7 +32,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('survey_questions', function (Blueprint $table) {
             $table->dropForeign(['question_type_id']);
             $table->dropForeign(['survey_page_id']);

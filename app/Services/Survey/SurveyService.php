@@ -59,7 +59,7 @@ class SurveyService implements SurveyServiceInterface
         return $this->survey_repository->getStockSurveys();
     }
 
-    public function publish($survey_id, array $params)
+    public function publish($survey_id, array $params): Survey
     {
         $survey = $this->survey_repository->resolveModel($survey_id);
 
@@ -71,6 +71,22 @@ class SurveyService implements SurveyServiceInterface
         }
 
         return $this->survey_repository->update($survey, $params);
+    }
+
+    public function preview($survey_id, array $params): Survey
+    {
+        $survey = $this->survey_repository->resolveModel($survey_id);
+
+        if (empty($survey->title)) {
+            throw new \InvalidArgumentException('Survey title is required to create a public link.');
+        }
+
+        $params['public_link'] = $this->updatePublicLink($survey->title);
+        $params['survey_status_id'] = '3';
+
+        $survey = $this->survey_repository->update($survey, $params);
+
+        return $this->getSurveyPreview($survey->id);
     }
 
 
@@ -114,6 +130,11 @@ class SurveyService implements SurveyServiceInterface
     public function getSurveyWithDetails($survey_id): Survey
     {
         return $this->survey_repository->getSurveyWithDetails($survey_id);
+    }
+
+    public function getSurveyPreview($survey_id): Survey
+    {
+        return $this->survey_repository->getSurveyPreview($survey_id);
     }
 
     public function getPublicSurveyBySlug($slug): Survey

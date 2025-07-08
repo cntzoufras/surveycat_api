@@ -67,6 +67,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::post('/', [SurveyController::class, 'store']);
         Route::put('/{survey}', [SurveyController::class, 'update']);
         Route::put('{survey}/publish', [SurveyController::class, 'publish']);
+        Route::put('{survey}/preview', [SurveyController::class, 'preview']);
         Route::get('/{id}', [SurveyController::class, 'show']);
         Route::delete('/{id}', [SurveyController::class, 'destroy']);
 

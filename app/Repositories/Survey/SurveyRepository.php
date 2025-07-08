@@ -111,6 +111,25 @@ class SurveyRepository implements SurveyRepositoryInterface
             ->findOrFail($survey_id);
     }
 
+    public function getSurveyPreview($survey_id): Survey
+    {
+        return Survey::with([
+            'theme:id,title',
+            'survey_category:id,title',
+            'survey_pages' => function ($survey_page_query) {
+                $survey_page_query->orderBy('sort_index')
+                    ->with(['survey_questions' => function ($survey_question_query) {
+                        $survey_question_query->orderBy('sort_index')
+                            ->with(['survey_question_choices' => function ($survey_question_choice_query) {
+                                $survey_question_choice_query->orderBy('sort_index');
+                            }]);
+                    }]);
+            },
+        ])
+            ->where('user_id', Auth::id())
+            ->findOrFail($survey_id);
+    }
+
     public function getPublicSurveyBySlug(string $slug): Survey
     {
         return Survey::withoutGlobalScopes()->where('public_link', $slug)
