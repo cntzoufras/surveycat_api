@@ -99,13 +99,26 @@ class SurveySeeder extends Seeder
             'additional_settings' => $additional,
         ]);
 
-        // Types 1,2,5,7 get explicit choices
-        if (in_array($questionTypeId, [1, 2, 5, 7], true)) {
-            // For best/worst (5), we still seed 4 slider labels
-            $labels = ($questionTypeId === 5)
-                ? ['Slide 1', 'Slide 2', 'Slide 3', 'Slide 4']
-                : ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+        if (in_array($questionTypeId, [1, 2, 7], true)) {
+            // Check if the new 'choices' column ($data[14]) exists and is not empty
+            if (isset($data[14]) && !empty($data[14])) {
+                // Split the pipe-separated string into an array of labels
+                $labels = explode('|', $data[14]);
 
+                // Loop through the dynamic labels from the CSV
+                foreach ($labels as $idx => $content) {
+                    SurveyQuestionChoice::create([
+                        'survey_question_id' => $surveyQuestion->id,
+                        'content' => trim($content), // Use trim() to clean up any whitespace
+                        'sort_index' => $idx,
+                    ]);
+                }
+            }
+        }
+
+        // Special case for Best-Worst slider (Type 5), which might have fixed labels
+        if ($questionTypeId === 5) {
+            $labels = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
             foreach ($labels as $idx => $content) {
                 SurveyQuestionChoice::create([
                     'survey_question_id' => $surveyQuestion->id,
