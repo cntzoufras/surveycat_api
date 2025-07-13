@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('public_link')->nullable()->default(null);
             $table->bigInteger('views')->default('0');
             $table->integer('priority')->nullable()->default(null);
+            $table->boolean('is_stock')->nullable()->default('false');
             $table->enum('layout', ['single', 'multiple'])->default('multiple');
             $table->timestamps();
             $table->softDeletes();
