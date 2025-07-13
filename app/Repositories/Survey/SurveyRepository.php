@@ -29,7 +29,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         if ($surveys instanceof Survey) {
             return $surveys;
         }
-        return Survey::query()->findOrFail($surveys);
+        return Survey::with('survey_status')->findOrFail($surveys);
     }
 
     public function getIfExist($survey)
