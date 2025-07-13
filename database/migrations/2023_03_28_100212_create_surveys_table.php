@@ -10,7 +10,8 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('surveys', function (Blueprint $table) {
             if (DB::connection()->getDriverName() === 'pgsql') {
                 DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
@@ -25,7 +26,6 @@ return new class extends Migration {
             $table->string('public_link')->nullable()->default(null);
             $table->bigInteger('views')->default('0');
             $table->integer('priority')->nullable()->default(null);
-            $table->boolean('is_stock')->nullable()->default('false');
             $table->enum('layout', ['single', 'multiple'])->default('multiple');
             $table->timestamps();
             $table->softDeletes();
@@ -35,7 +35,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('surveys', function (Blueprint $table) {
             $table->dropForeign(['survey_category_id']);
             $table->dropForeign(['survey_status_id']);
