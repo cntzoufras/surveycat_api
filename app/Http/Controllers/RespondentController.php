@@ -3,22 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Respondent\StoreRespondentRequest;
+use App\Http\Requests\Respondent\UpdateRespondentRequest;
+use App\Models\Respondent;
 use App\Services\RespondentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RespondentController extends Controller {
+class RespondentController extends Controller
+{
 
     protected RespondentService $respondent_service;
 
-    public function __construct(RespondentService $respondent_service) {
+    public function __construct(RespondentService $respondent_service)
+    {
         $this->respondent_service = $respondent_service;
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->respondent_service->index($validated);
     }
@@ -26,14 +31,16 @@ class RespondentController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(): \App\Models\Respondent {
+    public function store(): \App\Models\Respondent
+    {
         return $this->respondent_service->store();
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id): mixed {
+    public function show($id): mixed
+    {
         $validated = Validator::make(['id' => $id], [
             'id' => 'required|integer|gt:0|exists:respondents,id',
         ]);
@@ -41,6 +48,14 @@ class RespondentController extends Controller {
             return response()->json(['error' => 'Respondent does not exist'], 400);
         }
         return $this->respondent_service->show($validated);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateRespondentRequest $request, Respondent $respondent): Respondent
+    {
+        return $this->respondent_service->update($respondent, $request->validated());
     }
 
 }

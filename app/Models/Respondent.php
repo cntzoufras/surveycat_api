@@ -8,30 +8,36 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Respondent extends Model {
+class Respondent extends Model
+{
 
     use HasFactory, Uuids;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    protected $guarded  = ['id'];
-    protected $fillable = ['email', 'details'];
+    protected $guarded = ['id'];
+    protected $fillable = ['email', 'age', 'gender'];
 
     /**
      * Get all survey submissions by this respondent
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function survey_submissions(): HasMany {
+    public function survey_submissions(): HasMany
+    {
         return $this->hasMany(SurveySubmission::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get the survey response associated with the respondent.
+     *
+     * @return HasOne
      */
-    public function survey_responses(): HasMany {
-        return $this->hasMany(SurveyResponse::class);
+    public function survey_response(): HasOne
+    {
+        return $this->hasOne(SurveyResponse::class);
     }
 }
