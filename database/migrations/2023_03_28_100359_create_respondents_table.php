@@ -9,11 +9,13 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('respondents', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('email')->nullable();
-            $table->jsonb('details')->nullable();
+            $table->integer('age')->nullable();
+            $table->string('gender')->nullable();
             $table->timestamps();
         });
     }
@@ -21,7 +23,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('respondents');
     }
 };
