@@ -2,284 +2,219 @@
 
 namespace Database\Seeders\Survey;
 
+use App\Models\Respondent;
 use App\Models\Survey\Survey;
 use App\Models\Survey\SurveyPage;
 use App\Models\Survey\SurveyQuestion;
 use App\Models\Survey\SurveyQuestionChoice;
 use App\Models\Survey\SurveyResponse;
 use App\Models\Survey\SurveySubmission;
-use App\Models\Respondent;
-use App\Models\User;
-use App\Models\Theme\Theme;
 use App\Models\Tag;
-use Illuminate\Database\Seeder;
+use App\Models\Theme\Theme;
+use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SurveySeeder extends Seeder
 {
+    private array $allSurveys = [];
 
     public function run(): void
     {
-        // Get the superadmin user (first user from UserSeeder)
-        $superadmin = User::query()->first();
+        $superadmin = User::first();
+        $theme = Theme::first();
 
-        // Get the first theme (from ThemeSeeder)
-        $theme = Theme::query()->first();
-
-        // Get the path to the CSV file
+        // 2️⃣ Open CSV
         $csvPath = base_path('database/seeds/stock_surveys.csv');
-
-        // Open the CSV file
+        if (!file_exists($csvPath)) {
+            $this->command->error("Missing {$csvPath}");
+            return;
+        }
         $file = fopen($csvPath, 'r');
-
-        // Skip the header row
-        fgetcsv($file);
+        fgetcsv($file); // skip header
 
         $currentSurvey = null;
         $currentPage = null;
 
-        // Loop through each row in the CSV file
-        while (($data = fgetcsv($file)) !== false) {
+        // 3️⃣ Process rows
+        while ($data = fgetcsv($file)) {
             $this->processRow($data, $currentSurvey, $currentPage, $superadmin->id, $theme->id);
         }
-
-        // Close the file
         fclose($file);
 
-        // Create responses for the generated survey
-        if ($currentSurvey) {
-            $this->createSurveyResponses($currentSurvey);
-        }
-    }
-
-    /**
-     * Process each row in the CSV file.
-     *
-     * @param array $data
-     * @param Survey|null $currentSurvey
-     * @param SurveyPage|null $currentPage
-     * @param string $userId
-     * @param string $themeId
-     */
-    private function processRow(array $data, &$currentSurvey, &$currentPage, string $userId, string $themeId): void
-    {
-        // Check if we need to create a new survey
-        if (!$currentSurvey || $currentSurvey->title !== $data[0]) {
-            $currentSurvey = $this->createSurvey($data, $userId, $themeId);
+        // Now seed each survey with fake responses
+        foreach ($this->allSurveys as $survey) {
+            $this->createSurveyResponses($survey);
         }
 
-        // Check if we need to create a new page
-        if (!$currentPage || $currentPage->title !== $data[5]) {
-            $currentPage = $this->createSurveyPage($data, $currentSurvey);
+    }
+
+    private function processRow(array $data, ?Survey &$survey, ?SurveyPage &$page, string $userId, string $themeId): void
+    {
+        // New survey?
+        if (!$survey || $survey->title !== $data[0]) {
+            $survey = Survey::create([
+                'title' => $data[0],
+                'description' => $data[1],
+                'survey_category_id' => $data[2],
+                'survey_status_id' => $data[3],
+                'priority' => $data[4],
+                'is_stock' => true,
+                'user_id' => $userId,
+                'theme_id' => $themeId,
+            ]);
+            $this->allSurveys[$survey->id] = $survey;
         }
 
-        // Create the question with choices if necessary
-        $this->createSurveyQuestionWithChoices($data, $currentPage);
+        if (!$page || $page->title !== $data[5]) {
+            $page = SurveyPage::create([
+                'title' => $data[5],
+                'description' => $data[6],
+                'survey_id' => $survey->id,
+                'require_questions' => filter_var($data[7], FILTER_VALIDATE_BOOLEAN),
+            ]);
+        }
+
+        // Question + choices
+        $this->createSurveyQuestionWithChoices($data, $page);
     }
 
-    /**
-     * Create a new survey.
-     *
-     * @param array $data
-     * @param string $userId
-     * @param string $themeId
-     *
-     * @return Survey
-     */
-    private function createSurvey(array $data, string $userId, string $themeId): Survey
-    {
-        return Survey::query()->create([
-            'title' => $data[0],
-            'description' => $data[1],
-            'survey_category_id' => $data[2],  // Use survey_category_id from the CSV
-            'survey_status_id' => $data[3],  // Use status_id from the CSV
-            'priority' => $data[4],  // Adding priority from the CSV
-            'is_stock' => true,      // This is a stock survey
-            'user_id' => $userId,   // Associating with the superadmin user
-            'theme_id' => $themeId,  // Associating with the first theme
-        ]);
-    }
-
-    /**
-     * Create a new survey page.
-     *
-     * @param array $data
-     * @param Survey $survey
-     *
-     * @return SurveyPage
-     */
-    private function createSurveyPage(array $data, Survey $survey): SurveyPage
-    {
-        return SurveyPage::query()->create([
-            'title' => $data[5],
-            'description' => $data[6],
-            'survey_id' => $survey->id,
-            'require_questions' => filter_var($data[7], FILTER_VALIDATE_BOOLEAN), // Handling require_questions
-        ]);
-    }
-
-    /**
-     * Create a new survey question and assign random tags.
-     *
-     * @param array $data
-     * @param SurveyPage $page
-     */
     private function createSurveyQuestionWithChoices(array $data, SurveyPage $page): void
     {
-        $additionalSettings = json_encode([
+        $questionTypeId = (int)$data[10];
+        $additional = json_encode([
             'color' => $data[11],
             'align' => $data[12],
             'font' => $data[13],
         ]);
 
-        // Determine the question type
-        $questionTypeId = $data[10];
-
-        // Create the survey question
-        $surveyQuestion = SurveyQuestion::query()->create([
+        // Create question
+        $surveyQuestion = SurveyQuestion::create([
             'title' => $data[8],
             'is_required' => filter_var($data[9], FILTER_VALIDATE_BOOLEAN),
             'question_type_id' => $questionTypeId,
             'survey_page_id' => $page->id,
-            'additional_settings' => $additionalSettings,
+            'additional_settings' => $additional,
         ]);
 
-        // Add choices if the question type is multiple choice or checkboxes
-        if (in_array($questionTypeId, [1, 2, 7])) {  // Multiple Choice, Checkboxes, Dropdown
-            $this->createSurveyQuestionChoices($surveyQuestion);
+        // Types 1,2,5,7 get explicit choices
+        if (in_array($questionTypeId, [1, 2, 5, 7], true)) {
+            // For best/worst (5), we still seed 4 slider labels
+            $labels = ($questionTypeId === 5)
+                ? ['Slide 1', 'Slide 2', 'Slide 3', 'Slide 4']
+                : ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+
+            foreach ($labels as $idx => $content) {
+                SurveyQuestionChoice::create([
+                    'survey_question_id' => $surveyQuestion->id,
+                    'content' => $content,
+                    'sort_index' => $idx,
+                ]);
+            }
         }
 
-        // Assign random tags to the survey question
-        $tags = Tag::inRandomOrder()->take(rand(1, 5))->get();
-
-        // Attach each tag to the survey question using the morphToMany relationship
-        foreach ($tags as $tag) {
-            $surveyQuestion->tags()->attach($tag);
-        }
+        // Random tags
+        Tag::inRandomOrder()->take(rand(1, 3))
+            ->each(fn($tag) => $surveyQuestion->tags()->attach($tag));
     }
 
-    /**
-     * Create survey question choices for a multiple-choice, checkboxes, or dropdown question.
-     *
-     * @param SurveyQuestion $surveyQuestion
-     */
-    private function createSurveyQuestionChoices(SurveyQuestion $surveyQuestion): void
-    {
-        $choices = [
-            'Option 1',
-            'Option 2',
-            'Option 3',
-            'Option 4',
-        ];
-
-        foreach ($choices as $index => $content) {
-            SurveyQuestionChoice::query()->create([
-                'content' => $content,
-                'sort_index' => $index,
-                'survey_question_id' => $surveyQuestion->id,
-            ]);
-        }
-    }
-
-    /**
-     * Create survey responses and submissions for the given survey.
-     *
-     * @param Survey $survey
-     */
     private function createSurveyResponses(Survey $survey): void
     {
         $faker = Faker::create();
 
-        // Get all survey questions for the given survey
-        $surveyQuestions = SurveyQuestion::whereHas('survey_page', function ($query) use ($survey) {
-            $query->where('survey_id', $survey->id);
-        })->get();
+        // Eager-load choices
+        $surveyQuestions = SurveyQuestion::with('survey_question_choices')
+            ->whereHas('survey_page', fn($q) => $q->where('survey_id', $survey->id))
+            ->get();
 
         for ($i = 0; $i < 100; $i++) {
-            // Determine if this respondent leaves their email
-            $hasEmail = $faker->boolean(30); // 30% chance to have an email
-
-            // Create a respondent
+            // Respondent
             $respondent = Respondent::create([
-                'email' => $hasEmail ? $faker->unique()->safeEmail : null,
-                'details' => json_encode([
-                    'age' => $faker->numberBetween(18, 65),
-                    'gender' => $faker->randomElement(['male', 'female']),
-                    'location' => $faker->city,
-                ]),
+                'email' => $faker->boolean(30) ? $faker->unique()->safeEmail : null,
+                'gender' => $faker->randomElement(['male', 'female', 'other']),
+                'age' => $faker->numberBetween(6, 80),
             ]);
 
-            // Create a session for the respondent
+            // Session
             $sessionId = $this->createSessionForRespondent($respondent, $faker);
 
-            // Create a survey response
+            // Response
+            $startedAt = $faker->dateTimeBetween('-1 month', '-1 day');
+            $completedAt = $faker->boolean(80)
+                ? $faker->dateTimeBetween('-1 day', 'now')
+                : null;
+
             $surveyResponse = SurveyResponse::create([
                 'ip_address' => $faker->ipv4,
                 'device' => $faker->randomElement(['desktop', 'mobile', 'tablet']),
-                'started_at' => $faker->dateTimeBetween('-1 week', '-1 day'),
-                'completed_at' => $faker->boolean(80) ? $faker->dateTimeBetween('-1 day', 'now') : null,
+                'started_at' => $startedAt,
+                'completed_at' => $completedAt,
                 'session_id' => $sessionId,
                 'survey_id' => $survey->id,
                 'respondent_id' => $respondent->id,
                 'country' => $faker->country,
             ]);
 
-            // Prepare submission data
-            $submissionData = [];
+            if ($completedAt) {
+                $submissionData = [];
 
-            foreach ($surveyQuestions as $question) {
-                $questionTypeId = $question->question_type_id;
+                foreach ($surveyQuestions as $q) {
+                    switch ($q->question_type_id) {
+                        case 1: // Multiple Choice
+                        case 7: // Dropdown
+                            $choice = $q->survey_question_choices->random();
+                            $submissionData[$q->id] = $choice->id;
+                            break;
 
-                if (in_array($questionTypeId, [1, 2, 7])) { // Multiple Choice, Checkboxes, Dropdown
-                    $choice = SurveyQuestionChoice::where('survey_question_id', $question->id)->inRandomOrder()->first();
-                    $submissionData[$question->id] = $choice ? $choice->id : null;
-                } elseif ($questionTypeId == 3) { // Star Rating
-                    $submissionData[$question->id] = $faker->numberBetween(1, 5); // Rating from 1 to 5 stars
-                } elseif ($questionTypeId == 9) { // Slider
-                    $submissionData[$question->id] = $faker->numberBetween(1, 100); // Slider value from 1 to 100
-                } elseif ($questionTypeId == 10) { // Date / Time
-                    $submissionData[$question->id] = $faker->dateTimeThisYear()->format('Y-m-d H:i:s');
-                } else {
-                    $submissionData[$question->id] = $faker->sentence;
+                        case 2: // Checkboxes
+                            $ids = $q->survey_question_choices->pluck('id')->toArray();
+                            $pick = $faker->randomElements($ids, rand(1, count($ids)));
+                            $submissionData[$q->id] = $pick;
+                            break;
+
+                        case 3: // Single Textbox
+                            $submissionData[$q->id] = $faker->sentence();
+                            break;
+
+                        case 4: // Star Rating 1–5
+                            $submissionData[$q->id] = $faker->numberBetween(1, 5);
+                            break;
+
+                        case 5: // Best-Worst slider (1–100)
+                            $submissionData[$q->id] = $faker->numberBetween(1, 100);
+                            break;
+
+                        case 6: // Comment Box
+                            $submissionData[$q->id] = $faker->paragraph();
+                            break;
+
+                        default:
+                            $submissionData[$q->id] = null;
+                    }
                 }
-            }
 
-            // Create a survey submission
-            SurveySubmission::create([
-                'submission_data' => json_encode($submissionData),
-                'survey_id' => $survey->id,
-                'survey_response_id' => $surveyResponse->id,
-            ]);
+                SurveySubmission::create([
+                    'survey_id' => $survey->id,
+                    'survey_response_id' => $surveyResponse->id,
+                    'submission_data' => json_encode($submissionData),
+                ]);
+            }
         }
     }
 
-    /**
-     * Create a session for a respondent and return the session ID.
-     *
-     * @param Respondent $respondent
-     * @param \Faker\Generator $faker
-     *
-     * @return string
-     */
     private function createSessionForRespondent(Respondent $respondent, $faker): string
     {
-        // Generate a more realistic session ID
-        $sessionId = Str::random(40);  // Generates a 40-character random string
-        $userAgent = $faker->userAgent;
-        $ipAddress = $faker->ipv4;
-
-        // Insert session into the sessions table
+        $sessionId = Str::random(40);
         DB::table('sessions')->insert([
             'id' => $sessionId,
-            'user_id' => null, // Assuming these are anonymous sessions
-            'ip_address' => $ipAddress,
-            'user_agent' => $userAgent,
-            'payload' => base64_encode(json_encode([])), // Simple empty payload for example
+            'user_id' => null,
+            'ip_address' => $faker->ipv4,
+            'user_agent' => $faker->userAgent,
+            'payload' => base64_encode('{}'),
             'last_activity' => now()->timestamp,
         ]);
-
         return $sessionId;
     }
 }
