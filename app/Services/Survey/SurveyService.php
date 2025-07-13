@@ -62,9 +62,9 @@ class SurveyService implements SurveyServiceInterface
     public function publish($survey_id, array $params): Survey
     {
         $survey = $this->survey_repository->resolveModel($survey_id);
+        $params['public_link'] = $this->updatePublicLink($survey->title);
 
-        if (!empty($survey->title)) {
-            $params['public_link'] = $this->updatePublicLink($survey->title);
+        if (!empty($survey->title) && !$survey->survey_status()->title === 'PUBLISHED') {
             $params['survey_status_id'] = '2';
         } else {
             throw new \InvalidArgumentException('Survey title is required to create a public link.');
@@ -82,7 +82,11 @@ class SurveyService implements SurveyServiceInterface
         }
 
         $params['public_link'] = $this->updatePublicLink($survey->title);
-        $params['survey_status_id'] = '3';
+
+
+        if ($survey->survey_status && $survey->survey_status->title !== 'PUBLISHED') {
+            $params['survey_status_id'] = 3;
+        }
 
         $survey = $this->survey_repository->update($survey, $params);
 

@@ -30,6 +30,13 @@ Route::get('/surveys/ps/{slug}', [SurveyController::class, 'getPublicSurveyBySlu
 Route::post('/survey-submissions', [SurveySubmissionController::class, 'store']);
 
 Route::get('/question-types', [QuestionTypeController::class, 'index']);;
+Route::prefix('survey-responses')->group(function () {
+    Route::get('/', [SurveyResponseController::class, 'index']);
+    Route::post('/', [SurveyResponseController::class, 'store']);
+    Route::put('/{survey_response}', [SurveyResponseController::class, 'update']);
+    Route::get('/{survey_response}', [SurveyResponseController::class, 'show']);
+    Route::patch('/{survey_response}', [SurveyResponseController::class, 'update']);
+});
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('/user', function (Request $request) {
@@ -93,14 +100,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::get('/question/{questionId}', [SurveyQuestionChoiceController::class,
             'getSurveyQuestionChoicesByQuestion',
         ]);
-    });
-
-    Route::prefix('survey-responses')->group(function () {
-        Route::get('/', [SurveyResponseController::class, 'index']);
-        Route::post('/', [SurveyResponseController::class, 'store']);
-        Route::put('/{survey_response}', [SurveyResponseController::class, 'update']);
-        Route::get('/{survey_response}', [SurveyResponseController::class, 'show']);
-        Route::patch('/{survey_response}', [SurveyResponseController::class, 'update']);
     });
 
     Route::prefix('survey-submissions')->group(function () {
