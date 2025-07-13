@@ -1,27 +1,39 @@
 survey_title,survey_description,survey_category_id,survey_status_id,priority,page_title,page_description,require_questions,question_title,is_required,question_type_id,color,align,font
-Customer Feedback,Survey to gather customer feedback,1,1,5,General Info,Collect basic customer information,true,What is your age?,true,1,#FF5733,left,Arial
-Customer Feedback,Survey to gather customer feedback,1,1,4,General Info,Collect basic customer information,true,What is your gender?,true,2,#33FF57,center,Verdana
-Customer Feedback,Survey to gather customer feedback,1,1,5,General Info,Collect basic customer information,true,How satisfied are you with our service?,true,3,#5733FF,right,Consolas
-Customer Feedback,Survey to gather customer feedback,1,1,5,Service Experience,Feedback on recent service,false,How would you rate our customer service?,true,3,#FF33AA,left,Arial
-Customer Feedback,Survey to gather customer feedback,1,1,5,Service Experience,Feedback on recent service,false,Did our staff meet your expectations?,false,2,#33AAFF,center,Verdana
-Customer Feedback,Survey to gather customer feedback,1,1,4,Service Experience,Feedback on recent service,false,Would you recommend our service to others?,true,3,#FF5733,left,Arial
-Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand job satisfaction,true,How satisfied are you with your job?,true,1,#FF5733,left,Arial
-Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand job satisfaction,true,Do you feel valued at work?,true,2,#33FF57,center,Verdana
-Employee Satisfaction,Survey to assess employee satisfaction,2,1,2,Work Environment,Feedback on work environment,false,How would you rate the work environment?,true,3,#5733FF,right,Consolas
-Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Work Environment,Feedback on work environment,false,Do you feel safe at work?,false,2,#FF33AA,left,Arial
-Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Work Environment,Feedback on work environment,false,What improvements would you suggest?,false,3,#33AAFF,center,Verdana
-Product Feedback,Survey to collect feedback on our products,3,1,2,Product Usage,Understand product usage,true,How often do you use our product?,true,1,#FF5733,left,Arial
-Product Feedback,Survey to collect feedback on our products,3,1,3,Product Usage,Understand product usage,true,What features do you use the most?,true,2,#33FF57,center,Verdana
-Product Feedback,Survey to collect feedback on our products,3,1,2,Product Features,Feedback on product features,false,How satisfied are you with the product features?,true,3,#5733FF,right,Consolas
-Product Feedback,Survey to collect feedback on our products,3,1,1,Product Features,Feedback on product features,false,Which feature would you like to see improved?,false,2,#FF33AA,left,Arial
-Product Feedback,Survey to collect feedback on our products,3,1,1,Product Features,Feedback on product features,false,Any other comments about our product?,false,3,#33AAFF,center,Verdana
-Market Research,Survey to understand market trends,4,1,5,Demographics,Collect demographic information,true,What is your age group?,true,1,#FF5733,left,Arial
-Market Research,Survey to understand market trends,4,1,4,Demographics,Collect demographic information,true,What is your gender?,true,2,#33FF57,center,Verdana
-Market Research,Survey to understand market trends,4,1,4,Buying Habits,Understand buying habits,false,How often do you purchase similar products?,true,3,#5733FF,right,Consolas
-Market Research,Survey to understand market trends,4,1,4,Buying Habits,Understand buying habits,false,Where do you usually buy these products?,false,2,#FF33AA,left,Arial
-Market Research,Survey to understand market trends,4,1,4,Buying Habits,Understand buying habits,false,What influences your buying decisions?,false,3,#33AAFF,center,Verdana
-Website Feedback,Survey to gather feedback on website usability,5,1,3,User Experience,Feedback on website user experience,true,How easy is it to navigate our website?,true,1,#FF5733,left,Arial
-Website Feedback,Survey to gather feedback on website usability,5,1,2,User Experience,Feedback on website user experience,true,Do you find what you're looking for easily?,true,2,#33FF57,center,Verdana
-Website Feedback,Survey to gather feedback on website usability,5,1,3,Technical Aspects,Feedback on website technical performance,false,How fast does the website load?,true,3,#5733FF,right,Consolas
-Website Feedback,Survey to gather feedback on website usability,5,1,3,Technical Aspects,Feedback on website technical performance,false,Have you encountered any errors?,false,2,#FF33AA,left,Arial
-Website Feedback,Survey to gather feedback on website usability,5,1,3,Technical Aspects,Feedback on website technical performance,false,How would you rate the website reliability?,false,3,#33AAFF,center,Verdana
+Customer Feedback,Survey to gather customer feedback,1,1,5,General Info,Collect basic info,true,"What is your age?",true,3,#FF5733,left,Arial
+Customer Feedback,Survey to gather customer feedback,1,1,5,General Info,Collect basic info,true,"What is your gender?",true,7,#33FF57,center,Verdana
+Customer Feedback,Survey to gather customer feedback,1,1,5,General Info,Collect basic info,true,"Which of our products have you used?",false,2,#5733FF,right,Consolas
+Customer Feedback,Survey to gather customer feedback,1,1,5,General Info,Collect basic info,true,"Which benefits matter most to you?",false,1,#FF33AA,left,Arial
+Customer Feedback,Survey to gather customer feedback,1,1,5,Service Experience,Feedback on recent service,false,"How satisfied are you with our service?",true,4,#33AAFF,center,Georgia
+Customer Feedback,Survey to gather customer feedback,1,1,5,Service Experience,Feedback on recent service,false,"Which feature did you like best and which worst?",false,6,#FFC300,left,Tahoma
+Customer Feedback,Survey to gather customer feedback,1,1,5,Service Experience,Feedback on recent service,false,"Any additional comments?",false,6,#DAF7A6,center,Helvetica
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand how employees feel about their job,true,"Which of the following best describes your role?",true,1,#FF5733,left,Arial
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand how employees feel about their job,true,"Which benefits do you value most?",false,1,#33FF57,center,Verdana
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand how employees feel about their job,true,"What motivates you at work?",false,3,#5733FF,right,Consolas
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand how employees feel about their job,true,"Rate your overall job satisfaction",true,4,#FF33AA,left,Arial
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Work Environment,Feedback on the workplace,false,"Which workplace feature did you like best and worst?",false,6,#33AAFF,center,Georgia
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Work Environment,Feedback on the workplace,false,"Any suggestions to improve your workspace?",false,6,#FFC300,left,Helvetica
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Work Environment,Feedback on the workplace,false,"How long have you been with the company?",false,7,#DAF7A6,center,"Times New Roman"
+Product Feedback,Survey to collect feedback on our products,3,1,2,Product Usage,Understand product usage,true,"How often do you use our product?",true,1,#FF5733,left,Arial
+Product Feedback,Survey to collect feedback on our products,3,1,2,Product Usage,Understand product usage,true,"Which features do you use the most?",false,2,#33FF57,center,Verdana
+Product Feedback,Survey to collect feedback on our products,3,1,2,Product Usage,Understand product usage,true,"What challenges have you faced?",false,3,#5733FF,right,Consolas
+Product Feedback,Survey to collect feedback on our products,3,1,2,Product Usage,Understand product usage,true,"Rate your satisfaction with product performance?",true,4,#FF33AA,left,Arial
+Product Feedback,Survey to collect feedback on our products,3,1,1,Product Features,Feedback on product features,false,"Which feature did you like best and worst?",false,6,#33AAFF,center,Georgia
+Product Feedback,Survey to collect feedback on our products,3,1,1,Product Features,Feedback on product features,false,"Any comments on product functionality?",false,6,#FFC300,left,Helvetica
+Product Feedback,Survey to collect feedback on our products,3,1,1,Product Features,Feedback on product features,false,"Which platform do you primarily use?",false,7,#DAF7A6,center,"Courier New"
+Market Research,Survey to understand market trends,4,1,5,Demographics,Collect demographic information,true,"What is your age bracket?",true,1,#FF5733,left,Arial
+Market Research,Survey to understand market trends,4,1,5,Demographics,Collect demographic information,true,"Which regions have you lived in?",false,2,#33FF57,center,Verdana
+Market Research,Survey to understand market trends,4,1,5,Demographics,Collect demographic information,true,"What is your city of residence?",false,3,#5733FF,right,Consolas
+Market Research,Survey to understand market trends,4,1,5,Demographics,Collect demographic information,true,"Rate your interest in market trends",true,4,#FF33AA,left,Arial
+Market Research,Survey to understand market trends,4,1,4,Buying Habits,Understand buying habits,false,"Which influence matters most and least?",false,6,#33AAFF,center,Georgia
+Market Research,Survey to understand market trends,4,1,4,Buying Habits,Understand buying habits,false,"Any comments on your buying habits?",false,6,#FFC300,left,Helvetica
+Market Research,Survey to understand market trends,4,1,4,Buying Habits,Understand buying habits,false,"Where do you usually purchase these products?",false,7,#DAF7A6,center,Verdana
+Website Feedback,Survey to gather website usability feedback,5,1,3,User Experience,Feedback on navigation,true,"Which device do you use to browse our site?",true,1,#FF5733,left,Arial
+Website Feedback,Survey to gather website usability feedback,5,1,3,User Experience,Feedback on navigation,true,"How satisfied are you with site navigation?",true,4,#33FF57,center,Verdana
+Website Feedback,Survey to gather website usability feedback,5,1,3,User Experience,Feedback on navigation,false,"Which feature did you find most and least helpful?",false,6,#5733FF,right,Consolas
+Website Feedback,Survey to gather website usability feedback,5,1,3,User Experience,Feedback on navigation,false,"Please share any usability comments?",false,6,#FF33AA,left,Arial
+Website Feedback,Survey to gather website usability feedback,5,1,2,Technical Aspects,Feedback on performance,false,"Which browser do you use?",false,7,#33AAFF,center,Georgia
+Website Feedback,Survey to gather website usability feedback,5,1,2,Technical Aspects,Feedback on performance,false,"Which errors have you encountered?",false,6,#FFC300,left,Helvetica
+Website Feedback,Survey to gather website usability feedback,5,1,2,Technical Aspects,Feedback on performance,false,"Please describe any technical issues?",false,6,#DAF7A6,center,"Courier New"
+Customer Feedback,Survey to gather customer feedback,1,1,5,Service Experience,Feedback on recent service,false,"On a scale of 1-10, how likely are you to recommend our company to a friend or colleague?",true,5,#AABBCC,center,Arial
+Employee Satisfaction,Survey to assess employee satisfaction,2,1,3,Job Satisfaction,Understand how employees feel about their job,true,"How would you rate your work-life balance on a scale of 1 to 10?",true,5,#CCAABB,center,Verdana
+Product Feedback,Survey to collect feedback on our products,3,1,2,Product Usage,Understand product usage,true,"How likely are you to purchase from us again (1-10)?",true,5,#BBAACC,center,Tahoma
