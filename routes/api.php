@@ -37,6 +37,13 @@ Route::prefix('survey-responses')->group(function () {
     Route::get('/{survey_response}', [SurveyResponseController::class, 'show']);
     Route::patch('/{survey_response}', [SurveyResponseController::class, 'update']);
 });
+Route::prefix('respondents')->group(function () {
+    Route::get('/', [RespondentController::class, 'index']);
+    Route::post('/', [RespondentController::class, 'store']);
+    Route::put('/{respondent}', [RespondentController::class, 'update']);
+    Route::get('/{respondent}', [RespondentController::class, 'show']);
+    Route::delete('/{id}', [RespondentController::class, 'delete']);
+});
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('/user', function (Request $request) {
@@ -131,13 +138,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('/{id}', [VariablePalettesController::class, 'delete']);
     });
 
-    Route::prefix('respondents')->group(function () {
-        Route::get('/', [RespondentController::class, 'index']);
-        Route::post('/', [RespondentController::class, 'store']);
-        Route::put('/', [RespondentController::class, 'update']);
-        Route::get('/{id}', [RespondentController::class, 'show']);
-        Route::delete('/{id}', [RespondentController::class, 'delete']);
-    });
 
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
