@@ -11,25 +11,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Theme extends Model {
+class Theme extends Model
+{
 
     use HasFactory, Uuids;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
-    protected $casts        = [
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $casts = [
         'settings' => 'array',
     ];
 
-    protected $guarded  = ['id'];
-    protected $fillable = ['title', 'description', 'footer', 'user_id'];
+    protected $guarded = ['id'];
+    protected $fillable = ['title', 'description', 'user_id'];
 
     /**
      * Get the user that created this survey
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -38,7 +40,8 @@ class Theme extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function theme_setting(): HasOne {
+    public function theme_setting(): HasOne
+    {
         return $this->hasOne(ThemeSetting::class);
     }
 
@@ -47,7 +50,8 @@ class Theme extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function surveys(): HasMany {
+    public function surveys(): HasMany
+    {
         return $this->hasMany(Survey::class, 'theme_id');
     }
 

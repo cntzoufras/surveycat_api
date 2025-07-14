@@ -4,12 +4,14 @@ namespace App\Http\Requests\Theme;
 
 use App\Http\Requests\BaseRequest;
 
-class UpdateThemeRequest extends BaseRequest {
+class UpdateThemeRequest extends BaseRequest
+{
 
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool {
+    public function authorize(): bool
+    {
         return true;
     }
 
@@ -18,12 +20,12 @@ class UpdateThemeRequest extends BaseRequest {
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
             'description' => 'nullable|string',
-            'user_id'     => 'required|uuid|exists:users,id',
-            'title'       => 'required|string',
-            'footer'      => 'nullable|string|max:255',
+            'user_id' => 'required|uuid|exists:users,id',
+            'title' => 'required|string',
         ];
     }
 }

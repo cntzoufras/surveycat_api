@@ -134,7 +134,7 @@ class SurveyRepository implements SurveyRepositoryInterface
     {
         return Survey::withoutGlobalScopes()->where('public_link', $slug)
             ->with([
-                'theme:id,title,description,footer',
+                'theme:id,title,description',
                 'theme.theme_setting',
                 'survey_category:id,title,description',
                 'survey_pages' => function ($query) {
