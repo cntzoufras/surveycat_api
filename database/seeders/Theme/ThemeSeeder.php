@@ -6,12 +6,14 @@ use App\Models\Theme\Theme;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class ThemeSeeder extends Seeder {
+class ThemeSeeder extends Seeder
+{
 
     /**
      * Run the database seeds.
      */
-    public function run(): void {
+    public function run(): void
+    {
         // Get the path to the CSV file
         $csvPath = base_path('database/seeds/themes.csv');
 
@@ -23,7 +25,7 @@ class ThemeSeeder extends Seeder {
 
         // Loop through each row in the CSV file
         while (($data = fgetcsv($file)) !== false) {
-            $theme = [$data[0], $data[1], $data[2]];
+            $theme = [$data[0], $data[1]];
             $this->seedTheme($theme);
         }
 
@@ -36,16 +38,17 @@ class ThemeSeeder extends Seeder {
      *
      * @param array $theme
      */
-    private function seedTheme(array $theme): void {
+    private function seedTheme(array $theme): void
+    {
         $user_id = $this->getUserId();
-        Theme::query()->create(['title'       => $theme[0],
-                                'description' => $theme[1],
-                                'footer'      => $theme[2],
-                                'user_id'     => $user_id,
+        Theme::query()->create(['title' => $theme[0],
+            'description' => $theme[1],
+            'user_id' => $user_id,
         ]);
     }
 
-    private function getUserId(): string {
+    private function getUserId(): string
+    {
         return User::query()->inRandomOrder()->first()->id;
     }
 

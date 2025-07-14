@@ -10,7 +10,8 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('themes', function (Blueprint $table) {
             if (DB::connection()->getDriverName() === 'pgsql') {
                 DB::statement('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
@@ -18,7 +19,6 @@ return new class extends Migration {
             $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('title')->index();
             $table->string('description')->nullable();
-            $table->longText('footer')->nullable();
             $table->foreignUuid('user_id')->nullable()->constrained('users');
             $table->timestamps();
             $table->softDeletes();
@@ -28,7 +28,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('themes', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
         });

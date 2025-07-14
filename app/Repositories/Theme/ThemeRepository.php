@@ -5,10 +5,12 @@ namespace App\Repositories\Theme;
 use App\Models\Theme\Theme;
 use Illuminate\Support\Facades\DB;
 
-class ThemeRepository {
+class ThemeRepository
+{
 
 
-    public function index(array $params) {
+    public function index(array $params)
+    {
         try {
             $limit = $params['limit'] ?? 20;
             return DB::transaction(function () use ($limit) {
@@ -19,18 +21,21 @@ class ThemeRepository {
         }
     }
 
-    public function resolveModel($theme) {
+    public function resolveModel($theme)
+    {
         if ($theme instanceof Theme) {
             return $theme;
         }
-        return Theme::query()->findOrFail($theme);
+        return Theme::query()->with('theme_setting.variable_palettes')->findOrFail($theme);
     }
 
-    public function getIfExist($theme): mixed {
+    public function getIfExist($theme): mixed
+    {
         return Theme::query()->find($theme);
     }
 
-    public function update(Theme $theme, array $params) {
+    public function update(Theme $theme, array $params)
+    {
         return DB::transaction(function () use ($params, $theme) {
             $theme->fill($params);
             $theme->save();
@@ -38,7 +43,8 @@ class ThemeRepository {
         });
     }
 
-    public function store(array $params): Theme {
+    public function store(array $params): Theme
+    {
         return DB::transaction(function () use ($params) {
             $theme = new Theme();
             $theme->fill($params);
@@ -47,7 +53,8 @@ class ThemeRepository {
         });
     }
 
-    public function delete(Theme $theme) {
+    public function delete(Theme $theme)
+    {
         return DB::transaction(function () use ($theme) {
             $theme->delete();
             return $theme;

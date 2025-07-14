@@ -9,11 +9,14 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('theme_settings', function (Blueprint $table) {
             $table->id();
-            $table->jsonb('settings'); // logo, fonts, survey primary_background_alpha , theme_thumb
-            $table->foreignUuid('theme_id')->nullable()->constrained('themes');
+            $table->jsonb('settings')->comment('font_family_heading, font_family_body,
+            background_image_url, logo_position, button_style (e.g., corner_radius, border_width),
+            primary_background_alpha');
+            $table->foreignUuid('theme_id')->constrained('themes')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -21,7 +24,8 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('theme_settings', function (Blueprint $table) {
             $table->dropForeign(['theme_id']);
         });
