@@ -37,10 +37,11 @@ class SurveySeeder extends Seeder
 
         $currentSurvey = null;
         $currentPage = null;
+        $questionSortIndex = 0;
 
         // 3️⃣ Process rows
         while ($data = fgetcsv($file)) {
-            $this->processRow($data, $currentSurvey, $currentPage, $superadmin->id, $theme->id);
+            $this->processRow($data, $currentSurvey, $currentPage, $superadmin->id, $theme->id, $questionSortIndex);
         }
         fclose($file);
 
@@ -51,7 +52,7 @@ class SurveySeeder extends Seeder
 
     }
 
-    private function processRow(array $data, ?Survey &$survey, ?SurveyPage &$page, string $userId, string $themeId): void
+    private function processRow(array $data, ?Survey &$survey, ?SurveyPage &$page, string $userId, string $themeId, int &$questionSortIndex): void
     {
         // New survey?
         if (!$survey || $survey->title !== $data[0]) {
@@ -75,13 +76,14 @@ class SurveySeeder extends Seeder
                 'survey_id' => $survey->id,
                 'require_questions' => filter_var($data[7], FILTER_VALIDATE_BOOLEAN),
             ]);
+            $questionSortIndex = 0;
         }
 
         // Question + choices
-        $this->createSurveyQuestionWithChoices($data, $page);
+        $this->createSurveyQuestionWithChoices($data, $page, $questionSortIndex);
     }
 
-    private function createSurveyQuestionWithChoices(array $data, SurveyPage $page): void
+    private function createSurveyQuestionWithChoices(array $data, SurveyPage $page, int &$questionSortIndex): void
     {
         $questionTypeId = (int)$data[10];
         $additional = json_encode([
@@ -96,8 +98,11 @@ class SurveySeeder extends Seeder
             'is_required' => filter_var($data[9], FILTER_VALIDATE_BOOLEAN),
             'question_type_id' => $questionTypeId,
             'survey_page_id' => $page->id,
+            'sort_index' => $questionSortIndex,
             'additional_settings' => $additional,
         ]);
+
+        $questionSortIndex++;
 
         if (in_array($questionTypeId, [1, 2, 7], true)) {
             // Check if the new 'choices' column ($data[14]) exists and is not empty

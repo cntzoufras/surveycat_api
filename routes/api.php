@@ -65,6 +65,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     Route::prefix('survey-pages')->group(function () {
         Route::get('/', [SurveyPageController::class, 'index']);
         Route::post('/', [SurveyPageController::class, 'store']);
+        Route::post('/{survey_page}/questions/reorder', [SurveyQuestionController::class, 'updateOrder']);
         Route::put('/{id}', [SurveyPageController::class, 'update']);
         Route::get('/{id}', [SurveyPageController::class, 'show']);
         Route::delete('/{survey_page}', [SurveyPageController::class, 'delete']);

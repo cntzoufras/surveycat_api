@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "2.62"
+      IMAGE_VERSION: "2.63"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
