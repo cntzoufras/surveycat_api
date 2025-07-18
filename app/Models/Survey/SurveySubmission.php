@@ -8,15 +8,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SurveySubmission extends Model {
+class SurveySubmission extends Model
+{
 
     use HasFactory, Uuids;
 
-    public    $incrementing = false;
-    protected $keyType      = 'string';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    protected $guarded  = ['id'];
-    protected $fillable = ['submission_data', 'survey_id', 'survey_response_id', 'respondent_id'];
+    protected $guarded = ['id'];
+    protected $fillable = ['submission_data', 'survey_id', 'survey_response_id'];
 
     protected $casts = [
         'submission_data' => 'array',
@@ -28,7 +29,8 @@ class SurveySubmission extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey(): BelongsTo {
+    public function survey(): BelongsTo
+    {
         return $this->belongsTo(Survey::class);
     }
 
@@ -37,17 +39,9 @@ class SurveySubmission extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function survey_response(): BelongsTo {
+    public function survey_response(): BelongsTo
+    {
         return $this->belongsTo(SurveyResponse::class);
-    }
-
-    /**
-     * Get the respondent of the submission
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function respondent(): BelongsTo {
-        return $this->belongsTo(Respondent::class);
     }
 
 }

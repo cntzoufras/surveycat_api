@@ -9,7 +9,8 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('survey_submissions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->jsonb('submission_data');
@@ -23,10 +24,16 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('survey_submissions', function (Blueprint $table) {
-            $table->dropForeign(['survey_response_id']);
+            $table->dropIndex('survey_submissions_survey_id_survey_response_id_index');
+
+            $table->dropForeign('survey_submissions_survey_id_foreign');
+            $table->dropForeign('survey_submissions_survey_response_id_foreign');
         });
+
         Schema::dropIfExists('survey_submissions');
+
     }
 };
