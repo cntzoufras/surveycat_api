@@ -38,10 +38,11 @@ class SurveySeeder extends Seeder
         $currentSurvey = null;
         $currentPage = null;
         $questionSortIndex = 0;
+        $pageSortIndex = 0;
 
         // 3️⃣ Process rows
         while ($data = fgetcsv($file)) {
-            $this->processRow($data, $currentSurvey, $currentPage, $superadmin->id, $theme->id, $questionSortIndex);
+            $this->processRow($data, $currentSurvey, $currentPage, $superadmin->id, $theme->id, $pageSortIndex, $questionSortIndex);
         }
         fclose($file);
 
@@ -52,7 +53,7 @@ class SurveySeeder extends Seeder
 
     }
 
-    private function processRow(array $data, ?Survey &$survey, ?SurveyPage &$page, string $userId, string $themeId, int &$questionSortIndex): void
+    private function processRow(array $data, ?Survey &$survey, ?SurveyPage &$page, string $userId, string $themeId, int &$pageSortIndex, int &$questionSortIndex): void
     {
         // New survey?
         if (!$survey || $survey->title !== $data[0]) {
@@ -67,6 +68,7 @@ class SurveySeeder extends Seeder
                 'theme_id' => $themeId,
             ]);
             $this->allSurveys[$survey->id] = $survey;
+            $pageSortIndex = 0;
         }
 
         if (!$page || $page->title !== $data[5]) {
@@ -74,8 +76,10 @@ class SurveySeeder extends Seeder
                 'title' => $data[5],
                 'description' => $data[6],
                 'survey_id' => $survey->id,
+                'sort_index' => $pageSortIndex,
                 'require_questions' => filter_var($data[7], FILTER_VALIDATE_BOOLEAN),
             ]);
+            $pageSortIndex++;
             $questionSortIndex = 0;
         }
 
