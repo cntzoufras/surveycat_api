@@ -11,12 +11,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
 
     protected AuthService $auth_service;
 
-    public function __construct(AuthService $auth_service) {
+    public function __construct(AuthService $auth_service)
+    {
         $this->auth_service = $auth_service;
     }
 
@@ -29,17 +31,19 @@ class AuthController extends Controller {
      * @throws \Illuminate\Auth\AuthenticationException
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function login(Request $request): JsonResponse {
+    public function login(Request $request): JsonResponse
+    {
         $this->validate($request, [
-            'email'       => 'required|string|email|exists:users,email',
-            'password'    => 'required|string',
+            'email' => 'required|string|email|exists:users,email',
+            'password' => 'required|string',
             'remember_me' => 'boolean',
         ]);
 
-        $credentials = $request->only('email', 'password'); // Extract credentials from request
+        $credentials = $request->only('email', 'password');
+        $remember = $request->boolean('remember_me', false);
 
         // Attempt to authenticate the user using Laravel's built-in authentication
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials, $remember)) {
             throw new AuthenticationException();
         } else {
 
@@ -52,8 +56,8 @@ class AuthController extends Controller {
 
             return response()->json([
                 'message' => 'Login successful',
-                'user'    => $user,
-                'token'   => $token,
+                'user' => $user,
+                'token' => $token,
             ]);
         }
     }
@@ -63,7 +67,8 @@ class AuthController extends Controller {
      *
      * @throws \Exception
      */
-    public function user(Request $request): mixed {
+    public function user(Request $request): mixed
+    {
         try {
             $user = Auth::user();
             return response()->json($user);
@@ -75,7 +80,8 @@ class AuthController extends Controller {
     /**
      * @throws \Illuminate\Auth\AuthenticationException
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         if ($request->user()) {
             try {
                 $this->auth_service->logout($request->user()->currentAccessToken());
@@ -91,7 +97,8 @@ class AuthController extends Controller {
     /**
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function forgotPassword(Request $request): JsonResponse {
+    public function forgotPassword(Request $request): JsonResponse
+    {
         $this->validate($request, [
             'username' => 'required|string|exists:users,username', 'regex:/^[a-zA-Z]+$/u',
         ]);
@@ -107,10 +114,11 @@ class AuthController extends Controller {
         }
     }
 
-    public function resetPassword(Request $request): JsonResponse {
+    public function resetPassword(Request $request): JsonResponse
+    {
         $this->validate($request, [
-            'token'                 => 'required',
-            'password'              => 'required',
+            'token' => 'required',
+            'password' => 'required',
             'password_confirmation' => 'required|same:password',
         ]);
         $this->auth_service->resetPassword($request->input('token'), $request->input('password'));

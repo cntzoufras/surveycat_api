@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class Tag extends Model {
+class Tag extends Model
+{
 
     use HasFactory;
 
@@ -23,7 +24,8 @@ class Tag extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -32,7 +34,8 @@ class Tag extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function surveys(): MorphToMany {
+    public function surveys(): MorphToMany
+    {
         return $this->morphedByMany(Survey::class, 'taggable');
     }
 
@@ -41,17 +44,9 @@ class Tag extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function survey_questions(): MorphToMany {
+    public function survey_questions(): MorphToMany
+    {
         return $this->morphedByMany(SurveyQuestion::class, 'taggable');
-    }
-
-    /**
-     * Get all library questions that are assigned this tag
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
-     */
-    public function library_questions(): MorphToMany {
-        return $this->morphedByMany(LibraryQuestion::class, 'taggable');
     }
 
     /**
@@ -59,7 +54,8 @@ class Tag extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function survey_categories(): MorphToMany {
+    public function survey_categories(): MorphToMany
+    {
         return $this->morphedByMany(SurveyCategory::class, 'taggable');
     }
 }

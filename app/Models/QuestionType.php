@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class QuestionType extends Model {
+class QuestionType extends Model
+{
 
     use HasFactory;
 
@@ -20,16 +21,9 @@ class QuestionType extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function survey_questions(): HasMany {
+    public function survey_questions(): HasMany
+    {
         return $this->hasMany(SurveyQuestion::class);
     }
 
-    /**
-     * Get all library questions using this question type
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function library_question(): HasMany {
-        return $this->hasMany(LibraryQuestion::class);
-    }
 }
