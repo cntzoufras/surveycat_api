@@ -26,27 +26,27 @@ class SurveySeeder extends Seeder
         $superadmin = User::first();
         $theme = Theme::first();
 
-        // 2️⃣ Open CSV
+        // Άνοιγμα CSV
         $csvPath = base_path('database/seeds/stock_surveys.csv');
         if (!file_exists($csvPath)) {
             $this->command->error("Missing {$csvPath}");
             return;
         }
         $file = fopen($csvPath, 'r');
-        fgetcsv($file); // skip header
+        fgetcsv($file); // παράλειψη κεφαλίδας
 
         $currentSurvey = null;
         $currentPage = null;
         $questionSortIndex = 0;
         $pageSortIndex = 0;
 
-        // 3️⃣ Process rows
+        // Επεξεργασία γραμμών
         while ($data = fgetcsv($file)) {
             $this->processRow($data, $currentSurvey, $currentPage, $superadmin->id, $theme->id, $pageSortIndex, $questionSortIndex);
         }
         fclose($file);
 
-        // Now seed each survey with fake responses
+        // Δημιουργία ψεύτικων απαντήσεων για κάθε έρευνα
         foreach ($this->allSurveys as $survey) {
             $this->createSurveyResponses($survey);
         }
@@ -55,7 +55,7 @@ class SurveySeeder extends Seeder
 
     private function processRow(array $data, ?Survey &$survey, ?SurveyPage &$page, string $userId, string $themeId, int &$pageSortIndex, int &$questionSortIndex): void
     {
-        // New survey?
+        // Εάν νέα έρευνα?, δημιουργησε νέο μοντε΄λο και αρχικοποιησε το sort index στις σελίδες
         if (!$survey || $survey->title !== $data[0]) {
             $survey = Survey::create([
                 'title' => $data[0],
@@ -71,6 +71,7 @@ class SurveySeeder extends Seeder
             $pageSortIndex = 0;
         }
 
+        // Εάν νέα σελίδα, τότε δημιούργησε νέο μοντε΄λο και αύξησε το sort_index κατά 1
         if (!$page || $page->title !== $data[5]) {
             $page = SurveyPage::create([
                 'title' => $data[5],
@@ -80,10 +81,10 @@ class SurveySeeder extends Seeder
                 'require_questions' => filter_var($data[7], FILTER_VALIDATE_BOOLEAN),
             ]);
             $pageSortIndex++;
-            $questionSortIndex = 0;
+            $questionSortIndex = 0; // Το sort_index σε νέα ερώτηση της σελίδας ξεκινά από 0
         }
 
-        // Question + choices
+        // Καταχώριση ερώτησης και επιλογών
         $this->createSurveyQuestionWithChoices($data, $page, $questionSortIndex);
     }
 
@@ -96,7 +97,7 @@ class SurveySeeder extends Seeder
             'font' => $data[13],
         ]);
 
-        // Create question
+        // Δημιουργία ερώτησης
         $surveyQuestion = SurveyQuestion::create([
             'title' => $data[8],
             'is_required' => filter_var($data[9], FILTER_VALIDATE_BOOLEAN),
@@ -109,12 +110,8 @@ class SurveySeeder extends Seeder
         $questionSortIndex++;
 
         if (in_array($questionTypeId, [1, 2, 7], true)) {
-            // Check if the new 'choices' column ($data[14]) exists and is not empty
             if (isset($data[14]) && !empty($data[14])) {
-                // Split the pipe-separated string into an array of labels
                 $labels = explode('|', $data[14]);
-
-                // Loop through the dynamic labels from the CSV
                 foreach ($labels as $idx => $content) {
                     SurveyQuestionChoice::create([
                         'survey_question_id' => $surveyQuestion->id,
@@ -125,7 +122,7 @@ class SurveySeeder extends Seeder
             }
         }
 
-        // Special case for Best-Worst slider (Type 5), which might have fixed labels
+        // Ειδική περ΄ίπτβωση για Best-Worst slider (Type 5), που έχει πιο fixed labels
         if ($questionTypeId === 5) {
             $labels = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
             foreach ($labels as $idx => $content) {
@@ -137,32 +134,33 @@ class SurveySeeder extends Seeder
             }
         }
 
-        // Random tags
+        // Δημιουργία τυχαίων tags
         Tag::inRandomOrder()->take(rand(1, 3))
             ->each(fn($tag) => $surveyQuestion->tags()->attach($tag));
     }
 
+    // Δημιουργία ψεύτικων απαντήσεων
     private function createSurveyResponses(Survey $survey): void
     {
         $faker = Faker::create();
 
-        // Eager-load choices
+        // Eager-load τις επιλογές
         $surveyQuestions = SurveyQuestion::with('survey_question_choices')
             ->whereHas('survey_page', fn($q) => $q->where('survey_id', $survey->id))
             ->get();
 
         for ($i = 0; $i < 100; $i++) {
-            // Respondent
+            // Δημιούργησε νέους ανταποκριτές
             $respondent = Respondent::create([
                 'email' => $faker->boolean(30) ? $faker->unique()->safeEmail : null,
                 'gender' => $faker->randomElement(['male', 'female', 'other']),
                 'age' => $faker->numberBetween(6, 80),
             ]);
 
-            // Session
+            // Πρόσθεσε string στο session
             $sessionId = $this->createSessionForRespondent($respondent, $faker);
 
-            // Response
+            // Ενημέρωση ολοκληρωμένης έρευνας
             $startedAt = $faker->dateTimeBetween('-1 month', '-1 day');
             $completedAt = $faker->boolean(80)
                 ? $faker->dateTimeBetween('-1 day', 'now')
