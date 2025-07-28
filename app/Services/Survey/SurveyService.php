@@ -65,7 +65,7 @@ class SurveyService implements SurveyServiceInterface
         $params['public_link'] = $this->updatePublicLink($survey->title);
 
         if (!empty($survey->title) && $survey->survey_status->title !== 'PUBLISHED') {
-            $params['survey_status_id'] = '2';
+            $params['survey_status_id'] = 2;
         } else {
             throw new \InvalidArgumentException('Survey title is required to create a public link.');
         }
@@ -79,12 +79,12 @@ class SurveyService implements SurveyServiceInterface
 
         if (empty($survey->title)) {
             throw new \InvalidArgumentException('Survey title is required to create a public link.');
-        }
+        } 
 
         $params['public_link'] = $this->updatePublicLink($survey->title);
 
 
-        if ($survey->survey_status && $survey->survey_status->title !== 'PUBLISHED') {
+        if ($survey->survey_status->title !== 'PUBLISHED') {
             $params['survey_status_id'] = 3;
         }
 
