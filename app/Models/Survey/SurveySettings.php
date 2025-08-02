@@ -16,8 +16,8 @@ class SurveySettings extends Model {
 
     protected $guarded  = ['id'];
     protected $fillable = [
-        'page_title', 'show_page_title', 'show_page_numbers', 'show_question_numbers',
-        'show_progress_bar', 'required_asterisks', 'public_link', 'banner_image', 'survey_id',
+        'show_page_title', 'show_page_numbers', 'show_question_numbers',
+        'show_progress_bar', 'required_asterisks', 'banner_image', 'survey_id',
     ];
 
     /**
@@ -27,6 +27,23 @@ class SurveySettings extends Model {
      */
     public function survey(): BelongsTo {
         return $this->belongsTo(Survey::class);
+    }
+
+    /**
+     * Get default survey settings values
+     *
+     * @return array
+     */
+    public static function getDefaultSettings(): array
+    {
+        return [
+            'show_page_title' => true,
+            'show_page_numbers' => true,
+            'show_question_numbers' => true,
+            'show_progress_bar' => false,
+            'required_asterisks' => true,
+            'banner_image' => null,
+        ];
     }
 
 }

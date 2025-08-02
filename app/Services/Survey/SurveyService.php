@@ -4,7 +4,9 @@ namespace App\Services\Survey;
 
 use App\Exceptions\SurveyNotEditableException;
 use App\Models\Survey\Survey;
+use App\Models\Survey\SurveySettings;
 use App\Repositories\Survey\SurveyRepositoryInterface;
+use App\Repositories\Survey\SurveySettingsRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -14,10 +16,12 @@ class SurveyService implements SurveyServiceInterface
 {
 
     protected SurveyRepositoryInterface $survey_repository;
+    protected SurveySettingsRepository $survey_settings_repository;
 
-    public function __construct(SurveyRepositoryInterface $survey_repository)
+    public function __construct(SurveyRepositoryInterface $survey_repository, SurveySettingsRepository $survey_settings_repository)
     {
         $this->survey_repository = $survey_repository;
+        $this->survey_settings_repository = $survey_settings_repository;
     }
 
     /**
@@ -30,7 +34,14 @@ class SurveyService implements SurveyServiceInterface
 
     public function store(array $params): Survey
     {
-        return $this->survey_repository->store($params);
+        $survey = $this->survey_repository->store($params);
+
+        $settings = SurveySettings::getDefaultSettings();
+        $settings['survey_id'] = $survey->id;
+
+        $this->survey_settings_repository->store($settings);
+
+        return $survey;
     }
 
     /**
@@ -79,7 +90,7 @@ class SurveyService implements SurveyServiceInterface
 
         if (empty($survey->title)) {
             throw new \InvalidArgumentException('Survey title is required to create a public link.');
-        } 
+        }
 
         $params['public_link'] = $this->updatePublicLink($survey->title);
 
