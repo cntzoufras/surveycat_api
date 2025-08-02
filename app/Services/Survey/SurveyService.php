@@ -39,7 +39,9 @@ class SurveyService implements SurveyServiceInterface
         $settings = SurveySettings::getDefaultSettings();
         $settings['survey_id'] = $survey->id;
 
-        $this->survey_settings_repository->store($settings);
+        $new_settings = $this->survey_settings_repository->store($settings);
+
+        $survey->setRelation('survey_settings', $new_settings);
 
         return $survey;
     }

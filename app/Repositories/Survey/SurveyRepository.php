@@ -17,7 +17,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         try {
             $limit = $params['limit'] ?? 50;
             return DB::transaction(function () use ($limit) {
-                return Survey::query()->paginate($limit);
+                return Survey::with('survey_settings')->paginate($limit);
             });
         } catch (\Exception $e) {
             throw new \Exception($e, 500);
@@ -29,7 +29,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         if ($surveys instanceof Survey) {
             return $surveys;
         }
-        return Survey::with('survey_status')->findOrFail($surveys);
+        return Survey::with('survey_status', 'survey_settings')->findOrFail($surveys);
     }
 
     public function getIfExist($survey)
@@ -72,7 +72,7 @@ class SurveyRepository implements SurveyRepositoryInterface
     {
         try {
             return DB::transaction(function () {
-                return Survey::query()->where('is_stock', '=', true)->paginate();
+                return Survey::with('survey_settings')->where('is_stock', '=', true)->paginate();
             });
         } catch (\Exception $e) {
             throw new \Exception($e, 500);
@@ -84,7 +84,8 @@ class SurveyRepository implements SurveyRepositoryInterface
         return Survey::with([
             'theme:id,title',
             'survey_pages',
-            'survey_category:id,title'
+            'survey_category:id,title',
+            'survey_settings'
         ])
             ->where('user_id', $user_id)
             ->get();
@@ -92,7 +93,7 @@ class SurveyRepository implements SurveyRepositoryInterface
 
     public function getSurveysWithThemesAndPages(): Collection
     {
-        return Survey::with(['theme:id,title', 'survey_pages'])
+        return Survey::with(['theme:id,title', 'survey_pages', 'survey_settings'])
             ->where('user_id', Auth::id())  // Filter by the logged-in user
             ->where('is_stock', false)       // Exclude stock surveys
             ->get();
@@ -103,6 +104,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         return Survey::with([
             'theme:id,title',
             'survey_category:id,title',
+            'survey_settings',
             'survey_pages' => function ($query) {
                 $query->orderBy('sort_index');
             },
@@ -116,6 +118,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         return Survey::with([
             'theme:id,title',
             'survey_category:id,title',
+            'survey_settings',
             'survey_pages' => function ($survey_page_query) {
                 $survey_page_query->orderBy('sort_index')
                     ->with(['survey_questions' => function ($survey_question_query) {
