@@ -8,6 +8,7 @@ use App\Models\Survey\SurveyPage;
 use App\Models\Survey\SurveyQuestion;
 use App\Models\Survey\SurveyQuestionChoice;
 use App\Models\Survey\SurveyResponse;
+use App\Models\Survey\SurveySettings;
 use App\Models\Survey\SurveySubmission;
 use App\Models\Tag;
 use App\Models\Theme\Theme;
@@ -68,6 +69,12 @@ class SurveySeeder extends Seeder
                 'theme_id' => $themeId,
             ]);
             $this->allSurveys[$survey->id] = $survey;
+
+            // Create default settings for the new survey
+            $settings = SurveySettings::getDefaultSettings();
+            $settings['survey_id'] = $survey->id;
+            SurveySettings::create($settings);
+
             $pageSortIndex = 0;
         }
 
