@@ -37,7 +37,10 @@ class SurveySubmissionRepository
 
     public function getIfExist($survey_submission): mixed
     {
-        return SurveySubmission::query()->find($survey_submission);
+        return SurveySubmission::with([
+            'survey_response.survey.survey_pages.survey_questions.survey_question_choices',
+            'survey_response.respondent',
+        ])->find($survey_submission);
     }
 
     public function update(SurveySubmission $survey_submission, array $params)
