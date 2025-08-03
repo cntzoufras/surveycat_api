@@ -82,7 +82,8 @@ class SurveyRepository implements SurveyRepositoryInterface
     public function getSurveysForUser(string $user_id): Collection
     {
         return Survey::with([
-            'theme:id,title',
+            'theme:id,title,description',
+            'theme.theme_setting.variable_palettes',
             'survey_pages',
             'survey_category:id,title',
             'survey_settings'
@@ -93,7 +94,7 @@ class SurveyRepository implements SurveyRepositoryInterface
 
     public function getSurveysWithThemesAndPages(): Collection
     {
-        return Survey::with(['theme:id,title', 'survey_pages', 'survey_settings'])
+        return Survey::with(['theme:id,title,description', 'theme.theme_setting.variable_palettes', 'survey_pages', 'survey_settings'])
             ->where('user_id', Auth::id())  // Filter by the logged-in user
             ->where('is_stock', false)       // Exclude stock surveys
             ->get();
@@ -102,7 +103,8 @@ class SurveyRepository implements SurveyRepositoryInterface
     public function getSurveyWithDetails($survey_id): Survey
     {
         return Survey::with([
-            'theme:id,title',
+            'theme:id,title,description',
+            'theme.theme_setting.variable_palettes',
             'survey_category:id,title',
             'survey_settings',
             'survey_pages' => function ($query) {
@@ -116,7 +118,8 @@ class SurveyRepository implements SurveyRepositoryInterface
     public function getSurveyPreview($survey_id): Survey
     {
         return Survey::with([
-            'theme:id,title',
+            'theme:id,title,description',
+            'theme.theme_setting.variable_palettes',
             'survey_category:id,title',
             'survey_settings',
             'survey_pages' => function ($survey_page_query) {
@@ -138,7 +141,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         return Survey::withoutGlobalScopes()->where('public_link', $slug)
             ->with([
                 'theme:id,title,description',
-                'theme.theme_setting',
+                'theme.theme_setting.variable_palettes',
                 'survey_category:id,title,description',
                 'survey_pages' => function ($query) {
                     $query->orderBy('sort_index')
