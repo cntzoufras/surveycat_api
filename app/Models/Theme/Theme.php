@@ -13,17 +13,23 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Theme extends Model
 {
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['theme_setting'];
 
     use HasFactory, Uuids;
 
     public $incrementing = false;
     protected $keyType = 'string';
     protected $casts = [
-        'settings' => 'array',
+        'is_custom' => 'boolean',
     ];
 
     protected $guarded = ['id'];
-    protected $fillable = ['title', 'description', 'user_id'];
+    protected $fillable = ['title', 'description', 'user_id', 'is_custom', 'base_theme_id', 'survey_id'];
 
     /**
      * Get the user that created this survey
@@ -42,7 +48,8 @@ class Theme extends Model
      */
     public function theme_setting(): HasOne
     {
-        return $this->hasOne(ThemeSetting::class);
+        return $this->hasOne(ThemeSetting::class, 'theme_id');
+        // Explicitly specify foreign key to match themes.id (UUID) to theme_settings.theme_id (UUID)
     }
 
     /**

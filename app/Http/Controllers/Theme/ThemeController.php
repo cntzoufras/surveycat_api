@@ -41,20 +41,26 @@ class ThemeController extends Controller {
      *
      * @throws \Exception
      */
-    public function show(Request $request) {
+    public function show(Theme $theme)
+    {
         try {
-            if (isset($request['id'])) {
-                Validator::validate(['id' => $request['id']], [
-                    'id' => 'uuid|required|exists:themes,id',
-                ]);
-                return $this->theme_service->show($request['id']);
-            }
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            // The $theme is already resolved by Laravel's route model binding.
+            // We just need to ensure the nested relationships are loaded.
+            $theme->load('theme_setting.variable_palettes');
+
+            
+            // Debug: Log the retrieved theme object and its relationships
+            
+            
+            
+            
+            
+
+            return $theme;
         } catch (\Exception $e) {
+            
             throw new \Exception($e->getMessage(), 500);
         }
-        return null;
     }
 
     /**

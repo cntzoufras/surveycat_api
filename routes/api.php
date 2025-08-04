@@ -15,8 +15,8 @@ use App\Http\Controllers\Survey\SurveySubmissionController;
 use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\Theme\ThemeController;
 use App\Http\Controllers\Theme\ThemeSettingsController;
-
 use App\Http\Controllers\Theme\VariablePalettesController;
+use App\Http\Controllers\CustomThemeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -117,28 +117,35 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
 
     Route::prefix('themes')->group(function () {
         Route::get('/', [ThemeController::class, 'index']);
+        Route::get('/{theme}', [ThemeController::class, 'show']);
         Route::post('/', [ThemeController::class, 'store']);
-        Route::put('/{id}', [ThemeController::class, 'update']);
-        Route::get('/{id}', [ThemeController::class, 'show']);
-        Route::delete('/{id}', [ThemeController::class, 'delete']);
-    });
-
-    Route::prefix('theme-settings')->group(function () {
-        Route::get('/', [ThemeSettingsController::class, 'index']);
-        Route::post('/', [ThemeSettingsController::class, 'store']);
-        Route::put('/', [ThemeSettingsController::class, 'update']);
-        Route::get('/{id}', [ThemeSettingsController::class, 'show']);
-        Route::delete('/{id}', [ThemeSettingsController::class, 'delete']);
-    });
-
-    Route::prefix('variable-palettes')->group(function () {
-        Route::get('/', [VariablePalettesController::class, 'index']);
-        Route::post('/', [VariablePalettesController::class, 'store']);
-        Route::put('/', [VariablePalettesController::class, 'update']);
-        Route::get('/{id}', [VariablePalettesController::class, 'show']);
-        Route::delete('/{id}', [VariablePalettesController::class, 'delete']);
-    });
-
+        Route::put('/{theme}', [ThemeController::class, 'update']);
+        Route::delete('/{theme}', [ThemeController::class, 'destroy']);
+        
+        // Custom theme routes
+        Route::prefix('custom')->group(function () {
+            Route::post('/', [CustomThemeController::class, 'store']);
+            Route::get('/survey/{survey}', [CustomThemeController::class, 'showBySurvey']);
+            Route::put('/{theme}', [CustomThemeController::class, 'update']);
+            Route::delete('/{theme}', [CustomThemeController::class, 'destroy']);
+            Route::post('/reset/{survey}', [CustomThemeController::class, 'resetToBaseTheme']);
+        });
+        
+        Route::prefix('settings')->group(function () {
+            Route::get('/', [ThemeSettingsController::class, 'index']);
+            Route::get('/{theme_setting}', [ThemeSettingsController::class, 'show']);
+            Route::post('/', [ThemeSettingsController::class, 'store']);
+            Route::put('/{theme_setting}', [ThemeSettingsController::class, 'update']);
+            Route::delete('/{theme_setting}', [ThemeSettingsController::class, 'destroy']);
+        });
+        Route::prefix('variable-palettes')->group(function () {
+            Route::get('/', [VariablePalettesController::class, 'index']);
+            Route::get('/{variable_palette}', [VariablePalettesController::class, 'show']);
+            Route::post('/', [VariablePalettesController::class, 'store']);
+            Route::put('/{variable_palette}', [VariablePalettesController::class, 'update']);
+            Route::delete('/{variable_palette}', [VariablePalettesController::class, 'destroy']);
+        });
+    });  
 
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);

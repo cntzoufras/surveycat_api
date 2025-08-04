@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder {
         $this->call(CountrySeeder::class);
         $this->call(TagSeeder::class);
         $this->call(SurveySeeder::class);
+        $this->call(ThemeDataSeeder::class);
     }
 }

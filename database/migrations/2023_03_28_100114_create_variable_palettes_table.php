@@ -32,9 +32,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('variable_palettes', function (Blueprint $table) {
-            $table->dropForeign(['theme_setting_id']);
-        });
         Schema::dropIfExists('variable_palettes');
     }
 };

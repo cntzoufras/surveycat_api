@@ -30,6 +30,7 @@ class UpdateSurveyRequest extends FormRequest
             'priority' => 'sometimes|in:low,medium,high',
             'user_id' => 'sometimes|uuid|exists:users,id',
             'layout' => 'sometimes|in:single,multiple',
+            'custom_theme_settings' => 'sometimes|array',
         ];
     }
 }

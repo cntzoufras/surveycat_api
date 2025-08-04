@@ -29,8 +29,9 @@ class VariablePalette extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function theme_settings(): BelongsToMany {
-        return $this->belongsToMany(ThemeSetting::class);
+    public function theme_setting(): BelongsTo {
+        return $this->belongsTo(ThemeSetting::class, 'theme_setting_id');
+        // variable_palettes.theme_setting_id (foreign key) -> theme_settings.id (owner key)
     }
 
 }
