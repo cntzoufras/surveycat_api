@@ -35,7 +35,6 @@ class ThemeSetting extends Model
     public function variable_palettes(): HasMany
     {
         return $this->hasMany(VariablePalette::class, 'theme_setting_id');
-        // Explicitly specify foreign key to match variable_palettes.theme_setting_id to theme_settings.id
     }
 
 }

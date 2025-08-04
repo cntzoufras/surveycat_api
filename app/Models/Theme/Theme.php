@@ -49,7 +49,6 @@ class Theme extends Model
     public function theme_setting(): HasOne
     {
         return $this->hasOne(ThemeSetting::class, 'theme_id');
-        // Explicitly specify foreign key to match themes.id (UUID) to theme_settings.theme_id (UUID)
     }
 
     /**

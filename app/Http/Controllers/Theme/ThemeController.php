@@ -44,21 +44,9 @@ class ThemeController extends Controller {
     public function show(Theme $theme)
     {
         try {
-            // The $theme is already resolved by Laravel's route model binding.
-            // We just need to ensure the nested relationships are loaded.
             $theme->load('theme_setting.variable_palettes');
-
-            
-            // Debug: Log the retrieved theme object and its relationships
-            
-            
-            
-            
-            
-
             return $theme;
         } catch (\Exception $e) {
-            
             throw new \Exception($e->getMessage(), 500);
         }
     }
