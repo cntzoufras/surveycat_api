@@ -18,6 +18,7 @@ use App\Http\Controllers\Theme\ThemeSettingsController;
 use App\Http\Controllers\Theme\VariablePalettesController;
 use App\Http\Controllers\CustomThemeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Dashboards\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -121,7 +122,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::post('/', [ThemeController::class, 'store']);
         Route::put('/{theme}', [ThemeController::class, 'update']);
         Route::delete('/{theme}', [ThemeController::class, 'destroy']);
-        
+
         // Custom theme routes
         Route::prefix('custom')->group(function () {
             Route::post('/', [CustomThemeController::class, 'store']);
@@ -130,7 +131,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
             Route::delete('/{theme}', [CustomThemeController::class, 'destroy']);
             Route::post('/reset/{survey}', [CustomThemeController::class, 'resetToBaseTheme']);
         });
-        
+
         Route::prefix('settings')->group(function () {
             Route::get('/', [ThemeSettingsController::class, 'index']);
             Route::get('/{theme_setting}', [ThemeSettingsController::class, 'show']);
@@ -145,7 +146,10 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
             Route::put('/{variable_palette}', [VariablePalettesController::class, 'update']);
             Route::delete('/{variable_palette}', [VariablePalettesController::class, 'destroy']);
         });
-    });  
+    });
+
+    Route::get('/surveys-dashboard', [DashboardController::class, 'getSurveyDashboardStats']);
+    Route::get('/app-dashboard', [DashboardController::class, 'getAppDashboardStats']);
 
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);

@@ -47,10 +47,8 @@ class SurveySeeder extends Seeder
         }
         fclose($file);
 
-        // Δημιουργία ψεύτικων απαντήσεων για κάθε έρευνα
-        foreach ($this->allSurveys as $survey) {
-            $this->createSurveyResponses($survey);
-        }
+        // Δημιουργία ψεύτικων απαντήσεων και υποβολών
+        $this->createGlobalSurveyResponsesAndSubmissions(array_values($this->allSurveys));
 
     }
 
@@ -62,7 +60,7 @@ class SurveySeeder extends Seeder
                 'title' => $data[0],
                 'description' => $data[1],
                 'survey_category_id' => $data[2],
-                'survey_status_id' => $data[3],
+                'survey_status_id' => 1,
                 'priority' => $data[4],
                 'is_stock' => true,
                 'user_id' => $userId,
@@ -146,32 +144,78 @@ class SurveySeeder extends Seeder
             ->each(fn($tag) => $surveyQuestion->tags()->attach($tag));
     }
 
-    // Δημιουργία ψεύτικων απαντήσεων
-    private function createSurveyResponses(Survey $survey): void
+    private function createGlobalSurveyResponsesAndSubmissions(array $surveys): void
     {
+        if (empty($surveys)) {
+            $this->command->info('No surveys found to create responses for.');
+            return;
+        }
+
         $faker = Faker::create();
+        $totalResponses = 16213;
+        $totalSubmissions = 9850;
 
-        // Eager-load τις επιλογές
-        $surveyQuestions = SurveyQuestion::with('survey_question_choices')
-            ->whereHas('survey_page', fn($q) => $q->where('survey_id', $survey->id))
-            ->get();
+        // Eager-load all questions and choices for all surveys to be more efficient
+        $surveyIds = array_map(fn($s) => $s->id, $surveys);
+        $allSurveyQuestions = SurveyQuestion::with('survey_question_choices')
+            ->whereHas('survey_page', fn($q) => $q->whereIn('survey_id', $surveyIds))
+            ->get()
+            ->groupBy('survey_page.survey_id'); // Group questions by survey ID
 
-        for ($i = 0; $i < 100; $i++) {
-            // Δημιούργησε νέους ανταποκριτές
+        $this->command->info("Creating {$totalResponses} responses and {$totalSubmissions} submissions...");
+        $bar = $this->command->getOutput()->createProgressBar($totalResponses);
+
+        // Create a weighted list of survey IDs to make the distribution more realistic
+        $categoryWeights = [
+            'Beauty and Fashion' => 30,
+            'Career and Work' => 25,
+            'Business and Finance' => 20,
+            'Arts and Culture' => 15,
+            'Automotive' => 10,
+        ];
+
+        $categories = \App\Models\Survey\SurveyCategory::whereIn('title', array_keys($categoryWeights))->get()->keyBy('title');
+        $surveysByCategory = collect($surveys)->groupBy('survey_category_id');
+
+        $weightedSurveyIds = [];
+        foreach ($categoryWeights as $title => $weight) {
+            if (isset($categories[$title])) {
+                $categoryId = $categories[$title]->id;
+                if (isset($surveysByCategory[$categoryId])) {
+                    $categorySurveyIds = $surveysByCategory[$categoryId]->pluck('id')->toArray();
+                    for ($i = 0; $i < $weight; $i++) {
+                        $weightedSurveyIds = array_merge($weightedSurveyIds, $categorySurveyIds);
+                    }
+                }
+            }
+        }
+
+        for ($i = 0; $i < $totalResponses; $i++) {
+            // Pick a random survey for this response based on the new weighted distribution
+            $randomSurveyId = $faker->randomElement($weightedSurveyIds);
+            $survey = collect($surveys)->firstWhere('id', $randomSurveyId);
+            $surveyQuestions = $allSurveyQuestions->get($survey->id) ?? collect();
+
+            // Determine the start date for the response first
+            $startedAt = $faker->dateTimeBetween('-12 months', 'now');
+
+            // Create a respondent with a historical creation date
             $respondent = Respondent::create([
                 'email' => $faker->boolean(30) ? $faker->unique()->safeEmail : null,
                 'gender' => $faker->randomElement(['male', 'female', 'other']),
                 'age' => $faker->numberBetween(6, 80),
+                'created_at' => $startedAt,
+                'updated_at' => $startedAt,
             ]);
 
             // Πρόσθεσε string στο session
             $sessionId = $this->createSessionForRespondent($respondent, $faker);
 
-            // Ενημέρωση ολοκληρωμένης έρευνας
-            $startedAt = $faker->dateTimeBetween('-1 month', '-1 day');
-            $completedAt = $faker->boolean(80)
-                ? $faker->dateTimeBetween('-1 day', 'now')
-                : null;
+            // Create the SurveyResponse record
+            // Create a mix of completed, started but not finished, and not started surveys
+            // Let's say 50% of responses lead to submissions
+            $isCompleted = $faker->boolean(50);
+            $completedAt = $isCompleted ? $faker->dateTimeBetween($startedAt, 'now') : null;
 
             $surveyResponse = SurveyResponse::create([
                 'ip_address' => $faker->ipv4,
@@ -184,41 +228,47 @@ class SurveySeeder extends Seeder
                 'country' => $faker->country,
             ]);
 
-            if ($completedAt) {
+            // If it's a completed survey, create the submission data
+            if ($isCompleted) {
                 $submissionData = [];
+                if ($surveyQuestions->isNotEmpty()) {
+                    foreach ($surveyQuestions as $q) {
+                        switch ($q->question_type_id) {
+                            case 1: // Multiple Choice
+                            case 7: // Dropdown
+                                if ($q->survey_question_choices->isNotEmpty()) {
+                                    $choice = $q->survey_question_choices->random();
+                                    $submissionData[$q->id] = $choice->id;
+                                }
+                                break;
 
-                foreach ($surveyQuestions as $q) {
-                    switch ($q->question_type_id) {
-                        case 1: // Multiple Choice
-                        case 7: // Dropdown
-                            $choice = $q->survey_question_choices->random();
-                            $submissionData[$q->id] = $choice->id;
-                            break;
+                            case 2: // Checkboxes
+                                if ($q->survey_question_choices->isNotEmpty()) {
+                                    $ids = $q->survey_question_choices->pluck('id')->toArray();
+                                    $pick = $faker->randomElements($ids, rand(1, count($ids)));
+                                    $submissionData[$q->id] = $pick;
+                                }
+                                break;
 
-                        case 2: // Checkboxes
-                            $ids = $q->survey_question_choices->pluck('id')->toArray();
-                            $pick = $faker->randomElements($ids, rand(1, count($ids)));
-                            $submissionData[$q->id] = $pick;
-                            break;
+                            case 3: // Single Textbox
+                                $submissionData[$q->id] = $faker->sentence();
+                                break;
 
-                        case 3: // Single Textbox
-                            $submissionData[$q->id] = $faker->sentence();
-                            break;
+                            case 4: // Star Rating 1–5
+                                $submissionData[$q->id] = $faker->numberBetween(1, 5);
+                                break;
 
-                        case 4: // Star Rating 1–5
-                            $submissionData[$q->id] = $faker->numberBetween(1, 5);
-                            break;
+                            case 5: // Best-Worst slider (1–100)
+                                $submissionData[$q->id] = $faker->numberBetween(1, 100);
+                                break;
 
-                        case 5: // Best-Worst slider (1–100)
-                            $submissionData[$q->id] = $faker->numberBetween(1, 100);
-                            break;
+                            case 6: // Comment Box
+                                $submissionData[$q->id] = $faker->paragraph();
+                                break;
 
-                        case 6: // Comment Box
-                            $submissionData[$q->id] = $faker->paragraph();
-                            break;
-
-                        default:
-                            $submissionData[$q->id] = null;
+                            default:
+                                $submissionData[$q->id] = null;
+                        }
                     }
                 }
 
@@ -226,9 +276,14 @@ class SurveySeeder extends Seeder
                     'survey_id' => $survey->id,
                     'survey_response_id' => $surveyResponse->id,
                     'submission_data' => json_encode($submissionData),
+                    'created_at' => $completedAt,
+                    'updated_at' => $completedAt,
                 ]);
             }
+            $bar->advance();
         }
+        $bar->finish();
+        $this->command->info("\nSeeding of responses and submissions complete.");
     }
 
     private function createSessionForRespondent(Respondent $respondent, $faker): string

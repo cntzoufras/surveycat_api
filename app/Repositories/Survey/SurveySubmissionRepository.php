@@ -14,7 +14,7 @@ class SurveySubmissionRepository
     public function index(array $params)
     {
         try {
-            $limit = $params['limit'] ?? 1000;
+            $limit = $params['limit'] ?? 100000;
 
             return DB::transaction(function () use ($limit) {
                 return SurveySubmission::with([
