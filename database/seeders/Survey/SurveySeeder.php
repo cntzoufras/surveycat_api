@@ -65,6 +65,7 @@ class SurveySeeder extends Seeder
                 'is_stock' => true,
                 'user_id' => $userId,
                 'theme_id' => $themeId,
+                'created_at' => \Carbon\Carbon::now()->subDays(rand(0, 60)),
             ]);
             $this->allSurveys[$survey->id] = $survey;
 
@@ -213,9 +214,13 @@ class SurveySeeder extends Seeder
 
             // Create the SurveyResponse record
             // Create a mix of completed, started but not finished, and not started surveys
-            // Let's say 50% of responses lead to submissions
-            $isCompleted = $faker->boolean(50);
-            $completedAt = $isCompleted ? $faker->dateTimeBetween($startedAt, 'now') : null;
+            // Let's say 70% of responses lead to submissions
+            $isCompleted = $faker->boolean(70); 
+            $completedAt = null;
+            if ($isCompleted) {
+                $completionMinutes = $faker->numberBetween(1, 60); // Realistic completion time: 2 to 120 minutes
+                $completedAt = (new \Carbon\Carbon($startedAt))->addMinutes($completionMinutes);
+            }
 
             $surveyResponse = SurveyResponse::create([
                 'ip_address' => $faker->ipv4,
