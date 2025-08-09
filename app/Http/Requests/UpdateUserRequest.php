@@ -45,17 +45,16 @@ class UpdateUserRequest extends FormRequest
             ],
             'email' => [
                 'sometimes',
-                'required', // Email is required if present
+                'required',
                 'email:rfc,dns', // This rule is still great for checking format and domain existence.
-                'regex:/.+@.+\..+/', // ✅ ADDED: This ensures the email has a dot in the domain part.
+                'regex:/.+@.+\..+/',
                 Rule::unique('users')->ignore($this->user()->id), 'max:255',
             ],
             'password' => [
                 'sometimes',
-                'nullable', // Allows the password field to be submitted empty
+                'required',
                 'string',
                 'confirmed',
-                // Use the modern Password rule object for strong password requirements
                 Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised(),
             ],
         ];

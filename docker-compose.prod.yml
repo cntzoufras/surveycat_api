@@ -1,6 +1,6 @@
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:5.0
+    image: cntzoufras/surveycat-api-apache:5.1
     build:
       context: .
       dockerfile: Dockerfile.prod
