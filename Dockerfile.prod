@@ -16,18 +16,24 @@ ENV TZ=UTC
 # Set up timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install system dependencies
+# Install system dependencies (build tools and libs for gd/redis)
 RUN apt-get update && apt-get install -y \
     curl \
     zip \
     unzip \
     git \
-    libpng-dev \
+    build-essential \
+    autoconf \
+    pkg-config \
     libpq-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_pgsql pgsql gd \
+# Install and configure PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_pgsql pgsql gd \
     && pecl install redis \
     && docker-php-ext-enable redis
 
