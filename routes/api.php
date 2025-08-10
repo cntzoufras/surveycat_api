@@ -148,8 +148,10 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         });
     });
 
-    Route::get('/surveys-dashboard', [DashboardController::class, 'getSurveyDashboardStats']);
-    Route::get('/app-dashboard', [DashboardController::class, 'getAppDashboardStats']);
+    Route::prefix('dashboards')->group(function () {
+        Route::get('/app', [DashboardController::class, 'getAppDashboardStats']);
+        Route::get('/surveys', [DashboardController::class, 'getSurveyDashboardStats']);
+    });
 
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);

@@ -156,6 +156,25 @@ class SurveySeeder extends Seeder
         $totalResponses = 16213;
         $totalSubmissions = 9850;
 
+        // Realistic UA pools to resemble desktop/mobile/tablet devices
+        $desktopUAs = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15',
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edg/126.0.0.0 Chrome/126.0.0.0 Safari/537.36',
+        ];
+        $mobileUAs = [
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36',
+            'Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36',
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/126.0.0.0 Mobile/15E148 Safari/604.1',
+        ];
+        $tabletUAs = [
+            'Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'Mozilla/5.0 (Linux; Android 13; SAMSUNG SM-T970) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (iPad; CPU OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+        ];
+
         // Eager-load all questions and choices for all surveys to be more efficient
         $surveyIds = array_map(fn($s) => $s->id, $surveys);
         $allSurveyQuestions = SurveyQuestion::with('survey_question_choices')
@@ -222,15 +241,23 @@ class SurveySeeder extends Seeder
                 $completedAt = (new \Carbon\Carbon($startedAt))->addMinutes($completionMinutes);
             }
 
+            // Pick a device type with a realistic distribution, then assign a UA from that pool
+            $deviceType = $faker->randomElement([
+                'desktop','desktop','desktop','desktop','mobile','mobile','mobile','tablet' // ~50% desktop, ~37% mobile, ~13% tablet
+            ]);
+            $ua = $deviceType === 'desktop'
+                ? $faker->randomElement($desktopUAs)
+                : ($deviceType === 'mobile' ? $faker->randomElement($mobileUAs) : $faker->randomElement($tabletUAs));
+
             $surveyResponse = SurveyResponse::create([
                 'ip_address' => $faker->ipv4,
-                'device' => $faker->randomElement(['desktop', 'mobile', 'tablet']),
+                'device' => $ua, // store full user-agent string
                 'started_at' => $startedAt,
                 'completed_at' => $completedAt,
                 'session_id' => $sessionId,
                 'survey_id' => $survey->id,
                 'respondent_id' => $respondent->id,
-                'country' => $faker->country,
+                'country' => $this->pickWeightedCountry($faker),
             ]);
 
             // If it's a completed survey, create the submission data
@@ -289,6 +316,34 @@ class SurveySeeder extends Seeder
         }
         $bar->finish();
         $this->command->info("\nSeeding of responses and submissions complete.");
+
+        // Add one explicit desktop SurveyResponse resembling the provided production sample
+        // We will link it to a random existing survey and a fresh respondent/session
+        if (!empty($surveys)) {
+            $sampleSurvey = $surveys[array_rand($surveys)];
+            $sampleRespondent = Respondent::create([
+                'email' => null,
+                'gender' => $faker->randomElement(['male', 'female', 'other']),
+                'age' => $faker->numberBetween(18, 70),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $sampleSessionId = $this->createSessionForRespondent($sampleRespondent, $faker);
+
+            $sampleStarted = \Carbon\Carbon::parse('2025-08-10 17:23:22');
+            $sampleCompleted = \Carbon\Carbon::parse('2025-08-10 17:23:35');
+
+            SurveyResponse::create([
+                'ip_address' => '2.84.96.58',
+                'device' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+                'started_at' => $sampleStarted,
+                'completed_at' => $sampleCompleted,
+                'session_id' => $sampleSessionId,
+                'survey_id' => $sampleSurvey->id,
+                'respondent_id' => $sampleRespondent->id,
+                'country' => 'Greece',
+            ]);
+        }
     }
 
     private function createSessionForRespondent(Respondent $respondent, $faker): string
@@ -303,5 +358,89 @@ class SurveySeeder extends Seeder
             'last_activity' => now()->timestamp,
         ]);
         return $sessionId;
+    }
+
+    /**
+     * Pick a realistic country name using weighted continents and a boost for Greece.
+     * Intended only for seed/demo data; production uses GeoIP.
+     */
+    private function pickWeightedCountry($faker): string
+    {
+        // 1) Weighted continent selection (prioritize Europe, Asia, Americas)
+        $continents = [
+            'Europe' => 45,
+            'Asia' => 30,
+            'Americas' => 20,
+            'Africa' => 3,
+            'Oceania' => 2,
+        ];
+
+        $continentPool = [];
+        foreach ($continents as $c => $w) {
+            for ($i = 0; $i < $w; $i++) {
+                $continentPool[] = $c;
+            }
+        }
+        $continent = $faker->randomElement($continentPool);
+
+        // 2) Curated countries per continent (exclude microstates and rare territories)
+        $countriesByContinent = [
+            'Europe' => [
+                'Germany','France','United Kingdom','Italy','Spain','Netherlands','Sweden','Poland','Greece','Portugal','Ireland','Austria','Belgium','Romania','Czechia','Hungary','Denmark','Finland','Norway','Switzerland'
+            ],
+            'Asia' => [
+                'India','Indonesia','Philippines','Singapore','Malaysia','Japan','South Korea','Thailand','Vietnam','United Arab Emirates','Saudi Arabia','Pakistan','Bangladesh','Taiwan','Israel'
+            ],
+            'Americas' => [
+                'United States','Canada','Mexico','Brazil','Argentina','Chile','Colombia','Peru','Ecuador'
+            ],
+            'Africa' => [
+                'South Africa','Egypt','Nigeria','Morocco','Kenya','Ghana','Ethiopia','Algeria','Tunisia'
+            ],
+            'Oceania' => [
+                'Australia','New Zealand'
+            ],
+        ];
+
+        $list = $countriesByContinent[$continent] ?? ['United States'];
+
+        // 3) Optional per-country weights (light bias to larger markets)
+        $weights = [
+            'United States' => 6,
+            'Germany' => 4,
+            'United Kingdom' => 4,
+            'France' => 3,
+            'Italy' => 3,
+            'Spain' => 3,
+            'India' => 5,
+            'Japan' => 3,
+            'Brazil' => 3,
+            'Canada' => 2,
+            'Mexico' => 2,
+            'Indonesia' => 3,
+            'Philippines' => 2,
+            'South Korea' => 2,
+        ];
+
+        // Boost Greece visibly when Europe is selected
+        if ($continent === 'Europe') {
+            $weights['Greece'] = ($weights['Greece'] ?? 0) + 6; // strong boost
+        }
+
+        // Build weighted pool
+        $pool = [];
+        foreach ($list as $country) {
+            $w = $weights[$country] ?? 1;
+            for ($i = 0; $i < $w; $i++) {
+                $pool[] = $country;
+            }
+        }
+
+        // Global small chance to pick Greece regardless of continent (extra promotion)
+        if ($faker->numberBetween(1, 100) <= 5) { // 5% global boost
+            return 'Greece';
+        }
+
+        return $faker->randomElement($pool);
     }
 }
