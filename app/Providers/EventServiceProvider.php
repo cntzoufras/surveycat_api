@@ -6,9 +6,11 @@ use App\Events\UserRegistered;
 use App\Listeners\SendWelcomeEmailListener;
 use App\Events\PasswordResetRequested;
 use App\Listeners\SendPasswordResetNotification;
+use App\Listeners\ClearSessionCacheOnLogout;
 
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -28,6 +30,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
         PasswordResetRequested::class => [
             SendPasswordResetNotification::class,
+        ],
+        Logout::class => [
+            ClearSessionCacheOnLogout::class,
         ],
     ];
 

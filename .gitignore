@@ -24,3 +24,4 @@ auth.json
 #.github/
 #docker-compose.prod.yml
 #Dockerfile.prod
+.windsurf/rules/workspacerules.md

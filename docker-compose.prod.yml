@@ -1,6 +1,6 @@
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:5.2
+    image: cntzoufras/surveycat-api-apache:5.3
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -25,7 +25,6 @@ services:
       - "40000:80"
     depends_on:
       - pgsql
-      - memcached
       - redis
   pgsql:
     image: 'postgres:15'
@@ -42,11 +41,6 @@ services:
       - webnet
     ports:
       - "5432:5432"
-
-  memcached:
-    image: 'memcached:alpine'
-    networks:
-      - webnet
 
   redis:
     image: 'redis:alpine'

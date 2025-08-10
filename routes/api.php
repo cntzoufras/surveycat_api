@@ -38,7 +38,7 @@ Route::prefix('survey-responses')->group(function () {
     Route::get('/{survey_response}', [SurveyResponseController::class, 'show']);
     Route::patch('/{survey_response}', [SurveyResponseController::class, 'update']);
 });
-Route::prefix('respondents')->group(function () {
+Route::prefix('respondents')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
     Route::get('/', [RespondentController::class, 'index']);
     Route::post('/', [RespondentController::class, 'store']);
     Route::put('/{respondent}', [RespondentController::class, 'update']);
@@ -63,7 +63,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('{survey_question}', [SurveyQuestionController::class, 'destroy']);
     });
 
-    Route::prefix('survey-pages')->group(function () {
+    Route::prefix('survey-pages')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
         Route::get('/', [SurveyPageController::class, 'index']);
         Route::post('/', [SurveyPageController::class, 'store']);
         Route::post('/{survey_page}/questions/reorder', [SurveyQuestionController::class, 'updateOrder']);
@@ -72,7 +72,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('/{survey_page}', [SurveyPageController::class, 'delete']);
     });
 
-    Route::prefix('surveys')->group(function () {
+    Route::prefix('surveys')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
         Route::get('/count', [SurveyController::class, 'getProfileSurveyCountsForUser']);
         Route::get('/user', [SurveyController::class, 'getSurveysForUser']);
 
@@ -111,12 +111,12 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         ]);
     });
 
-    Route::prefix('survey-submissions')->group(function () {
+    Route::prefix('survey-submissions')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
         Route::get('/', [SurveySubmissionController::class, 'index']);
         Route::get('/{id}', [SurveySubmissionController::class, 'show']);
     });
 
-    Route::prefix('themes')->group(function () {
+    Route::prefix('themes')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
         Route::get('/', [ThemeController::class, 'index']);
         Route::get('/{theme}', [ThemeController::class, 'show']);
         Route::post('/', [ThemeController::class, 'store']);
@@ -148,7 +148,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         });
     });
 
-    Route::prefix('dashboards')->group(function () {
+    Route::prefix('dashboards')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
         Route::get('/app', [DashboardController::class, 'getAppDashboardStats']);
         Route::get('/surveys', [DashboardController::class, 'getSurveyDashboardStats']);
     });
