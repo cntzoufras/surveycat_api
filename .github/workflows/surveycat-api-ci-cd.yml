@@ -55,6 +55,7 @@ jobs:
           echo "REDIS_HOST=redis" >> .env
           echo "REDIS_PASSWORD=null" >> .env
           echo "REDIS_PORT=6379" >> .env
+          echo "REDIS_CLIENT=phpredis" >> .env
           echo "MAIL_MAILER=smtp" >> .env
           echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
           echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env

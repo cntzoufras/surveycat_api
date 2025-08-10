@@ -31,7 +31,7 @@ class UserScopedCache
         );
     }
 
-    public function tagsFor(?int $userId, string $sessionId): array
+    public function tagsFor(int|string|null $userId, string $sessionId): array
     {
         return ["user:{$userId}", "session:{$sessionId}"];
     }
