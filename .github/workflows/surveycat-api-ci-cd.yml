@@ -48,12 +48,12 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "COMPOSE_PROJECT_NAME=surveycat-api" >> .env
+          echo "COMPOSE_PROJECT_NAME=api" >> .env
           echo "CACHE_DRIVER=redis" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
           echo "SESSION_DRIVER=database" >> .env
           echo "REDIS_HOST=redis" >> .env
-          echo "REDIS_PASSWORD=null" >> .env
+          echo "REDIS_PASSWORD=" >> .env
           echo "REDIS_PORT=6379" >> .env
           echo "REDIS_CLIENT=phpredis" >> .env
           echo "MAIL_MAILER=smtp" >> .env

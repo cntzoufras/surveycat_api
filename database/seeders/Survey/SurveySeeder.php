@@ -317,6 +317,86 @@ class SurveySeeder extends Seeder
         $bar->finish();
         $this->command->info("\nSeeding of responses and submissions complete.");
 
+        // Ensure we have some completions for "today" so dashboards don't show 0 after a fresh seed.
+        // Keep this small and realistic. We create a handful of responses completed today across random surveys.
+        $todaysCount = 24; // ~two dozen completions today
+        if (!empty($surveys)) {
+            for ($j = 0; $j < $todaysCount; $j++) {
+                $survey = $surveys[array_rand($surveys)];
+                $surveyQuestions = $allSurveyQuestions->get($survey->id) ?? collect();
+
+                $respondent = Respondent::create([
+                    'email' => $faker->boolean(30) ? $faker->unique()->safeEmail : null,
+                    'gender' => $faker->randomElement(['male', 'female', 'other']),
+                    'age' => $faker->numberBetween(18, 70),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $sessionId = $this->createSessionForRespondent($respondent, $faker);
+
+                $startedAtToday = now()->subMinutes($faker->numberBetween(5, 90));
+                $completedAtToday = (clone $startedAtToday)->addMinutes($faker->numberBetween(2, 45));
+
+                $uaPool = array_merge($desktopUAs, $mobileUAs, $tabletUAs);
+                $ua = $faker->randomElement($uaPool);
+
+                $response = SurveyResponse::create([
+                    'ip_address' => $faker->ipv4,
+                    'device' => $ua,
+                    'started_at' => $startedAtToday,
+                    'completed_at' => $completedAtToday,
+                    'session_id' => $sessionId,
+                    'survey_id' => $survey->id,
+                    'respondent_id' => $respondent->id,
+                    'country' => $this->pickWeightedCountry($faker),
+                ]);
+
+                // Create minimal realistic submission payload
+                $submissionData = [];
+                if ($surveyQuestions->isNotEmpty()) {
+                    foreach ($surveyQuestions->take(5) as $q) { // limit for speed
+                        switch ($q->question_type_id) {
+                            case 1: // Multiple Choice
+                            case 7: // Dropdown
+                                if ($q->survey_question_choices->isNotEmpty()) {
+                                    $choice = $q->survey_question_choices->random();
+                                    $submissionData[$q->id] = $choice->id;
+                                }
+                                break;
+                            case 2: // Checkboxes
+                                if ($q->survey_question_choices->isNotEmpty()) {
+                                    $ids = $q->survey_question_choices->pluck('id')->toArray();
+                                    $pick = $faker->randomElements($ids, rand(1, min(3, count($ids))));
+                                    $submissionData[$q->id] = $pick;
+                                }
+                                break;
+                            case 3: // Single Textbox
+                                $submissionData[$q->id] = $faker->sentence();
+                                break;
+                            case 4: // Star Rating 1–5
+                                $submissionData[$q->id] = $faker->numberBetween(1, 5);
+                                break;
+                            case 5: // Best-Worst slider (1–100)
+                                $submissionData[$q->id] = $faker->numberBetween(1, 100);
+                                break;
+                            case 6: // Comment Box
+                                $submissionData[$q->id] = $faker->sentence();
+                                break;
+                        }
+                    }
+                }
+
+                SurveySubmission::create([
+                    'survey_id' => $survey->id,
+                    'survey_response_id' => $response->id,
+                    'submission_data' => json_encode($submissionData),
+                    'created_at' => $completedAtToday,
+                    'updated_at' => $completedAtToday,
+                ]);
+            }
+            $this->command->info("Added {$todaysCount} extra completions for today.");
+        }
+
         // Add one explicit desktop SurveyResponse resembling the provided production sample
         // We will link it to a random existing survey and a fresh respondent/session
         if (!empty($surveys)) {
