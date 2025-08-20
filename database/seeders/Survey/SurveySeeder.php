@@ -175,6 +175,19 @@ class SurveySeeder extends Seeder
             'Mozilla/5.0 (iPad; CPU OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
         ];
 
+        // A small pool of UAs that will be categorized as "Other" by our backend parser
+        // (no Chrome/Edg/Firefox/Safari tokens or patterns that would map to those)
+        $otherUAs = [
+            // Internet Explorer / Trident
+            'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko',
+            'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
+            // Old Opera (Presto)
+            'Opera/9.80 (Windows NT 6.1; U; en) Presto/2.12.388 Version/12.18',
+            // Tools/Bots (kept small)
+            'curl/7.68.0',
+            'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+        ];
+
         // Eager-load all questions and choices for all surveys to be more efficient
         $surveyIds = array_map(fn($s) => $s->id, $surveys);
         $allSurveyQuestions = SurveyQuestion::with('survey_question_choices')
@@ -245,9 +258,14 @@ class SurveySeeder extends Seeder
             $deviceType = $faker->randomElement([
                 'desktop','desktop','desktop','desktop','mobile','mobile','mobile','tablet' // ~50% desktop, ~37% mobile, ~13% tablet
             ]);
-            $ua = $deviceType === 'desktop'
-                ? $faker->randomElement($desktopUAs)
-                : ($deviceType === 'mobile' ? $faker->randomElement($mobileUAs) : $faker->randomElement($tabletUAs));
+            // ~7% chance to select a UA that will map to "Other"
+            if ($faker->numberBetween(1, 100) <= 7) {
+                $ua = $faker->randomElement($otherUAs);
+            } else {
+                $ua = $deviceType === 'desktop'
+                    ? $faker->randomElement($desktopUAs)
+                    : ($deviceType === 'mobile' ? $faker->randomElement($mobileUAs) : $faker->randomElement($tabletUAs));
+            }
 
             $surveyResponse = SurveyResponse::create([
                 'ip_address' => $faker->ipv4,
@@ -338,7 +356,12 @@ class SurveySeeder extends Seeder
                 $completedAtToday = (clone $startedAtToday)->addMinutes($faker->numberBetween(2, 45));
 
                 $uaPool = array_merge($desktopUAs, $mobileUAs, $tabletUAs);
-                $ua = $faker->randomElement($uaPool);
+                // Apply the same small chance for "Other" here as well
+                if ($faker->numberBetween(1, 100) <= 7) {
+                    $ua = $faker->randomElement($otherUAs);
+                } else {
+                    $ua = $faker->randomElement($uaPool);
+                }
 
                 $response = SurveyResponse::create([
                     'ip_address' => $faker->ipv4,
