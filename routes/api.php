@@ -54,7 +54,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     Route::put('/user', [UserController::class, 'update']);
     Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
     Route::get('/global-search', [GlobalSearchController::class, 'search']);
-    Route::prefix('survey-questions')->group(function () {
+    Route::prefix('survey-questions')->middleware(['invalidate.user.cache'])->group(function () {
         Route::get('/types', [SurveyQuestionController::class, 'getQuestionTypes']);
         Route::get('/', [SurveyQuestionController::class, 'index']);
         Route::post('/', [SurveyQuestionController::class, 'store']);
@@ -100,7 +100,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::get('/', [SurveyCategoryController::class, 'index']);
     });
 
-    Route::prefix('survey-question-choices')->group(function () {
+    Route::prefix('survey-question-choices')->middleware(['invalidate.user.cache'])->group(function () {
         Route::get('/', [SurveyQuestionChoiceController::class, 'index']);
         Route::post('/', [SurveyQuestionChoiceController::class, 'store']);
         Route::put('/{id}', [SurveyQuestionChoiceController::class, 'update']);
@@ -154,8 +154,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
     });
 
     Route::prefix('users')->group(function () {
-        Route::get('/', [UserController::class, 'index']);
-        Route::post('/', [UserController::class, 'store']);
         Route::put('/', [UserController::class, 'update']);
         Route::delete('/{id}', [UserController::class, 'delete']);
     });
