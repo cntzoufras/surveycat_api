@@ -5,20 +5,42 @@ namespace App\Repositories;
 use App\Models\Respondent;
 
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 
 class RespondentRepository
 {
 
     public function index(array $params)
     {
-
         try {
-            $limit = $params['limit'] ?? 100000;
-            return DB::transaction(function () use ($limit) {
-                return Respondent::with('survey_response.survey')->paginate($limit);
+            $perPage = $params['per_page'] ?? ($params['limit'] ?? 10);
+            $page = $params['page'] ?? null;
+            $search = isset($params['search']) ? trim((string)$params['search']) : '';
+
+            return DB::transaction(function () use ($perPage, $page, $search) {
+                $query = Respondent::query()
+                    ->with('survey_response.survey');
+
+                if ($search !== '') {
+                    $driver = DB::getDriverName();
+                    $likeOperator = $driver === 'pgsql' ? 'ilike' : 'like';
+                    $query->where(function ($q) use ($search, $likeOperator) {
+                        $q->where('email', $likeOperator, "%$search%");
+                        // Only compare by UUID when the search term is a valid UUID to avoid PG uuid cast errors
+                        if (Uuid::isValid($search)) {
+                            $q->orWhere('id', '=', $search);
+                        }
+                    });
+                }
+
+                if ($page !== null) {
+                    return $query->paginate($perPage, ['*'], 'page', (int)$page);
+                }
+
+                return $query->paginate($perPage);
             });
         } catch (\Exception $e) {
-            throw new \Exception($e, 500);
+            throw new \Exception($e->getMessage(), 500);
         }
     }
 

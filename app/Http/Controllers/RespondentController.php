@@ -24,7 +24,13 @@ class RespondentController extends Controller
      */
     public function index(Request $request)
     {
-        $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
+        $validated = $request->validate([
+            'limit' => 'integer|sometimes|min:0|max:100',
+            'per_page' => 'integer|sometimes|min:1|max:100',
+            'page' => 'integer|sometimes|min:1',
+            'search' => 'string|sometimes|max:255',
+        ]);
+
         return $this->respondent_service->index($validated);
     }
 
