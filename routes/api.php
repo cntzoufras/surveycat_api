@@ -31,7 +31,7 @@ Route::get('/surveys/ps/{slug}', [SurveyController::class, 'getPublicSurveyBySlu
 Route::post('/survey-submissions', [SurveySubmissionController::class, 'store'])->middleware(['invalidate.user.cache']);
 
 Route::get('/question-types', [QuestionTypeController::class, 'index']);;
-Route::prefix('survey-responses')->group(function () {
+Route::prefix('survey-responses')->middleware(['invalidate.user.cache'])->group(function () {
     Route::get('/', [SurveyResponseController::class, 'index']);
     Route::post('/', [SurveyResponseController::class, 'store']);
     Route::put('/{survey_response}', [SurveyResponseController::class, 'update']);

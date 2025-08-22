@@ -25,6 +25,10 @@ class InvalidateUserCacheOnWrite
                 $firstSegment = explode('/', $path)[0] ?? '';
                 if ($firstSegment !== '') {
                     $this->cache->flushByTags(["resource:{$firstSegment}"]);
+                    // If a survey response/submission is written, also flush respondents listing cache
+                    if (in_array($firstSegment, ['survey-responses', 'survey-submissions'], true)) {
+                        $this->cache->flushByTags(["resource:respondents"]);
+                    }
                 }
                 $surveyId = $request->query('survey_id')
                     ?? $request->input('survey_id')
