@@ -28,7 +28,7 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('register', [RegisteredUserController::class, 'store']);
 Route::get('/surveys/ps/{slug}', [SurveyController::class, 'getPublicSurveyBySlug']);
-Route::post('/survey-submissions', [SurveySubmissionController::class, 'store']);
+Route::post('/survey-submissions', [SurveySubmissionController::class, 'store'])->middleware(['invalidate.user.cache']);
 
 Route::get('/question-types', [QuestionTypeController::class, 'index']);;
 Route::prefix('survey-responses')->group(function () {

@@ -22,10 +22,8 @@ class CacheUserResponse
         $ttl = (int) config('http_cache.ttl', 3600);
 
         // Build key and tags using the service helpers
-        $userId = Auth::id() ?? 0;
-        $sessionId = $request->session()->getId() ?? 'guest';
         $key = $this->cache->keyFrom($request);
-        $tags = $this->cache->tagsFor($userId, $sessionId);
+        $tags = $this->cache->tagsFromRequest($request);
 
         // Attempt cache hit
         $cached = Cache::tags($tags)->get($key);

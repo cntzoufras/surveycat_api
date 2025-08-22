@@ -36,12 +36,40 @@ class UserScopedCache
         return ["user:{$userId}", "session:{$sessionId}"];
     }
 
-    public function remember(Request $request, int $ttl, Closure $resolver)
+    /**
+     * Build cache tags based on request context (user/session + resource + survey).
+     */
+    public function tagsFromRequest(Request $request): array
     {
         $userId = Auth::id() ?? 0;
         $sessionId = $request->session()->getId() ?? 'guest';
-        $key = $this->keyFrom($request);
+
         $tags = $this->tagsFor($userId, $sessionId);
+
+        // Resource tag: first path segment (e.g., survey-submissions, respondents)
+        $path = trim($request->path(), '/');
+        $firstSegment = explode('/', $path)[0] ?? '';
+        if ($firstSegment !== '') {
+            $tags[] = "resource:{$firstSegment}";
+        }
+
+        // Survey scoping: look for survey id in common places
+        $surveyId = $request->query('survey_id')
+            ?? $request->input('survey_id')
+            ?? $request->route('survey')
+            ?? $request->route('surveyId')
+            ?? $request->route('id');
+        if (!empty($surveyId)) {
+            $tags[] = "survey:{$surveyId}";
+        }
+
+        return $tags;
+    }
+
+    public function remember(Request $request, int $ttl, Closure $resolver)
+    {
+        $key = $this->keyFrom($request);
+        $tags = $this->tagsFromRequest($request);
 
         return Cache::tags($tags)->remember($key, $ttl, $resolver);
     }
