@@ -54,7 +54,10 @@ class DashboardRepository
             ];
         }
 
-        $surveysCompletedToday = SurveyResponse::whereDate('completed_at', today())->count();
+        // Use submissions as the definition of a completed survey within the app-local day window (mapped to UTC)
+        $startOfLocalDayUtc = Carbon::now()->startOfDay()->utc();
+        $endOfLocalDayUtc = Carbon::now()->endOfDay()->utc();
+        $surveysCompletedToday = SurveySubmission::whereBetween('created_at', [$startOfLocalDayUtc, $endOfLocalDayUtc])->count();
 
         $topSurveyTopics = DB::table('survey_submissions')
             ->join('surveys', 'survey_submissions.survey_id', '=', 'surveys.id')
