@@ -18,7 +18,7 @@ class QuestionTypeService
     /**
      * @throws \Exception
      */
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Database\Eloquent\Collection
     {
         return $this->question_type_repository->index($params);
     }

@@ -10,7 +10,7 @@ class SurveyQuestionChoiceRepository {
     /**
      * @throws \Exception
      */
-    public function index(array $params) {
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
         try {
             $limit = $params['limit'] ?? 20;
             return DB::transaction(function () use ($limit) {
@@ -21,18 +21,18 @@ class SurveyQuestionChoiceRepository {
         }
     }
 
-    public function resolveModel($survey_question_choice): mixed {
+    public function resolveModel($survey_question_choice): \App\Models\Survey\SurveyQuestionChoice {
         if ($survey_question_choice instanceof SurveyQuestionChoice) {
             return $survey_question_choice;
         }
         return SurveyQuestionChoice::query()->findOrFail($survey_question_choice);
     }
 
-    public function getIfExist($survey_question_choice): mixed {
+    public function getIfExist($survey_question_choice): ?\App\Models\Survey\SurveyQuestionChoice {
         return SurveyQuestionChoice::query()->find($survey_question_choice);
     }
 
-    public function update(SurveyQuestionChoice $survey_question_choice, array $params) {
+    public function update(SurveyQuestionChoice $survey_question_choice, array $params): \App\Models\Survey\SurveyQuestionChoice {
         return DB::transaction(function () use ($params, $survey_question_choice) {
             $survey_question_choice->fill($params);
             $survey_question_choice->save();
@@ -40,7 +40,7 @@ class SurveyQuestionChoiceRepository {
         });
     }
 
-    public function store(array $params): SurveyQuestionChoice {
+    public function store(array $params): \App\Models\Survey\SurveyQuestionChoice {
         return DB::transaction(function () use ($params) {
             $survey_question_choice = new SurveyQuestionChoice();
             $survey_question_choice->fill($params);
@@ -62,7 +62,7 @@ class SurveyQuestionChoiceRepository {
         });
     }
 
-    public function delete(SurveyQuestionChoice $survey_question_choice) {
+    public function delete(SurveyQuestionChoice $survey_question_choice): \App\Models\Survey\SurveyQuestionChoice {
         return DB::transaction(function () use ($survey_question_choice) {
             $survey_question_choice->delete();
             return $survey_question_choice;
@@ -75,7 +75,7 @@ class SurveyQuestionChoiceRepository {
      * @return mixed
      * @throws \Exception
      */
-    public function getSurveyQuestionChoicesByQuestion($survey_question_id): mixed {
+    public function getSurveyQuestionChoicesByQuestion($survey_question_id): \Illuminate\Database\Eloquent\Collection {
         try {
             return DB::transaction(function () use ($survey_question_id) {
                 return SurveyQuestionChoice::where('survey_question_id', $survey_question_id)->get();

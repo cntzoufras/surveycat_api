@@ -8,6 +8,7 @@ use App\Http\Requests\Theme\UpdateThemeRequest;
 use App\Models\Theme\Theme;
 use App\Services\Theme\ThemeService;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -24,7 +25,7 @@ class ThemeController extends Controller {
      *
      * @throws \Exception
      */
-    public function index(Request $request) {
+    public function index(Request $request): LengthAwarePaginator {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->theme_service->index($validated);
     }
@@ -41,7 +42,7 @@ class ThemeController extends Controller {
      *
      * @throws \Exception
      */
-    public function show(Theme $theme)
+    public function show(Theme $theme): Theme
     {
         try {
             $theme->load('theme_setting.variable_palettes');
@@ -54,14 +55,14 @@ class ThemeController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateThemeRequest $request, Theme $theme) {
+    public function update(UpdateThemeRequest $request, Theme $theme): Theme {
         return $this->theme_service->update($theme, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Theme $theme) {
+    public function destroy(Theme $theme): Theme {
         return $this->theme_service->delete($theme);
     }
 }

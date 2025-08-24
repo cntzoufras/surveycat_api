@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\VariablePalette\UpdateVariablePaletteRequest;
 use App\Models\Theme\VariablePalette;
 use App\Services\Theme\VariablePaletteService;
+use Illuminate\Http\JsonResponse;
 
 class VariablePalettesController extends Controller {
 
@@ -18,7 +19,7 @@ class VariablePalettesController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index() {
+    public function index(): JsonResponse {
         $params = request()->all();
         $variable_palettes = $this->variable_palette_service->index($params);
         return response()->json($variable_palettes);
@@ -27,7 +28,7 @@ class VariablePalettesController extends Controller {
     /**
      * Display the specified resource.
      */
-    public function show(VariablePalette $variable_palette) {
+    public function show(VariablePalette $variable_palette): JsonResponse {
         $variable_palette = $this->variable_palette_service->show($variable_palette->id);
         return response()->json($variable_palette);
     }
@@ -35,7 +36,7 @@ class VariablePalettesController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateVariablePaletteRequest $request, VariablePalette $variable_palette) {
+    public function update(UpdateVariablePaletteRequest $request, VariablePalette $variable_palette): JsonResponse {
         $params = $request->validated();
         $updated_variable_palette = $this->variable_palette_service->update($variable_palette, $params);
         return response()->json($updated_variable_palette);

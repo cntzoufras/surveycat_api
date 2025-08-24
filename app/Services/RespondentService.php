@@ -16,25 +16,20 @@ class RespondentService
         $this->respondent_repository = $respondent_repository;
     }
 
-    public function index(array $params): mixed
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->respondent_repository->index($params);
     }
 
     /**
-     * @return mixed
+     * Create a new Respondent and return the persisted model.
      */
     public function store(): mixed
     {
         return $this->respondent_repository->store();
     }
 
-    public function show($params): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|\App\Models\Respondent|\Illuminate\Database\Eloquent\Builder|array|null
-    {
-        return $this->respondent_repository->resolveModel($params);
-    }
-
-    public function update(Respondent $respondent, array $params)
+    public function update(Respondent $respondent, array $params): Respondent
     {
         return $this->respondent_repository->update($respondent, $params);
     }

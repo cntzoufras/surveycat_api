@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Survey\Survey;
 use App\Services\CustomThemeService;
 use App\Repositories\CustomThemeRepository;
 use App\Models\Theme\Theme;
-use App\Models\Survey;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -16,10 +16,11 @@ class CustomThemeController extends Controller
 
     public function __construct(
         CustomThemeService $customThemeService,
-        CustomThemeRepository $customThemeRepository
-    ) {
+
+    )
+    {
         $this->customThemeService = $customThemeService;
-        $this->customThemeRepository = $customThemeRepository;
+
     }
 
     /**
@@ -28,7 +29,7 @@ class CustomThemeController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'base_theme_id' => 'required|uuid|exists:themes,id',
@@ -64,7 +65,7 @@ class CustomThemeController extends Controller
      * @param string $themeId
      * @return JsonResponse
      */
-    public function update(Request $request, $themeId)
+    public function update(Request $request, string $themeId): JsonResponse
     {
         $request->validate([
             'customizations' => 'required|array',
@@ -87,20 +88,6 @@ class CustomThemeController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Get custom theme for a survey
-     */
-    public function showBySurvey(Survey $survey): JsonResponse
-    {
-        $theme = $this->customThemeRepository->getCustomThemeForSurvey($survey);
-
-        if (!$theme) {
-            return response()->json(['error' => 'Custom theme not found'], 404);
-        }
-
-        return response()->json($theme->load('theme_setting', 'theme_setting.variable_palettes'));
     }
 
     /**
@@ -127,12 +114,12 @@ class CustomThemeController extends Controller
      * @param string $surveyId
      * @return JsonResponse
      */
-    public function resetToBaseTheme($surveyId)
+    public function resetToBaseTheme(string $surveyId): JsonResponse
     {
         try {
             $survey = Survey::findOrFail($surveyId);
-            $baseTheme = $survey->theme && $survey->theme->base_theme_id 
-                ? Theme::find($survey->theme->base_theme_id) 
+            $baseTheme = $survey->theme && $survey->theme->base_theme_id
+                ? Theme::query()->find($survey->theme->base_theme_id)
                 : null;
 
             if (!$baseTheme) {

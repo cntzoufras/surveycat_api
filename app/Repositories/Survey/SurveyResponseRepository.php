@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class SurveyResponseRepository
 {
 
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
             $limit = $params['limit'] ?? 50;
@@ -20,7 +20,7 @@ class SurveyResponseRepository
         }
     }
 
-    public function resolveModel($survey_response): mixed
+    public function resolveModel($survey_response): \App\Models\Survey\SurveyResponse
     {
         if ($survey_response instanceof SurveyResponse) {
             return $survey_response;
@@ -28,12 +28,12 @@ class SurveyResponseRepository
         return SurveyResponse::query()->findOrFail($survey_response);
     }
 
-    public function getIfExist($survey_response): mixed
+    public function getIfExist($survey_response): ?\App\Models\Survey\SurveyResponse
     {
         return SurveyResponse::query()->find($survey_response);
     }
 
-    public function update(SurveyResponse $survey_response, array $params): SurveyResponse
+    public function update(SurveyResponse $survey_response, array $params): \App\Models\Survey\SurveyResponse
     {
         if (!$survey_response->exists) {
             $survey_response = SurveyResponse::query()
@@ -47,7 +47,7 @@ class SurveyResponseRepository
         });
     }
 
-    public function store(array $params): SurveyResponse
+    public function store(array $params): \App\Models\Survey\SurveyResponse
     {
         return DB::transaction(function () use ($params) {
             $survey_response = new SurveyResponse();

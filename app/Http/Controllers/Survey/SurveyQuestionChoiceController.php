@@ -12,11 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class SurveyQuestionChoiceController extends Controller {
+class SurveyQuestionChoiceController extends Controller
+{
 
     protected SurveyQuestionChoiceService $survey_question_choice_service;
 
-    public function __construct(SurveyQuestionChoiceService $survey_question_choice_service) {
+    public function __construct(SurveyQuestionChoiceService $survey_question_choice_service)
+    {
         $this->survey_question_choice_service = $survey_question_choice_service;
     }
 
@@ -25,7 +27,8 @@ class SurveyQuestionChoiceController extends Controller {
      *
      * @throws \Exception
      */
-    public function index(Request $request) {
+    public function index(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_question_choice_service->index($validated);
     }
@@ -33,7 +36,8 @@ class SurveyQuestionChoiceController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveyQuestionChoiceRequest $request): JsonResponse {
+    public function store(StoreSurveyQuestionChoiceRequest $request): JsonResponse
+    {
         $question_choices = $request->all();
         $createdChoices = $this->survey_question_choice_service->storeMultiple($question_choices);
 
@@ -45,7 +49,8 @@ class SurveyQuestionChoiceController extends Controller {
      *
      * @throws \Exception
      */
-    public function show(Request $request): mixed {
+    public function show(Request $request): mixed
+    {
         try {
             if (isset($request['id'])) {
                 Validator::validate(['id' => $request['id']], [
@@ -64,14 +69,16 @@ class SurveyQuestionChoiceController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSurveyQuestionChoiceRequest $request, SurveyQuestionChoice $survey_question_choice) {
+    public function update(UpdateSurveyQuestionChoiceRequest $request, SurveyQuestionChoice $survey_question_choice): SurveyQuestionChoice
+    {
         return $this->survey_question_choice_service->update($survey_question_choice, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SurveyQuestionChoice $survey_question) {
+    public function destroy(SurveyQuestionChoice $survey_question): SurveyQuestionChoice
+    {
         return $this->survey_question_choice_service->delete($survey_question);
     }
 
@@ -80,7 +87,8 @@ class SurveyQuestionChoiceController extends Controller {
      *
      * @throws \Exception
      */
-    public function getSurveyQuestionChoicesByQuestion($question_id) {
+    public function getSurveyQuestionChoicesByQuestion($question_id): \Illuminate\Database\Eloquent\Collection
+    {
         return $this->survey_question_choice_service->getSurveyQuestionChoicesByQuestion($question_id);
     }
 

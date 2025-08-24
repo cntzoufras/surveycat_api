@@ -27,7 +27,7 @@ class SurveyService implements SurveyServiceInterface
     /**
      * @throws \Exception
      */
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->survey_repository->index($params);
     }
@@ -49,14 +49,14 @@ class SurveyService implements SurveyServiceInterface
     /**
      * @throws \Exception
      */
-    public function update($survey, array $params)
+    public function update(Survey|string $survey, array $params): Survey
     {
         $survey = $this->survey_repository->resolveModel($survey);
         return $this->survey_repository->update($survey, $params);
     }
 
 
-    public function destroy($survey_id)
+    public function destroy(string $survey_id): Survey
     {
         $survey = $this->survey_repository->resolveModel($survey_id);
         return $this->survey_repository->destroy($survey);
@@ -67,12 +67,12 @@ class SurveyService implements SurveyServiceInterface
         return $this->survey_repository->getIfExist($id);
     }
 
-    public function getStockSurveys()
+    public function getStockSurveys(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->survey_repository->getStockSurveys();
     }
 
-    public function publish($survey_id, array $params): Survey
+    public function publish(string $survey_id, array $params): Survey
     {
         $survey = $this->survey_repository->resolveModel($survey_id);
         $params['public_link'] = $this->updatePublicLink($survey->title);
@@ -86,7 +86,7 @@ class SurveyService implements SurveyServiceInterface
         return $this->survey_repository->update($survey, $params);
     }
 
-    public function preview($survey_id, array $params): Survey
+    public function preview(string $survey_id, array $params): Survey
     {
         $survey = $this->survey_repository->resolveModel($survey_id);
 
@@ -107,7 +107,7 @@ class SurveyService implements SurveyServiceInterface
     }
 
 
-    public function updatePublicLink($title): string
+    public function updatePublicLink(string $title): string
     {
         $slug = Str::slug($title);
         $url = "{$slug}-" . uniqid();
@@ -117,7 +117,7 @@ class SurveyService implements SurveyServiceInterface
     /**
      * @throws \App\Exceptions\SurveyNotEditableException
      */
-    protected function disableUpdatesOnPublishedSurvey($survey, $data): void
+    protected function disableUpdatesOnPublishedSurvey(Survey $survey, array $data): void
     {
         if ($survey->status === 'published' && isset($data['status']) && $data['status'] !== 'draft') {
             throw new SurveyNotEditableException('Survey is published and cannot be edited unless reverted to draft.');
@@ -144,17 +144,17 @@ class SurveyService implements SurveyServiceInterface
         return $this->survey_repository->getSurveysWithThemesAndPages();
     }
 
-    public function getSurveyWithDetails($survey_id): Survey
+    public function getSurveyWithDetails(string $survey_id): Survey
     {
         return $this->survey_repository->getSurveyWithDetails($survey_id);
     }
 
-    public function getSurveyPreview($survey_id): Survey
+    public function getSurveyPreview(string $survey_id): Survey
     {
         return $this->survey_repository->getSurveyPreview($survey_id);
     }
 
-    public function getPublicSurveyBySlug($slug): Survey
+    public function getPublicSurveyBySlug(string $slug): Survey
     {
         return $this->survey_repository->getPublicSurveyBySlug($slug);
     }

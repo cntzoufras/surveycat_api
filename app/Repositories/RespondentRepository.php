@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 class RespondentRepository
 {
 
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
             $perPage = $params['per_page'] ?? ($params['limit'] ?? 10);
@@ -60,19 +60,6 @@ class RespondentRepository
         }
     }
 
-    public function resolveModel($survey_respondent)
-    {
-        if ($survey_respondent instanceof Respondent) {
-            return $survey_respondent;
-        }
-        return Respondent::query()->findOrFail($survey_respondent);
-    }
-
-    public function getIfExist($survey_respondent)
-    {
-        return Respondent::query()->find($survey_respondent);
-    }
-
     public function store()
     {
         return DB::transaction(function () {
@@ -82,7 +69,7 @@ class RespondentRepository
         });
     }
 
-    public function update(Respondent $respondent, array $params): Respondent
+    public function update(Respondent $respondent, array $params): \App\Models\Respondent
     {
         if (!$respondent->exists) {
             $respondent = Respondent::query()

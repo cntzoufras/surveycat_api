@@ -16,7 +16,7 @@ class SurveyQuestionChoiceService {
     /**
      * @throws \Exception
      */
-    public function index(array $params) {
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
         return $this->survey_question_choice_repository->index($params);
     }
 
@@ -29,21 +29,21 @@ class SurveyQuestionChoiceService {
     }
 
 
-    public function show($params): mixed {
+    public function show($params): ?SurveyQuestionChoice {
         return $this->survey_question_choice_repository->getIfExist($params);
     }
 
-    public function update(SurveyQuestionChoice $survey_question_choice, array $params) {
+    public function update(SurveyQuestionChoice $survey_question_choice, array $params): SurveyQuestionChoice {
         $survey_question_choice = $this->survey_question_choice_repository->resolveModel($survey_question_choice);
         return $this->survey_question_choice_repository->update($survey_question_choice, $params);
     }
 
-    public function delete($survey_question_choice) {
+    public function delete($survey_question_choice): SurveyQuestionChoice {
         $survey_question_choice = $this->survey_question_choice_repository->resolveModel($survey_question_choice);
         return $this->survey_question_choice_repository->delete($survey_question_choice);
     }
 
-    public function getSurveyQuestionChoicesByQuestion($survey_question_id) {
+    public function getSurveyQuestionChoicesByQuestion($survey_question_id): \Illuminate\Database\Eloquent\Collection {
         return $this->survey_question_choice_repository->getSurveyQuestionChoicesByQuestion($survey_question_id);
     }
 

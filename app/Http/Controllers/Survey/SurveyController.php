@@ -30,7 +30,7 @@ class SurveyController extends Controller
      *
      * @throws \Exception
      */
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_service->index($validated);
@@ -71,23 +71,23 @@ class SurveyController extends Controller
      *
      * @throws \Exception
      */
-    public function update(UpdateSurveyRequest $request, Survey $survey)
+    public function update(UpdateSurveyRequest $request, Survey $survey): Survey
     {
         return $this->survey_service->update($survey, $request->validated());
     }
 
 
-    public function publish(UpdateSurveyRequest $request, Survey $survey)
+    public function publish(UpdateSurveyRequest $request, Survey $survey): Survey
     {
         return $this->survey_service->publish($survey->id, $request->validated());
     }
 
-    public function preview(UpdateSurveyRequest $request, Survey $survey)
+    public function preview(UpdateSurveyRequest $request, Survey $survey): Survey
     {
         return $this->survey_service->preview($survey->id, $request->validated());
     }
 
-    public function destroy($id)
+    public function destroy(string $id): Survey|JsonResponse
     {
 
         try {
@@ -105,7 +105,7 @@ class SurveyController extends Controller
         }
     }
 
-    public function getStockSurveys()
+    public function getStockSurveys(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->survey_service->getStockSurveys();
     }
@@ -133,7 +133,7 @@ class SurveyController extends Controller
         return response()->json($surveys);
     }
 
-    public function getSurveyWithDetails(Request $request)
+    public function getSurveyWithDetails(Request $request): mixed
     {
         try {
             if (isset($request['id'])) {
@@ -150,7 +150,7 @@ class SurveyController extends Controller
         return null;
     }
 
-    public function getPublicSurveyBySlug($slug)
+    public function getPublicSurveyBySlug(string $slug): Survey|JsonResponse
     {
         try {
             $validator = Validator::make(['slug' => $slug], [

@@ -18,7 +18,7 @@ class GlobalSearchController extends Controller
     }
 
     /**
-     * Perform a global search across different models.
+     * Perform a global search across different existing Surveys by its title.
      *
      * @param Request $request
      * @return JsonResponse

@@ -9,6 +9,7 @@ use App\Models\QuestionType;
 use App\Models\Survey\SurveyPage;
 use App\Models\Survey\SurveyQuestion;
 use App\Services\Survey\SurveyQuestionService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +31,7 @@ class SurveyQuestionController extends Controller
      *
      * @throws \Exception
      */
-    public function index(Request $request)
+    public function index(Request $request): LengthAwarePaginator
     {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_question_service->index($validated);
@@ -69,7 +70,7 @@ class SurveyQuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSurveyQuestionRequest $request, SurveyQuestion $survey_question)
+    public function update(UpdateSurveyQuestionRequest $request, SurveyQuestion $survey_question): SurveyQuestion
     {
         return $this->survey_question_service->update($survey_question, $request->validated());
     }
@@ -77,12 +78,12 @@ class SurveyQuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SurveyQuestion $survey_question)
+    public function destroy(SurveyQuestion $survey_question): SurveyQuestion
     {
         return $this->survey_question_service->delete($survey_question);
     }
 
-    public function getSurveyQuestionsByPage($survey_id, $survey_page_id)
+    public function getSurveyQuestionsByPage($survey_id, $survey_page_id): \Illuminate\Database\Eloquent\Collection
     {
         return $this->survey_question_service->getSurveyQuestionsByPage($survey_id, $survey_page_id);
     }

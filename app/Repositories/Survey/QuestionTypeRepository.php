@@ -11,7 +11,7 @@ class QuestionTypeRepository
     /**
      * @throws \Exception
      */
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Database\Eloquent\Collection
     {
         try {
             $limit = $params['limit'] ?? 20;

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 class SurveyRepository implements SurveyRepositoryInterface
 {
 
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
             $limit = $params['limit'] ?? 50;
@@ -24,7 +24,7 @@ class SurveyRepository implements SurveyRepositoryInterface
         }
     }
 
-    public function resolveModel($surveys)
+    public function resolveModel(Survey|string $surveys): Survey
     {
         if ($surveys instanceof Survey) {
             return $surveys;
@@ -32,12 +32,12 @@ class SurveyRepository implements SurveyRepositoryInterface
         return Survey::with('survey_status', 'survey_settings')->findOrFail($surveys);
     }
 
-    public function getIfExist($survey)
+    public function getIfExist(string $survey): ?Survey
     {
         return Survey::query()->find($survey);
     }
 
-    public function update(Survey $survey, array $params)
+    public function update(Survey $survey, array $params): Survey
     {
         return DB::transaction(function () use ($params, $survey) {
             $survey->fill($params);
@@ -57,7 +57,7 @@ class SurveyRepository implements SurveyRepositoryInterface
     }
 
 
-    public function destroy(Survey $survey)
+    public function destroy(Survey $survey): Survey
     {
         return DB::transaction(function () use ($survey) {
             $survey->delete();
@@ -68,7 +68,7 @@ class SurveyRepository implements SurveyRepositoryInterface
     /**
      * @throws \Exception
      */
-    public function getStockSurveys()
+    public function getStockSurveys(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
             return DB::transaction(function () {
@@ -107,7 +107,7 @@ class SurveyRepository implements SurveyRepositoryInterface
             ->get();
     }
 
-    public function getSurveyWithDetails($survey_id): Survey
+    public function getSurveyWithDetails(string $survey_id): Survey
     {
         return Survey::with([
             'theme',
@@ -123,7 +123,7 @@ class SurveyRepository implements SurveyRepositoryInterface
             ->findOrFail($survey_id);
     }
 
-    public function getSurveyPreview($survey_id): Survey
+    public function getSurveyPreview(string $survey_id): Survey
     {
         return Survey::with([
             'theme',

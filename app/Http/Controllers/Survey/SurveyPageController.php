@@ -9,14 +9,17 @@ use App\Models\Survey\SurveyPage;
 use App\Services\Survey\SurveyPageService;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class SurveyPageController extends Controller {
+class SurveyPageController extends Controller
+{
 
     protected SurveyPageService $survey_page_service;
 
-    public function __construct(SurveyPageService $survey_page_service) {
+    public function __construct(SurveyPageService $survey_page_service)
+    {
 
         $this->survey_page_service = $survey_page_service;
     }
@@ -26,7 +29,8 @@ class SurveyPageController extends Controller {
      *
      * @throws \Exception
      */
-    public function index(Request $request) {
+    public function index(Request $request): LengthAwarePaginator
+    {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_page_service->index($validated);
     }
@@ -34,14 +38,16 @@ class SurveyPageController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSurveyPageRequest $request): SurveyPage {
+    public function store(StoreSurveyPageRequest $request): SurveyPage
+    {
         return $this->survey_page_service->store($request->validated());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request): mixed {
+    public function show(Request $request): mixed
+    {
         try {
             if (isset($request['id'])) {
                 Validator::validate(['id' => $request['id']], [
@@ -60,18 +66,21 @@ class SurveyPageController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSurveyPageRequest $request, $id) {
+    public function update(UpdateSurveyPageRequest $request, $id): SurveyPage
+    {
         return $this->survey_page_service->update($id, $request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(SurveyPage $survey_page) {
+    public function delete(SurveyPage $survey_page): SurveyPage
+    {
         return $this->survey_page_service->delete($survey_page);
     }
 
-    public function getSurveyPagesBySurvey($surveyId) {
+    public function getSurveyPagesBySurvey($surveyId): mixed
+    {
         try {
             // Validate the incoming request
             Validator::validate(['survey_id' => $surveyId], [

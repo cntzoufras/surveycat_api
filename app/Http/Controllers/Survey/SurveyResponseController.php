@@ -26,7 +26,7 @@ class SurveyResponseController extends Controller
      *
      * @throws \Exception
      */
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_response_service->index($validated);

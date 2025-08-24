@@ -24,7 +24,7 @@ class DashboardController extends Controller
         return $this->dashboard_service->getSurveyDashboardStats();
     }
 
-    public function getAppDashboardStats()
+    public function getAppDashboardStats(): array
     {
         return $this->dashboard_service->getAppDashboardStats();
     }

@@ -14,7 +14,7 @@ class SurveyQuestionRepository
     /**
      * @throws \Exception
      */
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         try {
             $limit = $params['limit'] ?? 20;
@@ -26,7 +26,7 @@ class SurveyQuestionRepository
         }
     }
 
-    public function resolveModel($survey_question): mixed
+    public function resolveModel($survey_question): \App\Models\Survey\SurveyQuestion
     {
         if ($survey_question instanceof SurveyQuestion) {
             return $survey_question;
@@ -34,12 +34,12 @@ class SurveyQuestionRepository
         return SurveyQuestion::query()->findOrFail($survey_question);
     }
 
-    public function getIfExist($survey_question): mixed
+    public function getIfExist($survey_question): ?\App\Models\Survey\SurveyQuestion
     {
         return SurveyQuestion::query()->find($survey_question);
     }
 
-    public function update(SurveyQuestion $survey_question, array $params)
+    public function update(SurveyQuestion $survey_question, array $params): \App\Models\Survey\SurveyQuestion
     {
         return DB::transaction(function () use ($params, $survey_question) {
             $survey_question->fill($params);
@@ -58,7 +58,7 @@ class SurveyQuestionRepository
         });
     }
 
-    public function delete($survey_question)
+    public function delete($survey_question): \App\Models\Survey\SurveyQuestion
     {
         return DB::transaction(function () use ($survey_question) {
             $survey_question->delete();
@@ -66,7 +66,7 @@ class SurveyQuestionRepository
         });
     }
 
-    public function getQuestionsByPage($survey_id, $survey_page_id)
+    public function getQuestionsByPage($survey_id, $survey_page_id): \Illuminate\Database\Eloquent\Collection
     {
         try {
             return DB::transaction(function () use ($survey_id, $survey_page_id) {
@@ -81,7 +81,7 @@ class SurveyQuestionRepository
         }
     }
 
-    public function getSurveyQuestionsWithChoices($survey_id)
+    public function getSurveyQuestionsWithChoices($survey_id): \Illuminate\Database\Eloquent\Collection
     {
         try {
             return DB::transaction(function () use ($survey_id) {

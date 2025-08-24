@@ -14,7 +14,7 @@ interface SurveyServiceInterface {
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function index(array $params);
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
     /**
      * Store a new survey.
@@ -33,7 +33,7 @@ interface SurveyServiceInterface {
      *
      * @return Survey
      */
-    public function update($survey, array $params);
+    public function update(Survey|string $survey, array $params): Survey;
 
     /**
      * Delete a survey by its ID.
@@ -42,7 +42,7 @@ interface SurveyServiceInterface {
      *
      * @return bool
      */
-    public function destroy($survey_id);
+    public function destroy(string $survey_id): Survey;
 
     /**
      * Show a survey based on parameters.
@@ -58,7 +58,7 @@ interface SurveyServiceInterface {
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getStockSurveys();
+    public function getStockSurveys(): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
     /**
      * Publish a survey.
@@ -68,7 +68,7 @@ interface SurveyServiceInterface {
      *
      * @return Survey
      */
-    public function publish(string $survey_id, array $params);
+    public function publish(string $survey_id, array $params): Survey;
 
     /**
      * Update the public link for a survey.
@@ -77,7 +77,7 @@ interface SurveyServiceInterface {
      *
      * @return string
      */
-    public function updatePublicLink($title): string;
+    public function updatePublicLink(string $title): string;
 
     /**
      * Get surveys for the authenticated user.
@@ -98,6 +98,6 @@ interface SurveyServiceInterface {
      *
      * @return Survey
      */
-    public function getPublicSurveyBySlug($slug): Survey;
+    public function getPublicSurveyBySlug(string $slug): Survey;
 
 }

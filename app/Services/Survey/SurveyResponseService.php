@@ -29,7 +29,7 @@ class SurveyResponseService
     /**
      * @throws \Exception
      */
-    public function index(array $params)
+    public function index(array $params): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $this->survey_response_repository->index($params);
     }
@@ -43,7 +43,7 @@ class SurveyResponseService
         return $this->survey_response_repository->store($metadata);
     }
 
-    public function update(SurveyResponse $survey_response, array $params)
+    public function update(SurveyResponse $survey_response, array $params): SurveyResponse
     {
         // Normalize potential datetime inputs
         if (isset($params['started_at'])) {
@@ -55,7 +55,7 @@ class SurveyResponseService
         return $this->survey_response_repository->update($survey_response, $params);
     }
 
-    public function show($params): mixed
+    public function show($params): ?SurveyResponse
     {
         return $this->survey_response_repository->getIfExist($params);
     }

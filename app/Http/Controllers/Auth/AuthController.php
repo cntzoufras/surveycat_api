@@ -80,7 +80,7 @@ class AuthController extends Controller
     /**
      * @throws \Illuminate\Auth\AuthenticationException
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         if ($request->user()) {
             try {

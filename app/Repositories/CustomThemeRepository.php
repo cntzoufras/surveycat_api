@@ -45,20 +45,6 @@ class CustomThemeRepository
     }
 
     /**
-     * Find custom theme by survey ID
-     *
-     * @param string $surveyId
-     * @return Theme|null
-     */
-    public function findBySurvey(string $surveyId): ?Theme
-    {
-        return Theme::with(['theme_setting', 'theme_setting.variable_palettes'])
-                   ->where('survey_id', $surveyId)
-                   ->where('is_custom', true)
-                   ->first();
-    }
-
-    /**
      * Delete a custom theme
      *
      * @param string $id

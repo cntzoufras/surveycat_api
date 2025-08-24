@@ -56,8 +56,6 @@ class UserController extends Controller
 
     public function updateAvatar(UpdateAvatarRequest $request): \Illuminate\Http\JsonResponse
     {
-//        $user = $request->user();
-        // Delete the old avatar if it exists
         $updatedUser = $this->user_service->updateAvatar(
             $request->user(),
             $request->file('avatar')

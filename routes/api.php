@@ -21,8 +21,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Dashboards\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -38,12 +36,10 @@ Route::prefix('survey-responses')->middleware(['invalidate.user.cache'])->group(
     Route::get('/{survey_response}', [SurveyResponseController::class, 'show']);
     Route::patch('/{survey_response}', [SurveyResponseController::class, 'update']);
 });
-Route::prefix('respondents')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
+Route::prefix('respondents')->middleware(['cache.user.response', 'invalidate.user.cache'])->group(function () {
     Route::get('/', [RespondentController::class, 'index']);
     Route::post('/', [RespondentController::class, 'store']);
     Route::put('/{respondent}', [RespondentController::class, 'update']);
-    Route::get('/{respondent}', [RespondentController::class, 'show']);
-    Route::delete('/{id}', [RespondentController::class, 'delete']);
 });
 Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
@@ -63,7 +59,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('{survey_question}', [SurveyQuestionController::class, 'destroy']);
     });
 
-    Route::prefix('survey-pages')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
+    Route::prefix('survey-pages')->middleware(['cache.user.response', 'invalidate.user.cache'])->group(function () {
         Route::get('/', [SurveyPageController::class, 'index']);
         Route::post('/', [SurveyPageController::class, 'store']);
         Route::post('/{survey_page}/questions/reorder', [SurveyQuestionController::class, 'updateOrder']);
@@ -72,7 +68,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         Route::delete('/{survey_page}', [SurveyPageController::class, 'delete']);
     });
 
-    Route::prefix('surveys')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
+    Route::prefix('surveys')->middleware(['cache.user.response', 'invalidate.user.cache'])->group(function () {
         Route::get('/count', [SurveyController::class, 'getProfileSurveyCountsForUser']);
         Route::get('/user', [SurveyController::class, 'getSurveysForUser']);
 
@@ -111,12 +107,12 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         ]);
     });
 
-    Route::prefix('survey-submissions')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
+    Route::prefix('survey-submissions')->middleware(['cache.user.response', 'invalidate.user.cache'])->group(function () {
         Route::get('/', [SurveySubmissionController::class, 'index']);
         Route::get('/{id}', [SurveySubmissionController::class, 'show']);
     });
 
-    Route::prefix('themes')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
+    Route::prefix('themes')->middleware(['cache.user.response', 'invalidate.user.cache'])->group(function () {
         Route::get('/', [ThemeController::class, 'index']);
         Route::get('/{theme}', [ThemeController::class, 'show']);
         Route::post('/', [ThemeController::class, 'store']);
@@ -126,7 +122,6 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         // Custom theme routes
         Route::prefix('custom')->group(function () {
             Route::post('/', [CustomThemeController::class, 'store']);
-            Route::get('/survey/{survey}', [CustomThemeController::class, 'showBySurvey']);
             Route::put('/{theme}', [CustomThemeController::class, 'update']);
             Route::delete('/{theme}', [CustomThemeController::class, 'destroy']);
             Route::post('/reset/{survey}', [CustomThemeController::class, 'resetToBaseTheme']);
@@ -148,7 +143,7 @@ Route::group(['middleware' => [EnsureFrontendRequestsAreStateful::class, 'auth:s
         });
     });
 
-    Route::prefix('dashboards')->middleware(['cache.user.response','invalidate.user.cache'])->group(function () {
+    Route::prefix('dashboards')->middleware(['cache.user.response', 'invalidate.user.cache'])->group(function () {
         Route::get('/app', [DashboardController::class, 'getAppDashboardStats']);
         Route::get('/surveys', [DashboardController::class, 'getSurveyDashboardStats']);
     });
