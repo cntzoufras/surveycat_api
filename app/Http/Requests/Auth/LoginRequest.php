@@ -40,9 +40,9 @@ class LoginRequest extends BaseRequest {
     public function authenticate(): void {
         $this->ensureIsNotRateLimited();
 
-        // Normalize remember flag from either snake_case or camelCase
-        $remember = $this->has('rememberMe')
-            ? $this->boolean('rememberMe')
+        // Extract remember flag (camelCase only)
+        $remember = $this->boolean('rememberMe', false);
+
         if (!Auth::attempt($this->only('email', 'password'), $remember)) {
             RateLimiter::hit($this->throttleKey());
 

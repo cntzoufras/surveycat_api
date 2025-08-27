@@ -36,11 +36,11 @@ class AuthController extends Controller
         $this->validate($request, [
             'email' => 'required|string|email|exists:users,email',
             'password' => 'required|string',
-            'remember_me' => 'boolean',
+            'rememberMe' => 'boolean',
         ]);
 
         $credentials = $request->only('email', 'password');
-        $remember = $request->boolean('remember_me', false);
+        $remember = $request->boolean('rememberMe', false);
 
         // Attempt to authenticate the user using Laravel's built-in authentication
         if (!Auth::attempt($credentials, $remember)) {
