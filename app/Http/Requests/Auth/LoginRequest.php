@@ -28,8 +28,7 @@ class LoginRequest extends BaseRequest {
         return [
             'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
-            // Optional remember flag from frontend (snake_case)
-            'remember_me' => ['sometimes', 'boolean'],
+            'rememberMe'  => ['sometimes', 'boolean'],
         ];
     }
 
@@ -41,8 +40,10 @@ class LoginRequest extends BaseRequest {
     public function authenticate(): void {
         $this->ensureIsNotRateLimited();
 
-        // Honor snake_case remember flag provided by frontend
-        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember_me'))) {
+        // Normalize remember flag from either snake_case or camelCase
+        $remember = $this->has('rememberMe')
+            ? $this->boolean('rememberMe')
+        if (!Auth::attempt($this->only('email', 'password'), $remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
