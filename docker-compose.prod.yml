@@ -1,6 +1,6 @@
 services:
   surveycat-api-apache:
-    image: cntzoufras/surveycat-api-apache:5.10
+    image: cntzoufras/surveycat-api-apache:5.11
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -14,7 +14,7 @@ services:
         limits:
           cpus: '2'
     environment:
-      APACHE_SERVER_NAME: "snf-893977.vm.okeanos.grnet.gr"
+      APACHE_SERVER_NAME: "${APACHE_SERVER_NAME}"
       WWWUSER: 1000
       WWWGROUP: 1000
     volumes:
@@ -28,6 +28,7 @@ services:
       - redis
   pgsql:
     image: 'postgres:15'
+    restart: always
     environment:
       POSTGRES_HOST: '${DB_HOST}'
       POSTGRES_DB: '${DB_DATABASE}'
@@ -44,6 +45,7 @@ services:
 
   redis:
     image: 'redis:alpine'
+    restart: always
     volumes:
       - 'prod-redis:/data'
     networks:
@@ -63,3 +65,4 @@ volumes:
   shared_uploads:
     name: shared_uploads
     driver: local
+

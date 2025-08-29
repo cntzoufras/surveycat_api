@@ -10,7 +10,7 @@ return [
 //        'http://surveycat.test:3000',
 //        'http://surveycat.test',
 //        'http://localhost',
-//        'https://snf-893977.vm.okeanos.grnet.gr',
+//        'https://my-live-survey-app.com',
         '*',
     ],
     'allowed_origins_patterns' => [],
