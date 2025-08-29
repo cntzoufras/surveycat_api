@@ -14,6 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class SurveyController extends Controller
 {
@@ -32,6 +33,7 @@ class SurveyController extends Controller
      */
     public function index(Request $request): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
+        $this->authorize('viewAny', Survey::class);
         $validated = $request->validate(['limit' => 'integer|sometimes|min:0|max:100']);
         return $this->survey_service->index($validated);
     }
@@ -41,6 +43,7 @@ class SurveyController extends Controller
      */
     public function store(StoreSurveyRequest $request): Survey
     {
+        $this->authorize('create', Survey::class);
         return $this->survey_service->store($request->validated());
     }
 
@@ -56,7 +59,11 @@ class SurveyController extends Controller
                 Validator::validate(['id' => $request['id']], [
                     'id' => 'uuid|required|exists:surveys,id',
                 ]);
-                return $this->survey_service->show($request['id']);
+                $survey = $this->survey_service->show($request['id']);
+                if ($survey) {
+                    $this->authorize('view', $survey);
+                }
+                return $survey;
             }
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
@@ -73,33 +80,33 @@ class SurveyController extends Controller
      */
     public function update(UpdateSurveyRequest $request, Survey $survey): Survey
     {
+        $this->authorize('update', $survey);
         return $this->survey_service->update($survey, $request->validated());
     }
 
 
     public function publish(UpdateSurveyRequest $request, Survey $survey): Survey
     {
+        $this->authorize('update', $survey);
         return $this->survey_service->publish($survey->id, $request->validated());
     }
 
     public function preview(UpdateSurveyRequest $request, Survey $survey): Survey
     {
+        $this->authorize('update', $survey);
         return $this->survey_service->preview($survey->id, $request->validated());
     }
 
     public function destroy(string $id): Survey|JsonResponse
     {
-
         try {
             $survey = Survey::findOrFail($id);
-
-            if ($survey->user_id !== Auth::id()) {
-                return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
-            }
-
+            $this->authorize('delete', $survey);
             return $this->survey_service->destroy($id);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Survey not found'], Response::HTTP_NOT_FOUND);
+        } catch (AuthorizationException $e) {
+            return response()->json(['error' => 'Forbidden'], Response::HTTP_FORBIDDEN);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

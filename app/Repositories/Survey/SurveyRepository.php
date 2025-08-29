@@ -17,7 +17,13 @@ class SurveyRepository implements SurveyRepositoryInterface
         try {
             $limit = $params['limit'] ?? 50;
             return DB::transaction(function () use ($limit) {
-                return Survey::with('survey_settings')->paginate($limit);
+                /** @var \App\Models\User|null $user */
+                $user = Auth::user();
+                $query = Survey::with('survey_settings');
+                if (!$user || !$user->isAdmin()) {
+                    $query->where('user_id', Auth::id());
+                }
+                return $query->paginate($limit);
             });
         } catch (\Exception $e) {
             throw new \Exception($e, 500);

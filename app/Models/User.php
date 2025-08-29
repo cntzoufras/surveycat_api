@@ -120,4 +120,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->morphTo();
     }
+
+    /**
+     * Check if the user has admin role.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
