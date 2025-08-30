@@ -15,8 +15,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
 
-Route::get('/sanctum/csrf-cookie', function () {
-    return response()->json(['csrfToken' => csrf_token()]);
-});
-
 require __DIR__ . '/auth.php';
