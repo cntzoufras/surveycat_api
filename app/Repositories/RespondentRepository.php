@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Respondent;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
 class RespondentRepository
@@ -17,9 +18,24 @@ class RespondentRepository
             $page = $params['page'] ?? null;
             $search = isset($params['search']) ? trim((string)$params['search']) : '';
 
-            return DB::transaction(function () use ($perPage, $page, $search) {
+            /** @var \App\Models\User|null $user */
+            $user = Auth::user();
+            $ownerId = Auth::id();
+            $isAdmin = $user && method_exists($user, 'isAdmin') && $user->isAdmin();
+
+            return DB::transaction(function () use ($perPage, $page, $search, $ownerId, $isAdmin) {
                 $query = Respondent::query()
-                    ->with('survey_response.survey');
+                    ->with('survey_response.survey')
+                    // Scope to respondents tied to surveys owned by the authenticated user (unless admin)
+                    ->when(!$isAdmin, function ($q) use ($ownerId) {
+                        $q->whereExists(function ($sub) use ($ownerId) {
+                            $sub->selectRaw('1')
+                                ->from('survey_responses')
+                                ->join('surveys', 'survey_responses.survey_id', '=', 'surveys.id')
+                                ->whereColumn('survey_responses.respondent_id', 'respondents.id')
+                                ->where('surveys.user_id', $ownerId);
+                        });
+                    });
 
                 if ($search !== '') {
                     $driver = DB::getDriverName();

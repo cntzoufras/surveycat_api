@@ -18,12 +18,26 @@ class SurveySubmissionRepository
             $page = $params['page'] ?? null;
             $search = isset($params['search']) ? trim((string)$params['search']) : '';
 
-            return DB::transaction(function () use ($perPage, $page, $search) {
+            /** @var \App\Models\User|null $user */
+            $user = Auth::user();
+            $ownerId = Auth::id();
+            $isAdmin = $user && method_exists($user, 'isAdmin') && $user->isAdmin();
+
+            return DB::transaction(function () use ($perPage, $page, $search, $ownerId, $isAdmin) {
                 $query = SurveySubmission::query()
                     ->with([
                         'survey_response.survey',
                         'survey_response.respondent',
-                    ]);
+                    ])
+                    // Scope to submissions where the parent survey belongs to the authenticated user (unless admin)
+                    ->when(!$isAdmin, function ($q) use ($ownerId) {
+                        $q->whereExists(function ($sub) use ($ownerId) {
+                            $sub->selectRaw('1')
+                                ->from('surveys')
+                                ->whereColumn('surveys.id', 'survey_submissions.survey_id')
+                                ->where('surveys.user_id', $ownerId);
+                        });
+                    });
 
                 if ($search !== '') {
                     $driver = DB::getDriverName();
