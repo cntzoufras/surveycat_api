@@ -82,16 +82,34 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        if ($request->user()) {
-            try {
-                $this->auth_service->logout($request->user()->currentAccessToken());
-                return response()->json(['message' => 'Token Revoked'], 204); // No content response
-            } catch (AuthenticationException $e) {
-                return response()->json(['message' => $e->getMessage()], 401);
-            }
+        // If neither API nor web guard is authenticated, respond 401
+        if (!$request->user() && !Auth::guard('web')->check()) {
+            return response()->json(['message' => 'Not Authenticated'], 401);
         }
 
-        return response()->json(['message' => 'Not Authenticated'], 401);
+        try {
+            // Revoke current API token if present (Sanctum)
+            if ($request->user()) {
+                $this->auth_service->logout($request->user()->currentAccessToken());
+            }
+
+            // Also log out the web guard to ensure Laravel clears the session
+            // and the remember_web_* (recaller) cookie.
+            if (Auth::guard('web')->check()) {
+                Auth::guard('web')->logout();
+            }
+
+            // Invalidate and regenerate session token only if a session exists
+            if ($request->hasSession()) {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
+
+            // Return proper 204 No Content (no JSON body)
+            return response()->json(null, 204);
+        } catch (AuthenticationException $e) {
+            return response()->json(['message' => $e->getMessage()], 401);
+        }
     }
 
     /**
