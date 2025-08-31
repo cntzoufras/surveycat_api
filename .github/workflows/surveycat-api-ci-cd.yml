@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "5.17"
+      IMAGE_VERSION: "5.18"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
           echo "APP_URL=${{ secrets.PROD_BASE_URL }}" >> .env
           echo "SESSION_SECURE_COOKIE=true" >> .env
           echo "SANCTUM_STATEFUL_DOMAINS=${{ secrets.PROD_DOMAIN }}" >> .env
-          echo "SESSION_DOMAIN=${{ secrets.PROD_DOMAIN }}" >> .env
+          echo "SESSION_DOMAIN=${{ secrets.SESSION_DOMAIN }}" >> .env
           echo "DB_CONNECTION=pgsql" >> .env
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "DB_PORT=5432" >> .env
