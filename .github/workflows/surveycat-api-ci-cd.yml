@@ -9,7 +9,7 @@ jobs:
   build_push_deploy:
     runs-on: ubuntu-latest
     env:
-      IMAGE_VERSION: "5.18"
+      IMAGE_VERSION: "5.19"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "APP_NAME=Surveycat" > .env
-          echo "APP_ENV=production" > .env
+          echo "APP_ENV=production" >> .env
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
           echo "APP_DEBUG=false" >> .env
           echo "APP_URL=${{ secrets.PROD_BASE_URL }}" >> .env
@@ -69,6 +69,7 @@ jobs:
           echo "DEFAULT_ADMIN_EMAIL=${{ secrets.DEFAULT_ADMIN_EMAIL }}" >> .env
           echo "TRUSTED_PROXIES=${{ secrets.TRUSTED_PROXIES }}" >> .env
           echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+          echo "CORS_ALLOWED_ORIGINS=${{ secrets.FRONTEND_URL }}" >> .env
           echo "GEOIP_DRIVER=ipapi" >> .env
 
       - name: Install Docker Compose

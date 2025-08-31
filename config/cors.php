@@ -1,18 +1,14 @@
 <?php
 
-return [
+$envOrigins = array_filter(array_map('trim', explode(',', env('CORS_ALLOWED_ORIGINS', ''))));
 
-    'paths'                    => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', 'auth/*'],
-    'allowed_methods'          => ['*'],
-//    'allowed_origins' => ['*'],
-    'allowed_origins'          => [
-//        'http://localhost:3000',
-//        'http://surveycat.test:3000',
-//        'http://surveycat.test',
-//        'http://localhost',
-//        'https://my-live-survey-app.com',
-        '*',
-    ],
+return [
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', 'auth/*'],
+    'allowed_methods' => ['*'],
+    'allowed_origins' => array_values(array_unique(array_merge(
+        ['http://surveycat.test:3000'],
+        $envOrigins 
+    ))),
     'allowed_origins_patterns' => [],
     'allowed_headers'          => ['*'],
     'exposed_headers'          => [],
