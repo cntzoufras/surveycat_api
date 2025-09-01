@@ -50,6 +50,10 @@ class SurveySubmissionRepository
                         $q->orWhereHas('survey_response.respondent', function ($rq) use ($search, $likeOperator) {
                             $rq->where('email', $likeOperator, "%$search%");
                         });
+                        // Allow string (partial) matching on respondent UUIDs
+                        $q->orWhereHas('survey_response.respondent', function ($rrqlike) use ($search, $likeOperator) {
+                            $rrqlike->where('id', $likeOperator, "%$search%");
+                        });
                         if (\Ramsey\Uuid\Uuid::isValid($search)) {
                             $q->orWhereHas('survey_response', function ($rsq) use ($search) {
                                 $rsq->where('id', '=', $search);
