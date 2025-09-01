@@ -64,10 +64,11 @@ return [
 
     'middleware' => [
         // Explicitly define Sanctum middleware so the csrf-cookie endpoint runs with the correct stack
+        'encrypt_cookies'      => Illuminate\Cookie\Middleware\EncryptCookies::class,
+        'add_queued_cookies'   => Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        'start_session'        => Illuminate\Session\Middleware\StartSession::class,
         'verify_csrf_token'    => App\Http\Middleware\VerifyCsrfToken::class,
         'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
-        'encrypt_cookies'      => Illuminate\Cookie\Middleware\EncryptCookies::class,
-        'validate_csrf_token'  => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
     ],
 
 ];
