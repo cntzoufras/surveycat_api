@@ -9,32 +9,33 @@ use Illuminate\Support\Facades\Hash;
 class UserSeeder extends Seeder {
 
     public function run(): void {
+        // Read admin credentials from config (works with cached config)
+        $defaultEmail = config('app.admin.default_email');
+        $defaultUsername = config('app.admin.default_username');
+        $defaultPassword = config('app.admin.default_password');
 
-        if (config('app.env') === 'local') {
-            // For local environments, seed with 20 random users
-            User::updateOrCreate(
-                ['email' => env('DEFAULT_ADMIN_EMAIL')],
-                [
-                    'username'          => env('DEFAULT_ADMIN_USERNAME'),
-                    'email'             => env('DEFAULT_ADMIN_EMAIL'),
-                    'password'          => Hash::make(env('DEFAULT_ADMIN_PASSWORD')),
-                    'role'              => 'admin',
-                    'email_verified_at' => now(),
-                ]
-            );
-            User::factory(20)->create();
-        } else {
-            // For non-local environments (like production), create a default admin user
-            User::updateOrCreate(
-                ['email' => env('DEFAULT_ADMIN_EMAIL')],
-                [
-                    'username'          => env('DEFAULT_ADMIN_USERNAME'),
-                    'email'             => env('DEFAULT_ADMIN_EMAIL'),
-                    'password'          => Hash::make(env('DEFAULT_ADMIN_PASSWORD')),
-                    'role'              => 'admin',
-                    'email_verified_at' => now(),
-                ]
-            );
+        // Basic validation to avoid NOT NULL violations
+        if (empty($defaultEmail) || empty($defaultUsername) || empty($defaultPassword)) {
+            // Provide a clear message during seeding
+            if (isset($this->command)) {
+                $this->command->warn('UserSeeder: DEFAULT_ADMIN_* variables are missing. Skipping admin user creation.');
+            }
+            return;
         }
+
+        // Create or update the admin user (works in all environments)
+        User::updateOrCreate(
+            ['email' => $defaultEmail],
+            [
+                'username'          => $defaultUsername,
+                'email'             => $defaultEmail,
+                'password'          => Hash::make($defaultPassword),
+                'role'              => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Also seed some sample users for demo data in modules (all environments)
+        User::factory(20)->create();
     }
 }

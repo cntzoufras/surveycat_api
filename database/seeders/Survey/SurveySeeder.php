@@ -153,8 +153,24 @@ class SurveySeeder extends Seeder
         }
 
         $faker = Faker::create();
-        $totalResponses = 16213;
-        $totalSubmissions = 9850;
+        // Configure targets so we end up with NOT LESS than ~20k submissions overall,
+        // but allow variability RUN-TO-RUN ("around" 20k). Submissions are driven by the
+        // completion logic (currently ~70%). We also add a small number of guaranteed
+        // completions for "today" below ($todaysCount).
+        $minSubmissions = 20000;      // Hard floor
+        $maxAround     = 23000;       // Upper bound for variability (tweak as desired)
+        $completionRate = 0.70;       // Must match the $isCompleted probability below
+        $todaysCount   = 24;          // Extra completions added later so dashboards aren't empty
+
+        // Pick a random target submissions count in [minSubmissions, maxAround]
+        $targetSubmissions = $faker->numberBetween($minSubmissions, $maxAround);
+
+        // Compute required total responses to reach the random target submissions (accounting
+        // for today's guaranteed completions). We round up to be safe. This ensures the final
+        // submissions count is >= $minSubmissions and varies up to ~$maxAround.
+        $neededCompletions = max(0, $targetSubmissions - $todaysCount);
+        $totalResponses = (int) ceil($neededCompletions / $completionRate);
+        // Note: submissions are driven by completion logic; keep a single source of truth
 
         // Realistic UA pools to resemble desktop/mobile/tablet devices
         $desktopUAs = [
@@ -195,7 +211,7 @@ class SurveySeeder extends Seeder
             ->get()
             ->groupBy('survey_page.survey_id'); // Group questions by survey ID
 
-        $this->command->info("Creating {$totalResponses} responses and {$totalSubmissions} submissions...");
+        $this->command->info("Creating {$totalResponses} responses (submissions driven by completion rate)...");
         $bar = $this->command->getOutput()->createProgressBar($totalResponses);
 
         // Create a weighted list of survey IDs to make the distribution more realistic
@@ -276,6 +292,9 @@ class SurveySeeder extends Seeder
                 'survey_id' => $survey->id,
                 'respondent_id' => $respondent->id,
                 'country' => $this->pickWeightedCountry($faker),
+                // Ensure timestamps reflect historical activity rather than defaulting to NOW()
+                'created_at' => $startedAt,
+                'updated_at' => $completedAt ?? $startedAt,
             ]);
 
             // If it's a completed survey, create the submission data
@@ -337,7 +356,7 @@ class SurveySeeder extends Seeder
 
         // Ensure we have some completions for "today" so dashboards don't show 0 after a fresh seed.
         // Keep this small and realistic. We create a handful of responses completed today across random surveys.
-        $todaysCount = 24; // ~two dozen completions today
+        // Use the same $todaysCount as above (~two dozen completions today)
         if (!empty($surveys)) {
             for ($j = 0; $j < $todaysCount; $j++) {
                 $survey = $surveys[array_rand($surveys)];
@@ -372,6 +391,9 @@ class SurveySeeder extends Seeder
                     'survey_id' => $survey->id,
                     'respondent_id' => $respondent->id,
                     'country' => $this->pickWeightedCountry($faker),
+                    // Timestamps aligned with today's realistic window
+                    'created_at' => $startedAtToday,
+                    'updated_at' => $completedAtToday ?? $startedAtToday,
                 ]);
 
                 // Create minimal realistic submission payload
@@ -420,6 +442,9 @@ class SurveySeeder extends Seeder
             $this->command->info("Added {$todaysCount} extra completions for today.");
         }
 
+        // Final consistency guard: ensure each submission's survey_response has a respondent
+        $this->ensureSubmissionRespondents();
+
         // Add one explicit desktop SurveyResponse resembling the provided production sample
         // We will link it to a random existing survey and a fresh respondent/session
         if (!empty($surveys)) {
@@ -446,6 +471,46 @@ class SurveySeeder extends Seeder
                 'respondent_id' => $sampleRespondent->id,
                 'country' => 'Greece',
             ]);
+        }
+    }
+
+    /**
+     * Ensure that for all SurveySubmissions, the linked SurveyResponse has a valid respondent_id.
+     * If missing (null), create a Respondent and attach it.
+     */
+    private function ensureSubmissionRespondents(): void
+    {
+        // Find submissions whose linked response has null respondent_id
+        $subsNeedingRespondent = SurveySubmission::query()
+            ->whereHas('survey_response', function ($q) {
+                $q->whereNull('respondent_id');
+            })
+            ->with('survey_response')
+            ->get();
+
+        $fixed = 0;
+        foreach ($subsNeedingRespondent as $submission) {
+            $response = $submission->survey_response;
+            if (!$response) {
+                continue;
+            }
+
+            // Create a lightweight respondent and backfill timestamps near the response start
+            $respondent = Respondent::create([
+                'email' => null,
+                'gender' => null,
+                'age' => null,
+                'created_at' => $response->started_at ?? now(),
+                'updated_at' => $response->started_at ?? now(),
+            ]);
+
+            $response->respondent_id = $respondent->id;
+            $response->save();
+            $fixed++;
+        }
+
+        if ($fixed > 0) {
+            $this->command->info("Consistency fix: attached respondents to {$fixed} submission responses missing respondent_id.");
         }
     }
 

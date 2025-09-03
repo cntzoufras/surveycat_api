@@ -64,7 +64,8 @@ class DashboardRepository
                     ->from('survey_responses')
                     ->join('surveys', 'survey_responses.survey_id', '=', 'surveys.id')
                     ->whereColumn('survey_responses.respondent_id', 'respondents.id')
-                    ->where('survey_responses.created_at', '>=', Carbon::now()->subWeek())
+                    // Use started_at for weekly activity window to avoid default created_at timestamps of NOW()
+                    ->where('survey_responses.started_at', '>=', Carbon::now()->subWeek())
                     ->when($ownerId, fn($q) => $q->where('surveys.user_id', $ownerId));
             })
             ->when($isAdmin, fn($q) => $q) // no-op for clarity
@@ -82,7 +83,8 @@ class DashboardRepository
                     ->from('survey_responses')
                     ->join('surveys', 'survey_responses.survey_id', '=', 'surveys.id')
                     ->whereColumn('survey_responses.respondent_id', 'respondents.id')
-                    ->where('survey_responses.created_at', '>=', Carbon::now()->subWeek())
+                    // Use started_at for weekly activity window to avoid default created_at timestamps of NOW()
+                    ->where('survey_responses.started_at', '>=', Carbon::now()->subWeek())
                     ->when($ownerId, fn($q) => $q->where('surveys.user_id', $ownerId));
             })
             ->when($isAdmin, fn($q) => $q)

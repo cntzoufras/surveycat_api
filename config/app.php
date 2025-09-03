@@ -58,6 +58,13 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    // Admin defaults (used by seeders, read via config to work with cached config)
+    'admin' => [
+        'default_email' => env('DEFAULT_ADMIN_EMAIL'),
+        'default_username' => env('DEFAULT_ADMIN_USERNAME'),
+        'default_password' => env('DEFAULT_ADMIN_PASSWORD'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
